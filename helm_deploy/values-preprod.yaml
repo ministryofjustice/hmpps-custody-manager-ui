@@ -15,6 +15,7 @@ generic-service:
     PRISONER_SEARCH_API_URL: "https://prisoner-search-preprod.prison.service.justice.gov.uk"
     CUSTODY_MANAGER_API_URL: "https://custody-manager-api-preprod.hmpps.service.justice.gov.uk"
     DOCUMENT_API_URL: "https://document-api-preprod.hmpps.service.justice.gov.uk"
+    DIGITAL_PRISON_SERVICES_URL: "https://digital-preprod.prison.service.justice.gov.uk"
     ENVIRONMENT_NAME: PRE-PRODUCTION
 
 generic-prometheus-alerts:
