@@ -5,9 +5,9 @@
                 <div class="dwf-header-inner">
                     <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
                         <div class="dwf-header-left">
-                            <img class="dwf-header-profile-img" src="/prisoner/{{ prisoner.prisonerNumber }}/image" alt="{{ prisoner.firstName + ' ' + prisoner.lastName }}">
+                            <img class="dwf-header-profile-img" src="/prisoner/{{ prisoner.prisonerNumber }}/image" alt="Image of {{ prisonerName(prisoner.firstName, prisoner.lastName) }}" loading="lazy">
                         </div>
-                        <p class="govuk-heading-s govuk-!-margin-bottom-1"><a class="govuk-link--no-visited-state" href="{{ digitalPrisonServicesUrl }}/prisoner/{{ prisoner.prisonerNumber }}" target="_blank">{{ prisoner.firstName + ' ' + prisoner.lastName }}</a></p>
+                        <p class="govuk-heading-s govuk-!-margin-bottom-1"><a class="govuk-link--no-visited-state" href="{{ digitalPrisonServicesUrl }}/prisoner/{{ prisoner.prisonerNumber }}" target="_blank">{{ prisonerName(prisoner.firstName, prisoner.lastName) }}</a></p>
                         <ul class="govuk-list">
                             <li>{{ prisoner.prisonerNumber }}</li>
                         </ul>

@@ -2,7 +2,7 @@
 import path from 'path'
 import nunjucks from 'nunjucks'
 import express from 'express'
-import { initialiseName } from './utils'
+import { initialiseName, prisonerName } from './utils'
 import { ApplicationInfo } from '../applicationInfo'
 import config from '../config'
 
@@ -12,7 +12,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   app.set('view engine', 'njk')
 
   app.locals.asset_path = '/assets/'
-  app.locals.applicationName = 'Custody Manager'
+  app.locals.applicationName = 'Court cases, adjustments and release dates'
   app.locals.environmentName = config.environmentName
   app.locals.environmentNameColour = config.environmentName === 'PRE-PRODUCTION' ? 'govuk-tag--green' : ''
   app.locals.digitalPrisonServicesUrl = config.digitalPrisonServicesUrl
@@ -44,4 +44,6 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   )
 
   njkEnv.addFilter('initialiseName', initialiseName)
+
+  njkEnv.addGlobal('prisonerName', prisonerName)
 }
