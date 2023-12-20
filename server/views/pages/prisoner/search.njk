@@ -3,6 +3,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "moj/components/pagination/macro.njk" import mojPagination -%}
 
 {% set pageTitle = applicationName + " - prisoner search" %}
 {% set mainClasses = "app-container govuk-body" %}
@@ -28,7 +29,7 @@
                 text: "Enter name or prisoner number",
                 classes: "govuk-label--m"
               },
-              value: query
+              value: prisonerSearch.query
             }) }}
             {{ govukButton({ text: "Search" }) }}
           </div>
@@ -37,12 +38,39 @@
     </div>
   </div>
 
-  {% if query %}
+  {% if prisonerSearch.query %}
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
-        {% if page and page.content | length >= 1 %}
+        {% if resultsPage and resultsPage.content | length >= 1 %}
+          {% set pages = [] %}
+          {% for page in range(0, resultsPage.totalPages) %}
+            {% set pages = (pages.push({
+              text: page + 1,
+              href: '/?query=' + prisonerSearch.query + '&page=' + page,
+              selected: page == resultsPage.number
+            }), pages) %}
+          {% endfor %}
+
+          {{ mojPagination({
+            items: pages,
+            results: {
+              count: resultsPage.totalElements,
+              from: resultsPage.number * resultsPage.size + 1,
+              to: (resultsPage.number + 1) * resultsPage.size if resultsPage.number < resultsPage.totalPages - 1 else resultsPage.totalElements,
+              text: 'prisoners'
+            },
+            previous: {
+              text: 'Previous',
+              href: '/?query=' + prisonerSearch.query + '&page=' + (resultsPage.number - 1)
+            } if not resultsPage.first,
+            next: {
+              text: 'Next',
+              href: '/?query=' + prisonerSearch.query + '&page=' + (resultsPage.number + 1)
+            } if not resultsPage.last
+          }) }}
+
           {% set prisonerRows = [] %}
-          {% for prisoner in page.content %}
+          {% for prisoner in resultsPage.content %}
             {% set prisonerRows = (prisonerRows.push([{
               html: '<img src="/prisoner/' + prisoner.prisonerNumber + '/image" alt="Image of ' + prisonerName(prisoner.firstName, prisoner.lastName) + '" class="prisoner-search-results__prisoner-image" loading="lazy">'
             }, {
@@ -50,7 +78,15 @@
             }, {
               text: prisoner.prisonerNumber
             }, {
+              text: prisoner.pncNumber
+            }, {
+              text: prisoner.croNumber
+            }, {
               text: prisoner.cellLocation
+            }, {
+              text: prisoner.status
+            }, {
+              text: prisoner.dateOfBirth | formatDateOfBirth
             }]), prisonerRows) %}
           {% endfor %}
           {{ govukTable({
@@ -64,7 +100,15 @@
             }, {
               text: "Prisoner number"
             }, {
-              text: "Cell location"
+              text: "PNC number"
+            }, {
+              text: "CRO number"
+            }, {
+              text: "Location"
+            }, {
+              text: "Status"
+            }, {
+              text: "Date of birth"
             }],
             rows: prisonerRows
           }) }}

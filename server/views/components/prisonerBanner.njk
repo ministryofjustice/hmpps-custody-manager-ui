@@ -14,7 +14,7 @@
                     </div>
                     <div class="govuk-grid-column-two-thirds govuk-!-padding-0">
                         <ul class="dwf-header-info">
-                            <li><span class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-padding-0">Date of birth</span><span class="govuk-body">{{ prisoner.dateOfBirth }}</span></li>
+                            <li><span class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-padding-0">Date of birth</span><span class="govuk-body">{{ prisoner.dateOfBirth | formatDateOfBirth }}</span></li>
                             <li><span class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-padding-0">PNC number</span><span class="govuk-body">{{ prisoner.pncNumber if prisoner.pncNumber else '-' }}</span></li>
                             <li><span class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-padding-0">Status</span><span class="govuk-body">{{ prisoner.status }}</span></li>
                             <li><span class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-padding-0">Establishment</span><span class="govuk-body">{{ prisoner.prisonName }}</span></li>

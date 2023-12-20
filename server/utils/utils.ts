@@ -1,3 +1,5 @@
+import { format, parse } from 'date-fns'
+
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
 
@@ -24,4 +26,9 @@ export const initialiseName = (fullName?: string): string | null => {
 
 export const prisonerName = (firstName: string, lastName: string): string => {
   return `${properCaseName(lastName)}, ${properCaseName(firstName)}`
+}
+
+export const formatDateOfBirth = (dateOfBirth: string): string => {
+  const date = parse(dateOfBirth, 'yyyy-MM-dd', new Date())
+  return format(date, 'dd/MM/yyyy')
 }
