@@ -5,7 +5,7 @@
                 <div class="dwf-header-inner">
                     <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
                         <div class="dwf-header-left">
-                            <img class="dwf-header-profile-img" src="/api/person/{{ prisoner.prisonerNumber }}/image" alt="{{ prisoner.firstName + ' ' + prisoner.lastName }}">
+                            <img class="dwf-header-profile-img" src="/prisoner/{{ prisoner.prisonerNumber }}/image" alt="{{ prisoner.firstName + ' ' + prisoner.lastName }}">
                         </div>
                         <p class="govuk-heading-s govuk-!-margin-bottom-1"><a class="govuk-link--no-visited-state" href="{{ digitalPrisonServicesUrl }}/prisoner/{{ prisoner.prisonerNumber }}" target="_blank">{{ prisoner.firstName + ' ' + prisoner.lastName }}</a></p>
                         <ul class="govuk-list">

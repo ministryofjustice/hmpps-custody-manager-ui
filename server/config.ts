@@ -88,6 +88,14 @@ export default {
       agent: new AgentConfig(Number(get('COMPONENT_API_TIMEOUT_SECONDS', 10000))),
       enabled: get('COMMON_COMPONENTS_ENABLED', 'false') === 'true',
     },
+    prisonApi: {
+      url: get('PRISON_API_URL', 'http://127.0.0.1:8080', requiredInProduction),
+      timeout: {
+        response: get('PRISON_API_TIMEOUT_RESPONSE', 10000),
+        deadline: get('PRISON_API_TIMEOUT_DEADLINE', 10000),
+      },
+      agent: new AgentConfig(),
+    },
     prisonerSearchApi: {
       url: get('PRISONER_SEARCH_API_URL', 'http://localhost:8090', requiredInProduction),
       timeout: {

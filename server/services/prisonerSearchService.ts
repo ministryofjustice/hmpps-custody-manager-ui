@@ -13,12 +13,19 @@ export default class PrisonerSearchService {
     page = 0,
     pageSize = config.apis.prisonerSearchApi.pageSize,
   ): Promise<PagePrisoner> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    return new PrisonerSearchApiClient(token).searchPrisoners(prisonCode, query, page, pageSize)
+    return new PrisonerSearchApiClient(await this.getSystemClientToken(username)).searchPrisoners(
+      prisonCode,
+      query,
+      page,
+      pageSize,
+    )
   }
 
   async getByPrisonerNumber(username: string, prisonerNumber: string): Promise<Prisoner> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    return new PrisonerSearchApiClient(token).getByPrisonerNumber(prisonerNumber)
+    return new PrisonerSearchApiClient(await this.getSystemClientToken(username)).getByPrisonerNumber(prisonerNumber)
+  }
+
+  private async getSystemClientToken(username: string): Promise<string> {
+    return this.hmppsAuthClient.getSystemClientToken(username)
   }
 }

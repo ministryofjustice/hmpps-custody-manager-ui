@@ -6,7 +6,6 @@ export default class PrisonerSearchApiClient {
   restClient: RestClient
 
   constructor(token: string) {
-    console.log(token)
     this.restClient = new RestClient('Prisoner Search API Client', config.apis.prisonerSearchApi as ApiConfig, token)
   }
 
