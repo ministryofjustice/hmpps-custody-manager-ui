@@ -1,4 +1,5 @@
 import type { UserDetails } from '../../services/userService'
+import { Prisoner } from '../prisonerSearchApi/types'
 
 export default {}
 
@@ -21,6 +22,7 @@ export declare global {
       verified?: boolean
       id: string
       logout(done: (err: unknown) => void): void
+      prisoner?: Prisoner
     }
 
     interface Locals {

@@ -91,10 +91,11 @@ export default {
     prisonerSearchApi: {
       url: get('PRISONER_SEARCH_API_URL', 'http://localhost:8090', requiredInProduction),
       timeout: {
-        response: Number(get('PRISONER_SEARCH_API_TIMEOUT_RESPONSE', 30000)),
-        deadline: Number(get('PRISONER_SEARCH_API_TIMEOUT_DEADLINE', 30000)),
+        response: Number(get('PRISONER_SEARCH_API_TIMEOUT_RESPONSE', 10000)),
+        deadline: Number(get('PRISONER_SEARCH_API_TIMEOUT_DEADLINE', 10000)),
       },
-      agent: new AgentConfig(Number(get('PRISONER_SEARCH_API_TIMEOUT_RESPONSE', 30000))),
+      agent: new AgentConfig(Number(get('PRISONER_SEARCH_API_TIMEOUT_RESPONSE', 10000))),
+      pageSize: Number(get('PRISONER_SEARCH_PAGE_SIZE', 50)),
     },
     documentManagementApi: {
       url: get('DOCUMENT_MANAGEMENT_API_URL', 'http://localhost:8080', requiredInProduction),
