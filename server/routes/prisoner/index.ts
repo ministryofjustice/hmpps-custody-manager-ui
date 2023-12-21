@@ -13,7 +13,7 @@ export default function Index({ prisonerService, prisonerSearchService }: Servic
   const get = (path: string | string[], handler: RequestHandler) =>
     router.get(path, getPrisoner(prisonerSearchService), asyncMiddleware(handler))
 
-  router.get('/image', new ImageRoutes(prisonerService).GET)
+  router.get('/:prisonerNumber/image', new ImageRoutes(prisonerService).GET)
 
   get('/:prisonerNumber/adjustments', new AdjustmentsRoutes().GET)
   get('/:prisonerNumber/court-cases', new CourtCasesRoutes().GET)
