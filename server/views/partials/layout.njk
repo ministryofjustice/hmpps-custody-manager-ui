@@ -10,16 +10,33 @@
   <script src="/assets/js/html5shiv-3.7.3.min.js"></script>
   <![endif]-->
 
-  <script src="/assets/js/jquery.min.js"></script> 
+  {% if feComponents.cssIncludes %}
+    {% for css in feComponents.cssIncludes %}
+      <link href="{{ css }}" nonce="{{ cspNonce }}" rel="stylesheet" />
+    {% endfor %}
+  {% endif %}
+
 {% endblock %}
 
 {% block pageTitle %}{{pageTitle | default(applicationName)}}{% endblock %}
 
 {% block header %}
-  {% include "./header.njk" %}
+  {% if feComponents.header %}
+    {{ feComponents.header | safe }}
+  {% else %}
+    {% include "./header.njk" %}
+  {% endif %}
 {% endblock %}
 
 {% block bodyStart %}
+{% endblock %}
+
+{% block footer %}
+  {% if feComponents.footer %}
+    {{ feComponents.footer | safe }}
+  {% else %}
+    {{ super() }}
+  {% endif %}
 {% endblock %}
 
 {% block bodyEnd %}
@@ -27,4 +44,11 @@
   <script src="/assets/govukFrontendInit.js"></script>
   <script src="/assets/moj/all.js"></script>
   <script src="/assets/mojFrontendInit.js"></script>
+  {% if feComponents.jsIncludes %}
+    {% for js in feComponents.jsIncludes %}
+      <script src="{{ js }}" nonce="{{ cspNonce }}"></script>
+    {% endfor %}
+  {% endif %}
+  {% block javascripts %}
+  {% endblock %}
 {% endblock %}

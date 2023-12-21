@@ -16,6 +16,7 @@ import { createRedisClient } from './redisClient'
 import RedisTokenStore from './tokenStore/redisTokenStore'
 import InMemoryTokenStore from './tokenStore/inMemoryTokenStore'
 import config from '../config'
+import FeComponentsClient from './feComponentsClient'
 
 type RestClientBuilder<T> = (token: string) => T
 
@@ -25,6 +26,7 @@ export const dataAccess = () => ({
     config.redis.enabled ? new RedisTokenStore(createRedisClient()) : new InMemoryTokenStore(),
   ),
   manageUsersApiClient: new ManageUsersApiClient(),
+  feComponentsClient: new FeComponentsClient(),
 })
 
 export type DataAccess = ReturnType<typeof dataAccess>
