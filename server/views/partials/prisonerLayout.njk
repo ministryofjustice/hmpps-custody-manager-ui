@@ -1,0 +1,40 @@
+{% extends "./layout.njk" %}
+
+{% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
+{% from "../components/prisonerBanner.njk" import prisonerBanner %}
+
+{% block main %}
+    <div class="govuk-width-container {{ containerClasses }}">
+        {% block beforeContent %}{% endblock %}
+        <main class="govuk-main-wrapper app-container govuk-body {{ mainClasses }}" id="main-content" role="main"{% if mainLang %} lang="{{ mainLang }}"{% endif %}>
+            {% block banner %}
+                {{ prisonerBanner(prisoner, digitalPrisonServicesUrl) }}
+            {% endblock %}
+
+            {% block subNavigation %}
+                {{ mojSubNavigation({
+                    label: 'Person navigation',
+                    items: [{
+                        text: 'Overview',
+                        href: 'overview',
+                        active: activeSubNav === 'overview'
+                    }, {
+                        text: 'Court cases',
+                        href: 'court-cases',
+                        active: activeSubNav === 'court-cases'
+                    }, {
+                        text: 'Adjustments',
+                        href: 'adjustments',
+                        active: activeSubNav === 'adjustments'
+                    }, {
+                        text: 'Release dates',
+                        href: 'release-dates',
+                        active: activeSubNav === 'release-dates'
+                    }]
+                }) }}
+            {% endblock %}
+
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+{% endblock %}
