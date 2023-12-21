@@ -1,0 +1,12 @@
+{% extends "../../partials/layout.njk" %}
+{% from "../../components/prisonerBanner.njk" import prisonerBanner %}
+
+{% set pageTitle = prisoner.prisonerNumber %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+    {{ prisonerBanner(prisoner, digitalPrisonServicesUrl) }}
+
+{% endblock %}
+

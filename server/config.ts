@@ -88,13 +88,22 @@ export default {
       agent: new AgentConfig(Number(get('COMPONENT_API_TIMEOUT_SECONDS', 10000))),
       enabled: get('COMMON_COMPONENTS_ENABLED', 'false') === 'true',
     },
+    prisonApi: {
+      url: get('PRISON_API_URL', 'http://127.0.0.1:8080', requiredInProduction),
+      timeout: {
+        response: get('PRISON_API_TIMEOUT_RESPONSE', 10000),
+        deadline: get('PRISON_API_TIMEOUT_DEADLINE', 10000),
+      },
+      agent: new AgentConfig(),
+    },
     prisonerSearchApi: {
       url: get('PRISONER_SEARCH_API_URL', 'http://localhost:8090', requiredInProduction),
       timeout: {
-        response: Number(get('PRISONER_SEARCH_API_TIMEOUT_RESPONSE', 30000)),
-        deadline: Number(get('PRISONER_SEARCH_API_TIMEOUT_DEADLINE', 30000)),
+        response: Number(get('PRISONER_SEARCH_API_TIMEOUT_RESPONSE', 10000)),
+        deadline: Number(get('PRISONER_SEARCH_API_TIMEOUT_DEADLINE', 10000)),
       },
-      agent: new AgentConfig(Number(get('PRISONER_SEARCH_API_TIMEOUT_RESPONSE', 30000))),
+      agent: new AgentConfig(Number(get('PRISONER_SEARCH_API_TIMEOUT_RESPONSE', 10000))),
+      pageSize: Number(get('PRISONER_SEARCH_PAGE_SIZE', 50)),
     },
     documentManagementApi: {
       url: get('DOCUMENT_MANAGEMENT_API_URL', 'http://localhost:8080', requiredInProduction),
@@ -105,6 +114,7 @@ export default {
       agent: new AgentConfig(10000),
     },
   },
+  digitalPrisonServicesUrl: get('DIGITAL_PRISON_SERVICES_URL', 'http://127.0.0.1:3000/dps', requiredInProduction),
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),
 }
