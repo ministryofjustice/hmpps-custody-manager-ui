@@ -3,19 +3,19 @@ import { IsNotEmpty } from 'class-validator'
 import { plainToInstance } from 'class-transformer'
 import PrisonerSearchService from '../../../services/prisonerSearchService'
 
-export class PrisonerSearch {
+export class Search {
   @IsNotEmpty({ message: 'You must enter a name or prison number in the format A1234CD' })
   query: string
 
   page: number = 0
 }
 
-export default class PrisonerOverviewRoutes {
+export default class SearchRoutes {
   constructor(private readonly prisonerSearchService: PrisonerSearchService) {}
 
   GET = async (req: Request, res: Response): Promise<void> => {
     const { username, activeCaseLoadId } = res.locals.user
-    const prisonerSearch = plainToInstance(PrisonerSearch, req.query)
+    const prisonerSearch = plainToInstance(Search, req.query)
 
     if (prisonerSearch.query) {
       const resultsPage = await this.prisonerSearchService.searchPrisoners(

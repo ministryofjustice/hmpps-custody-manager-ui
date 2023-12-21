@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
 
-export default class PrisonerOverviewRoutes {
+export default class ReleaseDatesRoutes {
   GET = async (req: Request, res: Response): Promise<void> => {
     const { prisoner } = req
 
-    res.render('pages/prisoner/overview', { prisoner })
+    res.render('pages/prisoner/releaseDates', { prisoner })
   }
 }
