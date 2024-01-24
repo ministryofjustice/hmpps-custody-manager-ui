@@ -1,14 +1,14 @@
 {% extends "./layout.njk" %}
 
+{% from "hmpps/components/mini-profile/macro.njk" import miniProfile %}
 {% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
-{% from "../components/prisonerBanner.njk" import prisonerBanner %}
 
 {% block main %}
     <div class="govuk-width-container {{ containerClasses }}">
         {% block beforeContent %}{% endblock %}
         <main class="govuk-main-wrapper app-container govuk-body {{ mainClasses }}" id="main-content" role="main"{% if mainLang %} lang="{{ mainLang }}"{% endif %}>
             {% block banner %}
-                {{ prisonerBanner(prisoner, digitalPrisonServicesUrl) }}
+                {{ miniProfile(prisoner, '/prisoner/' + prisoner.prisonerNumber + '/image', digitalPrisonServicesUrl + '/prisoner/' + prisoner.prisonerNumber) }}
             {% endblock %}
 
             {% block subNavigation %}

@@ -2,6 +2,7 @@
 import path from 'path'
 import nunjucks from 'nunjucks'
 import express from 'express'
+import { formatMiniProfileDateOfBirth, formatMiniProfileName } from 'hmpps-design-system-frontend/hmpps/utils/utils'
 import { formatDateOfBirth, initialiseName, prisonerName } from './utils'
 import { ApplicationInfo } from '../applicationInfo'
 import config from '../config'
@@ -32,10 +33,12 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   const njkEnv = nunjucks.configure(
     [
       path.join(__dirname, '../../server/views'),
-      'node_modules/govuk-frontend/',
-      'node_modules/govuk-frontend/components/',
+      'node_modules/govuk-frontend/dist/',
+      'node_modules/govuk-frontend/dist/components/',
       'node_modules/@ministryofjustice/frontend/',
       'node_modules/@ministryofjustice/frontend/moj/components/',
+      'node_modules/hmpps-design-system-frontend/',
+      'node_modules/hmpps-design-system-frontend/hmpps/components/',
     ],
     {
       autoescape: true,
@@ -45,6 +48,8 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
 
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('formatDateOfBirth', formatDateOfBirth)
+  njkEnv.addFilter('formatMiniProfileName', formatMiniProfileName)
+  njkEnv.addFilter('formatMiniProfileDateOfBirth', formatMiniProfileDateOfBirth)
 
   njkEnv.addGlobal('prisonerName', prisonerName)
 }
