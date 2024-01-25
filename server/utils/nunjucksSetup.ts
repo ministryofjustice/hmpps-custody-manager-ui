@@ -2,8 +2,8 @@
 import path from 'path'
 import nunjucks from 'nunjucks'
 import express from 'express'
-import { formatMiniProfileDateOfBirth, formatMiniProfileName } from 'hmpps-design-system-frontend/hmpps/utils/utils'
-import { formatDateOfBirth, initialiseName, prisonerName } from './utils'
+import { personProfileName, personDateOfBirth, personStatus } from 'hmpps-design-system-frontend/hmpps/utils/utils'
+import { initialiseName } from './utils'
 import { ApplicationInfo } from '../applicationInfo'
 import config from '../config'
 
@@ -47,9 +47,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   )
 
   njkEnv.addFilter('initialiseName', initialiseName)
-  njkEnv.addFilter('formatDateOfBirth', formatDateOfBirth)
-  njkEnv.addFilter('formatMiniProfileName', formatMiniProfileName)
-  njkEnv.addFilter('formatMiniProfileDateOfBirth', formatMiniProfileDateOfBirth)
-
-  njkEnv.addGlobal('prisonerName', prisonerName)
+  njkEnv.addFilter('personProfileName', personProfileName)
+  njkEnv.addFilter('personDateOfBirth', personDateOfBirth)
+  njkEnv.addFilter('personStatus', personStatus)
 }

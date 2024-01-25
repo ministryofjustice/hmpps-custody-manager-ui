@@ -23,12 +23,3 @@ export const initialiseName = (fullName?: string): string | null => {
   const array = fullName.split(' ')
   return `${array[0][0]}. ${array.reverse()[0]}`
 }
-
-export const prisonerName = (firstName: string, lastName: string): string => {
-  return `${properCaseName(lastName)}, ${properCaseName(firstName)}`
-}
-
-export const formatDateOfBirth = (dateOfBirth: string): string => {
-  const date = parse(dateOfBirth, 'yyyy-MM-dd', new Date())
-  return format(date, 'dd/MM/yyyy')
-}
