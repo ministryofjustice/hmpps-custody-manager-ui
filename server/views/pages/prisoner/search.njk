@@ -72,9 +72,9 @@
           {% set prisonerRows = [] %}
           {% for prisoner in resultsPage.content %}
             {% set prisonerRows = (prisonerRows.push([{
-              html: '<img src="/prisoner/' + prisoner.prisonerNumber + '/image" alt="Image of ' + prisonerName(prisoner.firstName, prisoner.lastName) + '" class="prisoner-search-results__prisoner-image" loading="lazy">'
+              html: '<img src="/prisoner/' + prisoner.prisonerNumber + '/image" alt="Image of ' + prisoner | personProfileName + '" class="prisoner-search-results__prisoner-image" loading="lazy">'
             }, {
-              html: '<a href="/prisoner/' + prisoner.prisonerNumber + '/overview">' + prisonerName(prisoner.firstName, prisoner.lastName) + '</a>'
+              html: '<a href="/prisoner/' + prisoner.prisonerNumber + '/overview">' + prisoner | personProfileName + '</a>'
             }, {
               text: prisoner.prisonerNumber
             }, {
@@ -84,9 +84,9 @@
             }, {
               text: prisoner.cellLocation
             }, {
-              text: prisoner.status
+              text: prisoner.status | personStatus
             }, {
-              text: prisoner.dateOfBirth | formatDateOfBirth
+              text: prisoner.dateOfBirth | personDateOfBirth
             }]), prisonerRows) %}
           {% endfor %}
           {{ govukTable({
