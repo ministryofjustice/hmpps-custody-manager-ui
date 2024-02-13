@@ -69,7 +69,7 @@ describe('Route Handlers - Overview', () => {
 
   it('should render next-court-hearing section correctly if no court hearing', () => {
     prisonerSearchService.getByPrisonerNumber.mockResolvedValue({ prisonerNumber: 'A12345B' } as Prisoner)
-    prisonerService.getNextCourtEvent.mockResolvedValue(null)
+    prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
 
     return request(app)
       .get('/prisoner/A12345B/overview')
