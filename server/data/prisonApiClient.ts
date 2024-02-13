@@ -1,6 +1,7 @@
 import { Readable } from 'stream'
 import config, { ApiConfig } from '../config'
 import RestClient from './restClient'
+import { CourtEventDetails } from '../@types/prisonApi/types'
 
 export default class PrisonApiClient {
   restClient: RestClient
@@ -13,5 +14,9 @@ export default class PrisonApiClient {
     return this.restClient.stream({
       path: `/api/bookings/offenderNo/${prisonerNumber}/image/data`,
     })
+  }
+
+  async getNextCourtEvent(bookingId: number): Promise<CourtEventDetails> {
+    return (await this.restClient.get({ path: `/api/court/${bookingId}/next-court-event` })) as CourtEventDetails
   }
 }

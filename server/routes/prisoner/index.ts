@@ -18,7 +18,7 @@ export default function Index({ prisonerService, prisonerSearchService }: Servic
 
   get('/:prisonerNumber/adjustments', new AdjustmentsRoutes().GET)
   get('/:prisonerNumber/court-cases', new CourtCasesRoutes().GET)
-  get('/:prisonerNumber/overview', new OverviewRoutes().GET)
+  get('/:prisonerNumber/overview', new OverviewRoutes(prisonerService).GET)
   get('/:prisonerNumber/release-dates', new ReleaseDatesRoutes().GET)
   get('/:prisonerNumber/documents', new DocumentsRoutes().GET)
 
