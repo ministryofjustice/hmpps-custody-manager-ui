@@ -76,7 +76,7 @@ describe('Route Handlers - Overview', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         expect(res.text).toContain('<h3 class="govuk-heading-m">Next court hearing</h3>')
-        expect(res.text).toContain('No upcoming court hearings.')
+        expect(res.text).toContain('No upcoming court hearing.')
       })
   })
 })
