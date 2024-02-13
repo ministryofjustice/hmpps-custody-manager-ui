@@ -28,9 +28,9 @@ afterEach(() => {
   jest.resetAllMocks()
 })
 
-describe('Route Handlers - Prisoner', () => {
+describe('Route Handlers - Overview', () => {
   describe('GET /', () => {
-    it('should render index page', () => {
+    it('should render next-court-hearing section', () => {
       prisonerSearchService.getByPrisonerNumber.mockResolvedValue({ prisonerNumber: 'A12345B' } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({ caseReference: 'TS0001' } as CourtEventDetails)
 
