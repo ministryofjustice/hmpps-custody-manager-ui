@@ -12,7 +12,7 @@
 
       <h3 class="govuk-heading-m">Next court hearing</h3>
 
-      {% if not nextCourtEvent %}
+      {% if not (nextCourtEvent | length) %}
         <p class="govuk-body">No upcoming court hearing.</p>
       {% else %}
         {{ govukSummaryList({
