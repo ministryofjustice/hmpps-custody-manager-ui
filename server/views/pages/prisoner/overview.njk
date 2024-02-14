@@ -1,8 +1,19 @@
 {% extends "../../partials/prisonerLayout.njk" %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "hmpps/components/legal-information/service-header/macro.njk" import serviceHeader %}
 
 {% set pageTitle = prisoner.prisonerNumber %}
 {% set activeSubNav = 'overview' %}
+
+{% block serviceHeaders %}
+  {{ 
+      serviceHeader({
+      environment: environment,
+      prisonNumber: prisoner.prisonerNumber
+    })
+  }}
+{% endblock %}
+
 
 {% block content %}
 
