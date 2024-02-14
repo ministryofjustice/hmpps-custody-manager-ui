@@ -81,4 +81,16 @@ describe('Route Handlers - Overview', () => {
         expect(res.text).toContain('No upcoming court hearing.')
       })
   })
+
+  it('should render service header', () => {
+    prisonerSearchService.getByPrisonerNumber.mockResolvedValue({ prisonerNumber: 'A12345B' } as Prisoner)
+    prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
+
+    return request(app)
+      .get('/prisoner/A12345B/overview')
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).toContain('Court cases and release dates')
+      })
+  })
 })

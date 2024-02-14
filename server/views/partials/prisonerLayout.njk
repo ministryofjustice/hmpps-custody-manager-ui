@@ -11,16 +11,6 @@
                 {{ miniProfile(prisoner, '/prisoner/' + prisoner.prisonerNumber + '/image', digitalPrisonServicesUrl + '/prisoner/' + prisoner.prisonerNumber) }}
             {% endblock %}
 
-            {% if environmentName === 'LOCAL' %}
-                {% set environment = 'local' %}
-            {% elseif environmentName === 'DEV' %}
-                {% set environment = 'dev' %}
-            {% elseif environmentName === 'PRE-PRODUCTION' %}
-                {% set environment = 'pre' %}
-            {% else %}
-                {% set environment = 'prod' %}
-            {% endif %}
-
             {% set navigation = {
                 activeSubNav: activeSubNav
             } %}

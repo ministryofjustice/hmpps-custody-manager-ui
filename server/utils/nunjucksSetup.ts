@@ -19,6 +19,16 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   app.locals.environmentNameColour = config.environmentName === 'PRE-PRODUCTION' ? 'govuk-tag--green' : ''
   app.locals.digitalPrisonServicesUrl = config.digitalPrisonServicesUrl
 
+  if (config.environmentName === 'LOCAL') {
+    app.locals.environment = 'local'
+  } else if (config.environmentName === 'DEV') {
+    app.locals.environment = 'dev'
+  } else if (config.environmentName === 'PRE-PRODUCTION') {
+    app.locals.environment = 'pre'
+  } else {
+    app.locals.environment = 'prod'
+  }
+
   // Cachebusting version string
   if (production) {
     // Version only changes with new commits
