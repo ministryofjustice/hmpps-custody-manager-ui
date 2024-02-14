@@ -46,7 +46,9 @@ describe('Route Handlers - Overview', () => {
         expect(res.text).toMatch(/Case reference\s*<\/dt>\s*<dd class="govuk-summary-list__value">\s*TS0001/)
         expect(res.text).toMatch(/Location\s*<\/dt>\s*<dd class="govuk-summary-list__value">\s*The Old Bailey/)
         expect(res.text).toMatch(/Hearing type\s*<\/dt>\s*<dd class="govuk-summary-list__value">\s*Court Appearance/)
-        expect(res.text).toMatch(/Date\s*<\/dt>\s*<dd class="govuk-summary-list__value">\s*08 February 2025 15:55/)
+        expect(res.text).toMatch(
+          /Date\s*<\/dt>\s*<dd class="govuk-summary-list__value">\s*Saturday, 08 February 2025 at 15:55/,
+        )
         expect(res.text).not.toContain('No upcoming court hearings.')
       })
   })

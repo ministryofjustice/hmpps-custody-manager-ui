@@ -52,5 +52,5 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   njkEnv.addFilter('personDateOfBirth', personDateOfBirth)
   njkEnv.addFilter('personStatus', personStatus)
   njkEnv.addFilter('date', date => dayjs(date).format('DD MMMM YYYY'))
-  njkEnv.addFilter('dateTime', date => dayjs(date).format('DD MMMM YYYY HH:mm'))
+  njkEnv.addFilter('dateTime', date => `${dayjs(date).format('dddd, DD MMMM YYYY')} at ${dayjs(date).format('HH:mm')}`)
 }
