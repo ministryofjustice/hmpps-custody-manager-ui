@@ -1,4 +1,5 @@
 {% extends "govuk/template.njk" %}
+{% from "hmpps/components/legal-information/service-header/macro.njk" import serviceHeader %}
 
 {% block head %}
   <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
@@ -19,8 +20,12 @@
   {% else %}
     {% include "./header.njk" %}
   {% endif %}
-  {% block serviceHeaders %}
-  {% endblock %}
+  {{ 
+      serviceHeader({
+      environment: environment,
+      prisonNumber: prisoner.prisonerNumber
+    })
+  }}
 {% endblock %}
 
 {% block bodyStart %}

@@ -5,15 +5,6 @@
 {% set pageTitle = prisoner.prisonerNumber %}
 {% set activeSubNav = 'overview' %}
 
-{% block serviceHeaders %}
-  {{ 
-      serviceHeader({
-      environment: environment,
-      prisonNumber: prisoner.prisonerNumber
-    })
-  }}
-{% endblock %}
-
 
 {% block content %}
 
