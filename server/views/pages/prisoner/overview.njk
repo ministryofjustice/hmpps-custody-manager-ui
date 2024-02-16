@@ -5,12 +5,42 @@
 {% set pageTitle = prisoner.prisonerNumber %}
 {% set activeSubNav = 'overview' %}
 
+{%- set adjustmentSummarys = [] -%}
 
+{% for adjustmentText, daysTotal in aggregatedAdjustments %}
+  {%- set adjustmentRow= {
+            key: {
+              text: adjustmentText
+            },
+              value: {
+              text: daysTotal + " Day" + ("s" if dayTotal != 1 else "")
+            }
+    }-%}
+    {% set adjustmentSummarys = (adjustmentSummarys.push(adjustmentRow), adjustmentSummarys)%}
+{% endfor %}
 {% block content %}
 
   <h1 class="govuk-heading-xl">Overview</h1>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+
+      <h3 class="govuk-heading-m">Adjustments</h3>
+      {% if aggregatedAdjustments | length %}
+        {{ govukSummaryList({
+          rows: adjustmentSummarys,
+          classes: "govuk-!-margin-bottom-2"
+        })}}
+      {% else %}
+        <p class="govuk-body govuk-!-margin-bottom-2">There are no active adjustments for {{ prisoner | firstNameSpaceLastName }}</p>
+      {% endif %}
+
+      <p class="govuk-body govuk-!-margin-top-6">
+
+        <a href="{{adjustmentsUIUrl}}/{{prisoner.prisonerNumber}}">View all adjustments</a>
+
+      </p>
+
+      <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 
       <h3 class="govuk-heading-m">Next court hearing</h3>
 

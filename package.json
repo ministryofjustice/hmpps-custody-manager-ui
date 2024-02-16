@@ -29,7 +29,8 @@
     "clean": "rm -rf dist build node_modules stylesheets",
     "generate-prisoner-search-api-types": "openapi-typescript https://prisoner-search-dev.prison.service.justice.gov.uk/v3/api-docs > ./server/@types/prisonerSearchApi/index.d.ts",
     "generate-custody-manager-api-types": "openapi-typescript https://custody-manager-api-dev.hmpps.service.justice.gov.uk/v3/api-docs > ./server/@types/custodyManagerApi/index.d.ts",
-    "generate-document-management-api-types": "openapi-typescript https://document-api-dev.hmpps.service.justice.gov.uk/v3/api-docs > ./server/@types/documentManagementApi/index.d.ts"
+    "generate-document-management-api-types": "openapi-typescript https://document-api-dev.hmpps.service.justice.gov.uk/v3/api-docs > ./server/@types/documentManagementApi/index.d.ts",
+    "generate-adjustments-api-types": "openapi-typescript https://adjustments-api-dev.hmpps.service.justice.gov.uk/v3/api-docs > ./server/@types/adjustmentsApi/index.d.ts"
   },
   "engines": {
     "node": "^20",

@@ -3,6 +3,7 @@ import UserService from './userService'
 import FeComponentsService from './feComponentsService'
 import PrisonerSearchService from './prisonerSearchService'
 import PrisonerService from './prisonerService'
+import AdjustmentsService from './adjustmentsService'
 
 export const services = () => {
   const { applicationInfo, hmppsAuthClient, manageUsersApiClient, feComponentsClient } = dataAccess()
@@ -15,12 +16,15 @@ export const services = () => {
 
   const prisonerSearchService = new PrisonerSearchService(hmppsAuthClient)
 
+  const adjustmentsService = new AdjustmentsService()
+
   return {
     applicationInfo,
     userService,
     feComponentsService,
     prisonerService,
     prisonerSearchService,
+    adjustmentsService,
   }
 }
 
