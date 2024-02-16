@@ -17,6 +17,7 @@ generic-service:
     CUSTODY_MANAGER_API_URL: "https://custody-manager-api.hmpps.service.justice.gov.uk"
     DOCUMENT_API_URL: "https://document-api.hmpps.service.justice.gov.uk"
     DIGITAL_PRISON_SERVICES_URL: "https://digital.prison.service.justice.gov.uk"
+    ADJUSTMENTS_UI_URL: "https://adjust-release-dates.hmpps.service.justice.gov.uk"
 
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service

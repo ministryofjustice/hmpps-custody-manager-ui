@@ -9,7 +9,7 @@ import OverviewRoutes from './handlers/overview'
 import ReleaseDatesRoutes from './handlers/releaseDates'
 import DocumentsRoutes from './handlers/documents'
 
-export default function Index({ prisonerService, prisonerSearchService }: Services): Router {
+export default function Index({ prisonerService, prisonerSearchService, adjustmentsService }: Services): Router {
   const router = Router()
   const get = (path: string | string[], handler: RequestHandler) =>
     router.get(path, getPrisoner(prisonerSearchService), asyncMiddleware(handler))
@@ -18,7 +18,7 @@ export default function Index({ prisonerService, prisonerSearchService }: Servic
 
   get('/:prisonerNumber/adjustments', new AdjustmentsRoutes().GET)
   get('/:prisonerNumber/court-cases', new CourtCasesRoutes().GET)
-  get('/:prisonerNumber/overview', new OverviewRoutes(prisonerService).GET)
+  get('/:prisonerNumber/overview', new OverviewRoutes(prisonerService, adjustmentsService).GET)
   get('/:prisonerNumber/release-dates', new ReleaseDatesRoutes().GET)
   get('/:prisonerNumber/documents', new DocumentsRoutes().GET)
 

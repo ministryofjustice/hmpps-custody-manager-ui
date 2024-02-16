@@ -20,6 +20,7 @@ generic-service:
     DOCUMENT_API_URL: "https://document-api-preprod.hmpps.service.justice.gov.uk"
     DIGITAL_PRISON_SERVICES_URL: "https://digital-preprod.prison.service.justice.gov.uk"
     ENVIRONMENT_NAME: PRE-PRODUCTION
+    ADJUSTMENTS_UI_URL: "https://adjust-release-dates-preprod.hmpps.service.justice.gov.uk"
 
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service-dev

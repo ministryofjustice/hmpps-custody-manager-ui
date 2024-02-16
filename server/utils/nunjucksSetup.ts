@@ -2,7 +2,12 @@
 import path from 'path'
 import nunjucks from 'nunjucks'
 import express from 'express'
-import { personProfileName, personDateOfBirth, personStatus } from 'hmpps-design-system-frontend/hmpps/utils/utils'
+import {
+  personProfileName,
+  personDateOfBirth,
+  personStatus,
+  firstNameSpaceLastName,
+} from 'hmpps-design-system-frontend/hmpps/utils/utils'
 import dayjs from 'dayjs'
 import { initialiseName } from './utils'
 import { ApplicationInfo } from '../applicationInfo'
@@ -18,6 +23,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   app.locals.environmentName = config.environmentName
   app.locals.environmentNameColour = config.environmentName === 'PRE-PRODUCTION' ? 'govuk-tag--green' : ''
   app.locals.digitalPrisonServicesUrl = config.digitalPrisonServicesUrl
+  app.locals.adjustmentsUIUrl = config.adjustmentsUIUrl
 
   if (config.environmentName === 'LOCAL') {
     app.locals.environment = 'local'
@@ -63,4 +69,5 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   njkEnv.addFilter('personStatus', personStatus)
   njkEnv.addFilter('date', date => dayjs(date).format('DD MMMM YYYY'))
   njkEnv.addFilter('dateTime', date => `${dayjs(date).format('dddd, DD MMMM YYYY')} at ${dayjs(date).format('HH:mm')}`)
+  njkEnv.addFilter('firstNameSpaceLastName', firstNameSpaceLastName)
 }

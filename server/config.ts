@@ -118,8 +118,17 @@ export default {
       },
       agent: new AgentConfig(Number(get('DOCUMENT_API_TIMEOUT_RESPONSE', 10000))),
     },
+    adjustmentsApi: {
+      url: get('ADJUSTMENTS_API_URL', 'http://localhost:8080', requiredInProduction),
+      timeout: {
+        response: get('ADJUSTMENTS_API_TIMEOUT_RESPONSE', 10000),
+        deadline: get('ADJUSTMENTS_API_TIMEOUT_DEADLINE', 10000),
+      },
+      agent: new AgentConfig(Number(get('ADJUSTMENTS_API_TIMEOUT_RESPONSE', 10000))),
+    },
   },
   digitalPrisonServicesUrl: get('DIGITAL_PRISON_SERVICES_URL', 'http://127.0.0.1:3000/dps', requiredInProduction),
+  adjustmentsUIUrl: get('ADJUSTMENTS_UI_URL', 'http://127.0.0.1:3000/adjustments', requiredInProduction),
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),
 }
