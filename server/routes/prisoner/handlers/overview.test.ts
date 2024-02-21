@@ -161,4 +161,32 @@ describe('Route Handlers - Overview', () => {
         expect(res.text).not.toContain('There are no active adjustments for Jane Doe')
       })
   })
+
+  it('do not include special remission or lawfully at large adjustments', () => {
+    prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
+      prisonerNumber: 'A12345B',
+      firstName: 'Jane',
+      lastName: 'Doe',
+    } as Prisoner)
+    prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
+    adjustmentsService.getAdjustments.mockResolvedValue([
+      {
+        adjustmentType: 'LAWFULLY_AT_LARGE',
+        adjustmentTypeText: 'Lawfully at large',
+        daysTotal: 5,
+      } as Adjustment,
+      {
+        adjustmentType: 'SPECIAL_REMISSION',
+        adjustmentTypeText: 'Special remission',
+        daysTotal: 10,
+      } as Adjustment,
+    ])
+    return request(app)
+      .get('/prisoner/A12345B/overview')
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).toContain('<h3 class="govuk-heading-m">Adjustments</h3>')
+        expect(res.text).toContain('There are no active adjustments for Jane Doe')
+      })
+  })
 })
