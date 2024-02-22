@@ -130,23 +130,23 @@ describe('Route Handlers - Overview', () => {
     adjustmentsService.getAdjustments.mockResolvedValue([
       {
         adjustmentTypeText: 'Remand',
-        daysTotal: 5,
+        days: 5,
       } as Adjustment,
       {
         adjustmentTypeText: 'Remand',
-        daysTotal: 10,
+        days: 10,
       } as Adjustment,
       {
         adjustmentTypeText: 'UAL',
-        daysTotal: 6,
+        days: 6,
       } as Adjustment,
       {
         adjustmentTypeText: 'RADA',
-        daysTotal: 1,
+        days: 1,
       } as Adjustment,
       {
         adjustmentTypeText: 'Tagged bail',
-        daysTotal: 0,
+        days: 0,
       } as Adjustment,
     ])
     return request(app)
@@ -173,12 +173,12 @@ describe('Route Handlers - Overview', () => {
       {
         adjustmentType: 'LAWFULLY_AT_LARGE',
         adjustmentTypeText: 'Lawfully at large',
-        daysTotal: 5,
+        days: 5,
       } as Adjustment,
       {
         adjustmentType: 'SPECIAL_REMISSION',
         adjustmentTypeText: 'Special remission',
-        daysTotal: 10,
+        days: 10,
       } as Adjustment,
     ])
     return request(app)
