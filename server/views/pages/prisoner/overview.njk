@@ -13,7 +13,7 @@
               text: adjustmentText
             },
               value: {
-              text: days + " Day" + ("s" if dayTotal != 1 else "")
+              text: days + " Day" + ("s" if days != 1 else "")
             }
     }-%}
     {% set adjustmentSummarys = (adjustmentSummarys.push(adjustmentRow), adjustmentSummarys)%}
