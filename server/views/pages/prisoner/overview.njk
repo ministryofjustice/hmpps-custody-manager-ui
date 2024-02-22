@@ -7,13 +7,13 @@
 
 {%- set adjustmentSummarys = [] -%}
 
-{% for adjustmentText, daysTotal in aggregatedAdjustments | dictsort %}
+{% for adjustmentText, days in aggregatedAdjustments | dictsort %}
   {%- set adjustmentRow= {
             key: {
               text: adjustmentText
             },
               value: {
-              text: daysTotal + " Day" + ("s" if dayTotal != 1 else "")
+              text: days + " Day" + ("s" if dayTotal != 1 else "")
             }
     }-%}
     {% set adjustmentSummarys = (adjustmentSummarys.push(adjustmentRow), adjustmentSummarys)%}

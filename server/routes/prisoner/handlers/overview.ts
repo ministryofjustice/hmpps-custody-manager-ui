@@ -19,7 +19,7 @@ export default class OverviewRoutes {
     const aggregatedAdjustments = adjustments
       .filter(adjustment => !['LAWFULLY_AT_LARGE', 'SPECIAL_REMISSION'].includes(adjustment.adjustmentType))
       .reduce((previous: { [key: string]: number }, current) => {
-        const total = (previous[current.adjustmentTypeText] ?? 0) + current.daysTotal
+        const total = (previous[current.adjustmentTypeText] ?? 0) + current.days
         let newAggregate = previous
         if (total) {
           // eslint-disable-next-line no-param-reassign
