@@ -16,15 +16,17 @@ export default class OverviewRoutes {
       this.adjustmentsService.getAdjustments(prisoner.prisonerNumber, token),
     ])
 
-    const aggregatedAdjustments = adjustments.reduce((previous: { [key: string]: number }, current) => {
-      const total = (previous[current.adjustmentTypeText] ?? 0) + current.daysTotal
-      let newAggregate = previous
-      if (total) {
-        // eslint-disable-next-line no-param-reassign
-        newAggregate = ((previous[current.adjustmentTypeText] = total), previous)
-      }
-      return newAggregate
-    }, {})
+    const aggregatedAdjustments = adjustments
+      .filter(adjustment => !['LAWFULLY_AT_LARGE', 'SPECIAL_REMISSION'].includes(adjustment.adjustmentType))
+      .reduce((previous: { [key: string]: number }, current) => {
+        const total = (previous[current.adjustmentTypeText] ?? 0) + current.daysTotal
+        let newAggregate = previous
+        if (total) {
+          // eslint-disable-next-line no-param-reassign
+          newAggregate = ((previous[current.adjustmentTypeText] = total), previous)
+        }
+        return newAggregate
+      }, {})
 
     res.render('pages/prisoner/overview', { prisoner, nextCourtEvent, aggregatedAdjustments })
   }

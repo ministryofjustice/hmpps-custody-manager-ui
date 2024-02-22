@@ -7,7 +7,7 @@
 
 {%- set adjustmentSummarys = [] -%}
 
-{% for adjustmentText, daysTotal in aggregatedAdjustments %}
+{% for adjustmentText, daysTotal in aggregatedAdjustments | dictsort %}
   {%- set adjustmentRow= {
             key: {
               text: adjustmentText
