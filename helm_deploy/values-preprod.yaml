@@ -5,10 +5,10 @@ generic-service:
   replicaCount: 2
 
   ingress:
-    host: custody-manager-preprod.hmpps.service.justice.gov.uk
+    host: court-cases-release-dates-preprod.hmpps.service.justice.gov.uk
 
   env:
-    INGRESS_URL: "https://custody-manager-preprod.hmpps.service.justice.gov.uk"
+    INGRESS_URL: "https://court-cases-release-dates-preprod.hmpps.service.justice.gov.uk"
     HMPPS_AUTH_URL: "https://sign-in-preprod.hmpps.service.justice.gov.uk/auth"
     MANAGE_USERS_API_URL: "https://manage-users-api-preprod.hmpps.service.justice.gov.uk"
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api-preprod.prison.service.justice.gov.uk"
