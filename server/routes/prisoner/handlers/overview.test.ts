@@ -7,7 +7,7 @@ import { Prisoner } from '../../../@types/prisonerSearchApi/types'
 import PrisonerSearchService from '../../../services/prisonerSearchService'
 import { CourtEventDetails } from '../../../@types/prisonApi/types'
 import AdjustmentsService from '../../../services/adjustmentsService'
-import {AdaIntercept, Adjustment} from '../../../@types/adjustmentsApi/types'
+import { AdaIntercept, Adjustment } from '../../../@types/adjustmentsApi/types'
 
 jest.mock('../../../services/prisonerService')
 jest.mock('../../../services/prisonerSearchService')
