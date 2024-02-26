@@ -7,7 +7,7 @@ import { Prisoner } from '../../../@types/prisonerSearchApi/types'
 import PrisonerSearchService from '../../../services/prisonerSearchService'
 import { CourtEventDetails } from '../../../@types/prisonApi/types'
 import AdjustmentsService from '../../../services/adjustmentsService'
-import { Adjustment } from '../../../@types/adjustmentsApi/types'
+import {AdaIntercept, Adjustment} from '../../../@types/adjustmentsApi/types'
 
 jest.mock('../../../services/prisonerService')
 jest.mock('../../../services/prisonerSearchService')
@@ -111,6 +111,7 @@ describe('Route Handlers - Overview', () => {
     } as Prisoner)
     prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
     adjustmentsService.getAdjustments.mockResolvedValue([])
+    adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
     return request(app)
       .get('/prisoner/A12345B/overview')
       .expect('Content-Type', /html/)
@@ -181,6 +182,7 @@ describe('Route Handlers - Overview', () => {
         days: 10,
       } as Adjustment,
     ])
+    adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
     return request(app)
       .get('/prisoner/A12345B/overview')
       .expect('Content-Type', /html/)

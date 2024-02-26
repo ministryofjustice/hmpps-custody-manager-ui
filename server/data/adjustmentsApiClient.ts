@@ -1,4 +1,4 @@
-import { Adjustment } from '../@types/adjustmentsApi/types'
+import { AdaIntercept, Adjustment } from '../@types/adjustmentsApi/types'
 import config, { ApiConfig } from '../config'
 import RestClient from './restClient'
 
@@ -16,5 +16,11 @@ export default class AdjustmentApiClient {
         person,
       },
     })) as unknown as Promise<Adjustment[]>
+  }
+
+  async getAdaIntercept(person: string): Promise<AdaIntercept> {
+    return (await this.restClient.get({
+      path: `/adjustments/${person}/intercept`,
+    })) as unknown as Promise<AdaIntercept>
   }
 }

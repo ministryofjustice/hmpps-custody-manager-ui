@@ -1,0 +1,28 @@
+{% macro adjustmentsIntercept(intercept, prisonerNumber) %}
+  <p class="govuk-body">
+    {{ intercept.message }}
+  </p>
+  <article class="moj-ticket-panel govuk-!-margin-bottom-4 govuk-!-margin-left-2">
+    <section class="moj-ticket-panel__content moj-ticket-panel__content--blue moj-ticket-panel__content--inline">
+
+      {% if intercept.type == 'FIRST_TIME' %}
+        <h2 class="govuk-heading-m">Review ADA adjudication{% if intercept.number > 1 %}s{% endif %}</h2>
+        <p class="govuk-body">Review and approve adjudications where additional days have been awarded.</p>
+        {% elif intercept.type == 'PADA' %}
+        <h2 class="govuk-heading-m">Review PADA{% if intercept.number > 1 %}s{% endif %}</h2>
+        <p class="govuk-body">Review and approve the PADAs that are relevant to the current sentence.</p>
+        {% elif intercept.type == 'UPDATE' %}
+        <h2 class="govuk-heading-m">Review ADA updates</h2>
+        <p class="govuk-body">Review and approve the changes that have been made to the ADAs</p>
+      {% endif %}
+
+      {% if intercept.anyProspective %}
+        {% set url = adjustmentsUIUrl + prisonerNumber + "/additional-days/review-prospective" %}
+      {% else %}
+        {% set url = adjustmentsUIUrl + prisonerNumber + "/additional-days/review-and-approve" %}
+      {% endif %}
+      <a class="govuk-link" data-qa="review-link" href="{{ url }}">Review</a>
+
+    </section>
+  </article>
+{% endmacro %}
