@@ -121,10 +121,10 @@ export default {
     adjustmentsApi: {
       url: get('ADJUSTMENTS_API_URL', 'http://localhost:8080', requiredInProduction),
       timeout: {
-        response: get('ADJUSTMENTS_API_TIMEOUT_RESPONSE', 10000),
-        deadline: get('ADJUSTMENTS_API_TIMEOUT_DEADLINE', 10000),
+        response: get('ADJUSTMENTS_API_TIMEOUT_RESPONSE', 20000),
+        deadline: get('ADJUSTMENTS_API_TIMEOUT_DEADLINE', 20000),
       },
-      agent: new AgentConfig(Number(get('ADJUSTMENTS_API_TIMEOUT_RESPONSE', 10000))),
+      agent: new AgentConfig(Number(get('ADJUSTMENTS_API_TIMEOUT_RESPONSE', 20000))),
     },
   },
   digitalPrisonServicesUrl: get('DIGITAL_PRISON_SERVICES_URL', 'http://127.0.0.1:3000/dps', requiredInProduction),

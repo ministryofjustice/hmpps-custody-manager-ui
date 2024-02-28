@@ -24,9 +24,9 @@
   <h1 class="govuk-heading-xl">Overview</h1>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-
-
-      {{ adjustmentsIntercept(adaIntercept, prisoner.prisonerNumber) }}
+      {% if intercept.type !== 'NONE' %}
+        {{ adjustmentsIntercept(adaIntercept, prisoner.prisonerNumber, adjustmentsUIUrl) }}
+      {% endif %}
       <h3 class="govuk-heading-m">Adjustments</h3>
       {% if aggregatedAdjustments | length %}
         {{ govukSummaryList({
