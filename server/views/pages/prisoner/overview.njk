@@ -1,6 +1,7 @@
 {% extends "../../partials/prisonerLayout.njk" %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "hmpps/components/legal-information/service-header/macro.njk" import serviceHeader %}
+{% from "../../partials/adjustmentsIntercept.njk" import adjustmentsIntercept %}
 
 {% set pageTitle = prisoner.prisonerNumber %}
 {% set activeSubNav = 'overview' %}
@@ -9,34 +10,36 @@
 
 {% for adjustmentText, days in aggregatedAdjustments | dictsort %}
   {%- set adjustmentRow= {
-            key: {
-              text: adjustmentText
-            },
-              value: {
-              text: days + " Day" + ("s" if days != 1 else "")
-            }
-    }-%}
-    {% set adjustmentSummarys = (adjustmentSummarys.push(adjustmentRow), adjustmentSummarys)%}
+    key: {
+      text: adjustmentText
+    },
+    value: {
+      text: days + " Day" + ("s" if days != 1 else "")
+    }
+  } -%}
+  {% set adjustmentSummarys = (adjustmentSummarys.push(adjustmentRow), adjustmentSummarys) %}
 {% endfor %}
 {% block content %}
 
   <h1 class="govuk-heading-xl">Overview</h1>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-
+      {% if intercept.type !== 'NONE' %}
+        {{ adjustmentsIntercept(adaIntercept, prisoner.prisonerNumber, adjustmentsUIUrl) }}
+      {% endif %}
       <h3 class="govuk-heading-m">Adjustments</h3>
       {% if aggregatedAdjustments | length %}
         {{ govukSummaryList({
           rows: adjustmentSummarys,
           classes: "govuk-!-margin-bottom-2"
-        })}}
+        }) }}
       {% else %}
         <p class="govuk-body govuk-!-margin-bottom-2">There are no active adjustments for {{ prisoner | firstNameSpaceLastName }}</p>
       {% endif %}
 
       <p class="govuk-body govuk-!-margin-top-6">
 
-        <a href="{{adjustmentsUIUrl}}/{{prisoner.prisonerNumber}}">View all adjustments</a>
+        <a href="{{ adjustmentsUIUrl }}/{{ prisoner.prisonerNumber }}">View all adjustments</a>
 
       </p>
 
