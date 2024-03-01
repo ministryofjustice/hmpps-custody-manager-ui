@@ -209,6 +209,7 @@ describe('Route Handlers - Overview', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           expect(res.text).toContain('Review ADA updates')
+          expect(res.text).toContain('review-link')
         })
     })
 
@@ -228,6 +229,7 @@ describe('Route Handlers - Overview', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           expect(res.text).toContain('Review ADA adjudication')
+          expect(res.text).toContain('review-link')
         })
     })
 
@@ -247,6 +249,7 @@ describe('Route Handlers - Overview', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           expect(res.text).toContain('Review PADA')
+          expect(res.text).toContain('review-link')
         })
     })
 
@@ -268,6 +271,7 @@ describe('Route Handlers - Overview', () => {
           expect(res.text).not.toContain('Review ADA updates')
           expect(res.text).not.toContain('Review ADA adjudication')
           expect(res.text).not.toContain('Review PADA')
+          expect(res.text).not.toContain('review-link')
         })
     })
   })
