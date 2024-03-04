@@ -11,9 +11,10 @@ export default class OverviewRoutes {
   GET = async (req: Request, res: Response): Promise<void> => {
     const { prisoner } = req
     const { token } = res.locals.user
-    const [nextCourtEvent, adjustments] = await Promise.all([
+    const [nextCourtEvent, adjustments, adaIntercept] = await Promise.all([
       this.prisonerService.getNextCourtEvent(prisoner.bookingId as unknown as number, token),
       this.adjustmentsService.getAdjustments(prisoner.prisonerNumber, token),
+      this.adjustmentsService.getAdaIntercept(prisoner.prisonerNumber, token),
     ])
 
     const aggregatedAdjustments = adjustments
@@ -28,6 +29,6 @@ export default class OverviewRoutes {
         return newAggregate
       }, {})
 
-    res.render('pages/prisoner/overview', { prisoner, nextCourtEvent, aggregatedAdjustments })
+    res.render('pages/prisoner/overview', { prisoner, nextCourtEvent, aggregatedAdjustments, adaIntercept })
   }
 }

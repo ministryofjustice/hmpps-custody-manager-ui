@@ -97,6 +97,10 @@ export interface paths {
   '/queue-admin/get-dlq-messages/{dlqName}': {
     get: operations['getDlqMessages']
   }
+  '/adjustments/{person}/intercept': {
+    /** Determine if there needs to be an adjustment-interception for this person */
+    get: operations['determineAdaIntercept']
+  }
 }
 
 export type webhooks = Record<string, never>
@@ -105,7 +109,7 @@ export interface components {
   schemas: {
     DlqMessage: {
       body: {
-        [key: string]: Record<string, never> | undefined
+        [key: string]: Record<string, never>
       }
       messageId: string
     }
@@ -250,12 +254,6 @@ export interface components {
        * @description The number of days effective in a calculation. (for example remand minus any unused deductions)
        */
       effectiveDays?: number
-      /**
-       * Format: int32
-       * @deprecated
-       * @description The total number of adjustment days
-       */
-      days?: number
     }
     /** @description The details of remand adjustment */
     RemandDto: {
@@ -337,6 +335,15 @@ export interface components {
       messagesReturnedCount: number
       messages: components['schemas']['DlqMessage'][]
     }
+    AdaIntercept: {
+      /** @enum {string} */
+      type: 'NONE' | 'FIRST_TIME' | 'UPDATE' | 'PADA'
+      /** Format: int32 */
+      number: number
+      anyProspective: boolean
+      messageArguments: string[]
+      message?: string
+    }
   }
   responses: never
   parameters: never
@@ -344,6 +351,8 @@ export interface components {
   headers: never
   pathItems: never
 }
+
+export type $defs = Record<string, never>
 
 export type external = Record<string, never>
 
@@ -438,11 +447,17 @@ export interface operations {
     }
     responses: {
       /** @description Adjustment update */
-      200: never
+      200: {
+        content: never
+      }
       /** @description Unauthorised, requires a valid Oauth2 token */
-      401: never
+      401: {
+        content: never
+      }
       /** @description Adjustment not found */
-      404: never
+      404: {
+        content: never
+      }
     }
   }
   /**
@@ -458,11 +473,17 @@ export interface operations {
     }
     responses: {
       /** @description Adjustment deleted */
-      200: never
+      200: {
+        content: never
+      }
       /** @description Unauthorised, requires a valid Oauth2 token */
-      401: never
+      401: {
+        content: never
+      }
       /** @description Adjustment not found */
-      404: never
+      404: {
+        content: never
+      }
     }
   }
   /**
@@ -515,11 +536,17 @@ export interface operations {
     }
     responses: {
       /** @description Adjustment update */
-      200: never
+      200: {
+        content: never
+      }
       /** @description Unauthorised, requires a valid Oauth2 token */
-      401: never
+      401: {
+        content: never
+      }
       /** @description Adjustment not found */
-      404: never
+      404: {
+        content: never
+      }
     }
   }
   /**
@@ -535,11 +562,17 @@ export interface operations {
     }
     responses: {
       /** @description Adjustment deleted */
-      200: never
+      200: {
+        content: never
+      }
       /** @description Unauthorised, requires a valid Oauth2 token */
-      401: never
+      401: {
+        content: never
+      }
       /** @description Adjustment not found */
-      404: never
+      404: {
+        content: never
+      }
     }
   }
   /**
@@ -671,11 +704,17 @@ export interface operations {
     }
     responses: {
       /** @description Adjustment update */
-      200: never
+      200: {
+        content: never
+      }
       /** @description Unauthorised, requires a valid Oauth2 token */
-      401: never
+      401: {
+        content: never
+      }
       /** @description Adjustment not found */
-      404: never
+      404: {
+        content: never
+      }
     }
   }
   /**
@@ -715,11 +754,17 @@ export interface operations {
     }
     responses: {
       /** @description Adjustment restored */
-      200: never
+      200: {
+        content: never
+      }
       /** @description Unauthorised, requires a valid Oauth2 token */
-      401: never
+      401: {
+        content: never
+      }
       /** @description Adjustment not found */
-      404: never
+      404: {
+        content: never
+      }
     }
   }
   getDlqMessages: {
@@ -736,6 +781,38 @@ export interface operations {
       200: {
         content: {
           '*/*': components['schemas']['GetDlqResult']
+        }
+      }
+    }
+  }
+  /** Determine if there needs to be an adjustment-interception for this person */
+  determineAdaIntercept: {
+    parameters: {
+      path: {
+        /**
+         * @description The noms ID of the person
+         * @example AA1256A
+         */
+        person: string
+      }
+    }
+    responses: {
+      /** @description Intercept decision returned */
+      200: {
+        content: {
+          'application/json': components['schemas']['AdaIntercept']
+        }
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        content: {
+          'application/json': components['schemas']['AdaIntercept']
+        }
+      }
+      /** @description Adjustment not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['AdaIntercept']
         }
       }
     }
