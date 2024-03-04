@@ -4,6 +4,8 @@
 
 Template github repo used for new Typescript based projects.
 
+This project is undergoing a name change. The new name is court-cases-and-release-dates. The GITHUB repo has not been changed yet but will be changed in the future and then this README will be updated accordingly.
+
 # Instructions
 
 If this is a HMPPS project then the project will be created as part of bootstrapping - 
