@@ -4,7 +4,6 @@
 generic-service:
   ingress:
     host: court-cases-release-dates.hmpps.service.justice.gov.uk
-    tlsSecretName: hmpps-court-cases-release-dates-preprod-cert
 
   env:
     INGRESS_URL: "https://court-cases-release-dates.hmpps.service.justice.gov.uk"
