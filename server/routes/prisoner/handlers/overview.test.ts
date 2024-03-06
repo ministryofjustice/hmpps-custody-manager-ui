@@ -103,6 +103,21 @@ describe('Route Handlers - Overview', () => {
       })
   })
 
+  it('should render sub nav', () => {
+    prisonerSearchService.getByPrisonerNumber.mockResolvedValue({ prisonerNumber: 'A12345B' } as Prisoner)
+    prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
+    adjustmentsService.getAdjustments.mockResolvedValue([])
+
+    return request(app)
+      .get('/prisoner/A12345B/overview')
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).toContain('Overview')
+        expect(res.text).toContain('Adjustments')
+        expect(res.text).toContain('Calculations and release dates')
+      })
+  })
+
   it('should render adjustments section correctly if no adjustments', () => {
     prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
       prisonerNumber: 'A12345B',

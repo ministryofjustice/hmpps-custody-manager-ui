@@ -12,7 +12,13 @@
             {% endblock %}
 
             {% set navigation = {
-                activeSubNav: activeSubNav
+                activeSubNav: activeSubNav,
+                courtCases: {
+                    enabled: false
+                },
+                documents: {
+                    enabled: false
+                }
             } %}
 
             {% block subNavigation %}
