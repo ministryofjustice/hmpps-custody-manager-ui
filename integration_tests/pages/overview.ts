@@ -1,8 +1,8 @@
 import Page, { PageElement } from './page'
 
-export default class IndexPage extends Page {
+export default class OverviewPage extends Page {
   constructor() {
-    super('Search for a prisoner to view their court cases, adjustments and release dates')
+    super('Overview')
   }
 
   headerUserName = (): PageElement => cy.get('[data-qa=header-user-name]')
