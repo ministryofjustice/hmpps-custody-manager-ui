@@ -9,6 +9,9 @@ context('Sign In', () => {
     cy.task('stubSignIn')
     cy.task('stubManageUser')
     cy.task('stubGetPrisonerDetails')
+    cy.task('stubGetNextCourtEvent')
+    cy.task('stubGetAdjustments')
+    cy.task('stubGetIntercept')
   })
 
   it('Unauthenticated user directed to auth', () => {
@@ -56,7 +59,7 @@ context('Sign In', () => {
     cy.task('stubVerifyToken', false)
 
     // can't do a visit here as cypress requires only one domain
-    cy.request('/').its('body').should('contain', 'Sign in')
+    cy.request('/prisoner/A1234AB/overview').its('body').should('contain', 'Sign in')
   })
 
   it('Token verification failure clears user session', () => {
@@ -65,7 +68,7 @@ context('Sign In', () => {
     cy.task('stubVerifyToken', false)
 
     // can't do a visit here as cypress requires only one domain
-    cy.request('/').its('body').should('contain', 'Sign in')
+    cy.request('/prisoner/A1234AB/overview').its('body').should('contain', 'Sign in')
 
     cy.task('stubVerifyToken', true)
     cy.task('stubManageUser', 'bobby brown')
