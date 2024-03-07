@@ -1,0 +1,73 @@
+import { SuperAgentRequest } from 'superagent'
+import { stubFor } from './wiremock'
+
+export default {
+  stubGetAdjustments: (): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        urlPath: '/adjustments-api/adjustments',
+        queryParameters: {
+          person: {
+            equalTo: 'A1234AB',
+          },
+        },
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: [
+          {
+            id: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+            bookingId: 0,
+            person: 'string',
+            adjustmentType: 'REMAND',
+            toDate: '2024-03-06',
+            fromDate: '2024-03-06',
+            days: 5,
+            remand: {
+              chargeId: [0],
+            },
+            additionalDaysAwarded: {
+              adjudicationId: [0],
+              prospective: true,
+            },
+            unlawfullyAtLarge: {
+              type: 'RECALL',
+            },
+            taggedBail: {
+              caseSequence: 0,
+            },
+            sentenceSequence: 0,
+            adjustmentTypeText: 'string',
+            prisonName: 'Leeds',
+            prisonId: 'LDS',
+            lastUpdatedBy: 'string',
+            status: 'ACTIVE',
+            lastUpdatedDate: '2024-03-06T15:53:46.483Z',
+            createdDate: '2024-03-06T15:53:46.483Z',
+          },
+        ],
+      },
+    })
+  },
+  stubGetIntercept: (): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        urlPath: '/adjustments-api/adjustments/A1234AB/intercept',
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {
+          type: 'NONE',
+          number: 0,
+          anyProspective: true,
+          messageArguments: ['string'],
+          message: 'string',
+        },
+      },
+    })
+  },
+}
