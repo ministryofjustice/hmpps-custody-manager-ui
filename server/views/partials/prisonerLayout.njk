@@ -3,24 +3,23 @@
 {% from "hmpps/components/mini-profile/macro.njk" import miniProfile %}
 {% from "hmpps/components/court-cases-release-dates/sub-navigation/macro.njk" import subNavigation %}
 
-{% block main %}
-    <div class="govuk-width-container {{ containerClasses }}">
-        {% block beforeContent %}{% endblock %}
-        <main class="govuk-main-wrapper app-container govuk-body {{ mainClasses }}" id="main-content" role="main"{% if mainLang %} lang="{{ mainLang }}"{% endif %}>
-            {% block banner %}
-                {% set person = {
-                    firstName: prisoner.firstName,
-                    lastName: prisoner.lastName,
-                    prisonerNumber: prisoner.prisonerNumber,
-                    dateOfBirth: prisoner.dateOfBirth,
-                    status: prisoner.imprisonmentStatusDescription,
-                    prisonName: prisoner.prisonName,
-                    cellLocation: prisoner.cellLocation
-                } %}
-                {{ miniProfile(person, '/prisoner/' + prisoner.prisonerNumber + '/image', digitalPrisonServicesUrl + '/prisoner/' + prisoner.prisonerNumber) }}
-            {% endblock %}
-
-            {% set navigation = {
+{% block beforeContent %}
+    <aside role="complementary">
+        {% block banner %}
+            {% set person = {
+                firstName: prisoner.firstName,
+                lastName: prisoner.lastName,
+                prisonerNumber: prisoner.prisonerNumber,
+                dateOfBirth: prisoner.dateOfBirth,
+                status: prisoner.imprisonmentStatusDescription,
+                prisonName: prisoner.prisonName,
+                cellLocation: prisoner.cellLocation
+            } %}
+            {{ miniProfile(person, '/prisoner/' + prisoner.prisonerNumber + '/image', digitalPrisonServicesUrl + '/prisoner/' + prisoner.prisonerNumber) }}
+        {% endblock %}
+    </aside>
+    {% block subNavigation %}
+        {% set navigation = {
                 activeSubNav: activeSubNav,
                 courtCases: {
                     enabled: false
@@ -29,12 +28,6 @@
                     enabled: false
                 }
             } %}
-
-            {% block subNavigation %}
-                {{ subNavigation(environment, navigation, prisoner.prisonerNumber) }}
-            {% endblock %}
-
-            {% block content %}{% endblock %}
-        </main>
-    </div>
+        {{ subNavigation(environment, navigation, prisoner.prisonerNumber) }}
+    {% endblock %}
 {% endblock %}
