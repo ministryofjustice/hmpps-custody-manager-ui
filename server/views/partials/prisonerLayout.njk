@@ -8,7 +8,16 @@
         {% block beforeContent %}{% endblock %}
         <main class="govuk-main-wrapper app-container govuk-body {{ mainClasses }}" id="main-content" role="main"{% if mainLang %} lang="{{ mainLang }}"{% endif %}>
             {% block banner %}
-                {{ miniProfile(prisoner, '/prisoner/' + prisoner.prisonerNumber + '/image', digitalPrisonServicesUrl + '/prisoner/' + prisoner.prisonerNumber) }}
+                {% set person = {
+                    firstName: prisoner.firstName,
+                    lastName: prisoner.lastName,
+                    prisonerNumber: prisoner.prisonerNumber,
+                    dateOfBirth: prisoner.dateOfBirth,
+                    status: prisoner.imprisonmentStatusDescription,
+                    prisonName: prisoner.prisonName,
+                    cellLocation: prisoner.cellLocation
+                } %}
+                {{ miniProfile(person, '/prisoner/' + prisoner.prisonerNumber + '/image', digitalPrisonServicesUrl + '/prisoner/' + prisoner.prisonerNumber) }}
             {% endblock %}
 
             {% set navigation = {
