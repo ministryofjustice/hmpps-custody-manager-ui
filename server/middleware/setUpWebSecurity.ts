@@ -19,6 +19,7 @@ export default function setUpWebSecurity(): Router {
   const fontSrc = ["'self'"]
   const imgSrc = ["'self'", 'data:']
   const formAction = [`'self' ${config.apis.hmppsAuth.externalUrl} ${config.digitalPrisonServicesUrl}`]
+  const connectSrc = ["'self' https://northeurope-0.in.applicationinsights.azure.com"]
 
   if (config.apis.frontendComponents.enabled) {
     scriptSrc.push(config.apis.frontendComponents.url)
@@ -37,6 +38,7 @@ export default function setUpWebSecurity(): Router {
           fontSrc,
           imgSrc,
           formAction,
+          connectSrc,
         },
       },
       crossOriginEmbedderPolicy: true,

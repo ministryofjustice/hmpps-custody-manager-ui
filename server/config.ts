@@ -132,4 +132,5 @@ export default {
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),
   calculateReleaseDatesUiUrl: get('CALCULATE_RELEASE_DATES_UI_URL', 'http://127.0.0.1:3000/crds', requiredInProduction),
+  appInsightsConnectionString: get('APPLICATIONINSIGHTS_CONNECTION_STRING', '', requiredInProduction),
 }
