@@ -2,12 +2,13 @@ import { Express } from 'express'
 
 import request from 'supertest'
 import PrisonerService from '../../../services/prisonerService'
-import { appWithAllRoutes } from '../../testutils/appSetup'
+import { appWithAllRoutes, user } from '../../testutils/appSetup'
 import { Prisoner } from '../../../@types/prisonerSearchApi/types'
 import PrisonerSearchService from '../../../services/prisonerSearchService'
 import { CourtEventDetails } from '../../../@types/prisonApi/types'
 import AdjustmentsService from '../../../services/adjustmentsService'
 import { AdaIntercept, Adjustment } from '../../../@types/adjustmentsApi/types'
+import config from '../../../config'
 
 jest.mock('../../../services/prisonerService')
 jest.mock('../../../services/prisonerSearchService')
@@ -25,6 +26,9 @@ beforeEach(() => {
       prisonerService,
       prisonerSearchService,
       adjustmentsService,
+    },
+    userSupplier: () => {
+      return { ...user, hasAdjustmentsAccess: true }
     },
   })
 })
@@ -311,6 +315,29 @@ describe('Route Handlers - Overview', () => {
           expect(res.text).not.toContain('Review PADA')
           expect(res.text).not.toContain('review-link')
         })
+    })
+  })
+
+  describe('Authorisation tests', () => {
+    it('must redirect when user does not have access to adjustments', () => {
+      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
+        prisonerNumber: 'A12345B',
+        imprisonmentStatusDescription: 'Life imprisonment',
+      } as Prisoner)
+      app = appWithAllRoutes({
+        services: {
+          prisonerService,
+          prisonerSearchService,
+          adjustmentsService,
+        },
+        userSupplier: () => {
+          return { ...user, hasAdjustmentsAccess: false }
+        },
+      })
+      return request(app)
+        .get('/prisoner/A12345B/overview')
+        .expect(302)
+        .expect('Location', `${config.calculateReleaseDatesUiUrl}?prisonId=A12345B`)
     })
   })
 })
