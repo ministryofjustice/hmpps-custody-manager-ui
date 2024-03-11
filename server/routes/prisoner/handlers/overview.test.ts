@@ -51,7 +51,7 @@ describe('Route Handlers - Overview', () => {
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
         .expect(res => {
-          expect(res.text).toContain('data-qa="mini-profile-prisoner-number">A12345B</li>')
+          expect(res.text).toContain('data-qa="mini-profile-prisoner-number">A12345B')
           expect(res.text).toContain('mini-profile-status">Life imprisonment<')
         })
     })
