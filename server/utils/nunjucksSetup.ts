@@ -24,6 +24,9 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   app.locals.environmentNameColour = config.environmentName === 'PRE-PRODUCTION' ? 'govuk-tag--green' : ''
   app.locals.digitalPrisonServicesUrl = config.digitalPrisonServicesUrl
   app.locals.adjustmentsUIUrl = config.adjustmentsUIUrl
+  app.locals.appInsightsConnectionString = config.appInsightsConnectionString
+  app.locals.appInsightsApplicationName = applicationInfo.applicationName
+  app.locals.buildNumber = config.buildNumber
 
   if (config.environmentName === 'LOCAL') {
     app.locals.environment = 'local'
