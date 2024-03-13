@@ -1,5 +1,6 @@
 {% extends "govuk/template.njk" %}
 {% from "hmpps/components/court-cases-release-dates/service-header/macro.njk" import serviceHeader %}
+{% from "hmpps/components/court-cases-release-dates/footer/macro.njk" import footer %}
 
 {% block head %}
   <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
@@ -65,11 +66,7 @@
 {% endblock %}
 
 {% block footer %}
-  {% if feComponents.footer %}
-    {{ feComponents.footer | safe }}
-  {% else %}
-    {{ super() }}
-  {% endif %}
+  {{ footer({environment: environment}) }}
 {% endblock %}
 
 {% block bodyEnd %}
