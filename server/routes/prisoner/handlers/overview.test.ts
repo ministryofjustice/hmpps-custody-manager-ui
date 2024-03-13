@@ -250,8 +250,8 @@ describe('Route Handlers - Overview', () => {
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
         .expect(res => {
-          expect(res.text).toContain('Review ADA updates')
-          expect(res.text).toContain('review-link')
+          expect(res.text).toContain('Before you continue, you must')
+          expect(res.text).toContain('review the updated ADA information')
         })
     })
 
@@ -270,8 +270,8 @@ describe('Route Handlers - Overview', () => {
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
         .expect(res => {
-          expect(res.text).toContain('Review ADA adjudication')
-          expect(res.text).toContain('review-link')
+          expect(res.text).toContain('Before you continue, you must')
+          expect(res.text).toContain('review existing ADA information')
         })
     })
 
@@ -290,8 +290,8 @@ describe('Route Handlers - Overview', () => {
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
         .expect(res => {
-          expect(res.text).toContain('Review PADA')
-          expect(res.text).toContain('review-link')
+          expect(res.text).toContain('Before you continue, you must')
+          expect(res.text).toContain('review prospective ADA information')
         })
     })
 
@@ -310,10 +310,9 @@ describe('Route Handlers - Overview', () => {
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
         .expect(res => {
-          expect(res.text).not.toContain('Review ADA updates')
-          expect(res.text).not.toContain('Review ADA adjudication')
-          expect(res.text).not.toContain('Review PADA')
-          expect(res.text).not.toContain('review-link')
+          expect(res.text).not.toContain('review the updated ADA information')
+          expect(res.text).not.toContain('review existing ADA information')
+          expect(res.text).not.toContain('review prospective ADA information')
         })
     })
   })
