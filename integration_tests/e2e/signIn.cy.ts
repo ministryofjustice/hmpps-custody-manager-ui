@@ -10,6 +10,7 @@ context('Sign In', () => {
     cy.task('stubManageUser')
     cy.task('stubGetPrisonerDetails')
     cy.task('stubGetNextCourtEvent')
+    cy.task('stubGetActiveCaseCount')
     cy.task('stubGetAdjustments')
     cy.task('stubGetIntercept')
   })

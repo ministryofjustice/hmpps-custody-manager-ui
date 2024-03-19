@@ -159,6 +159,7 @@ describe('Route Handlers - Overview', () => {
         .expect(res => {
           expect(res.text).toContain('<h2 class="govuk-heading-l">Adjustments</h2>')
           expect(res.text).toContain('There are no active adjustments for Jane Doe')
+          expect(res.text).toContain('<h1 class="govuk-heading-xl">Overview</h1>')
         })
     })
 
@@ -346,6 +347,44 @@ describe('Route Handlers - Overview', () => {
         .get('/prisoner/A12345B/overview')
         .expect(302)
         .expect('Location', `${config.calculateReleaseDatesUiUrl}?prisonId=A12345B`)
+    })
+  })
+
+  describe('Number of active court cases tests', () => {
+    it('Zero active cases shows error page', () => {
+      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
+        prisonerNumber: 'A12345B',
+        firstName: 'Jane',
+        lastName: 'Doe',
+      } as Prisoner)
+      prisonerService.getActiveCourtCaseCount.mockResolvedValue(0)
+
+      return request(app)
+        .get('/prisoner/A12345B/overview')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          expect(res.text).toContain('<h1 class="govuk-heading-xl">There is a problem</h1>')
+          expect(res.text).not.toContain('<h1 class="govuk-heading-xl">Overview</h1>')
+        })
+    })
+
+    it('If there are active cases then error page is not shown', () => {
+      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
+        prisonerNumber: 'A12345B',
+        firstName: 'Jane',
+        lastName: 'Doe',
+      } as Prisoner)
+      prisonerService.getActiveCourtCaseCount.mockResolvedValue(1)
+      prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
+      adjustmentsService.getAdjustments.mockResolvedValue([])
+
+      return request(app)
+        .get('/prisoner/A12345B/overview')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          expect(res.text).not.toContain('<h1 class="govuk-heading-xl">There is a problem</h1>')
+          expect(res.text).toContain('<h1 class="govuk-heading-xl">Overview</h1>')
+        })
     })
   })
 })

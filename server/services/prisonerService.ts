@@ -14,6 +14,10 @@ export default class PrisonerService {
     return new PrisonApiClient(token).getNextCourtEvent(bookingId)
   }
 
+  async getActiveCourtCaseCount(bookingId: number, token: string): Promise<number> {
+    return new PrisonApiClient(token).getActiveCourtCaseCount(bookingId)
+  }
+
   private async getSystemClientToken(username: string): Promise<string> {
     return this.hmppsAuthClient.getSystemClientToken(username)
   }

@@ -19,4 +19,8 @@ export default class PrisonApiClient {
   async getNextCourtEvent(bookingId: number): Promise<CourtEventDetails> {
     return (await this.restClient.get({ path: `/api/court/${bookingId}/next-court-event` })) as CourtEventDetails
   }
+
+  async getActiveCourtCaseCount(bookingId: number): Promise<number> {
+    return (await this.restClient.get({ path: `/api/court/${bookingId}/count-active-cases` })) as number
+  }
 }

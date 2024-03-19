@@ -1,0 +1,14 @@
+{% extends "../../partials/layoutWithoutSubNav.njk" %}
+{% from "hmpps/components/court-cases-release-dates/service-header/macro.njk" import serviceHeader %}
+
+{% set pageTitle = 'No court cases' %}
+
+{% block content %}
+  <h1 class="govuk-heading-xl">There is a problem</h1>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <p class="govuk-body">There are no court cases recorded for {{ prisoner | personProfileName }}.</p>
+      <p class="gouk-body">Check the details in NOMIS and then <a class="govuk-link" href="/prisoner/{{ prisoner.prisonerNumber }}/overview">try again</a>.</p>
+    </div>
+  </div>
+{% endblock %}

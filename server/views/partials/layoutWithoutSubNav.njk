@@ -1,0 +1,21 @@
+{% extends "./layout.njk" %}
+
+{% from "hmpps/components/mini-profile/macro.njk" import miniProfile %}
+{% from "hmpps/components/court-cases-release-dates/sub-navigation/macro.njk" import subNavigation %}
+
+{% block beforeContent %}
+    <aside role="complementary">
+        {% block banner %}
+            {% set person = {
+                firstName: prisoner.firstName,
+                lastName: prisoner.lastName,
+                prisonerNumber: prisoner.prisonerNumber,
+                dateOfBirth: prisoner.dateOfBirth,
+                status: prisoner.imprisonmentStatusDescription,
+                prisonName: prisoner.prisonName,
+                cellLocation: prisoner.cellLocation
+            } %}
+            {{ miniProfile(person, '/prisoner/' + prisoner.prisonerNumber + '/image', digitalPrisonServicesUrl + '/prisoner/' + prisoner.prisonerNumber) }}
+        {% endblock %}
+    </aside>
+{% endblock %}

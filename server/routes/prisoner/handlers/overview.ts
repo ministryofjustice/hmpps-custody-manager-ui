@@ -12,6 +12,14 @@ export default class OverviewRoutes {
   GET = async (req: Request, res: Response): Promise<void> => {
     const { prisoner } = req
     const { token } = res.locals.user
+    const activeCourtCaseCount = await this.prisonerService.getActiveCourtCaseCount(
+      prisoner.bookingId as unknown as number,
+      token,
+    )
+    if (activeCourtCaseCount === 0) {
+      return res.render('pages/prisoner/noCourtCases', { prisoner })
+    }
+
     if (res.locals.user.hasAdjustmentsAccess === true) {
       const [nextCourtEvent, adjustments, adaIntercept] = await Promise.all([
         this.prisonerService.getNextCourtEvent(prisoner.bookingId as unknown as number, token),
