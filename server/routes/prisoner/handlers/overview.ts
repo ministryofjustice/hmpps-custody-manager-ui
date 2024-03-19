@@ -21,15 +21,19 @@ export default class OverviewRoutes {
 
       const aggregatedAdjustments = adjustments
         .filter(adjustment => !['LAWFULLY_AT_LARGE', 'SPECIAL_REMISSION'].includes(adjustment.adjustmentType))
-        .reduce((previous: { [key: string]: number }, current) => {
-          const total = (previous[current.adjustmentTypeText] ?? 0) + current.days
-          let newAggregate = previous
-          if (total) {
-            // eslint-disable-next-line no-param-reassign
-            newAggregate = ((previous[current.adjustmentTypeText] = total), previous)
-          }
-          return newAggregate
-        }, {})
+        .reduce(
+          (previous: { [arithmeticKey: string]: { [typeKey: string]: number } }, current) => {
+            const total = (previous[current.adjustmentArithmeticType][current.adjustmentTypeText] ?? 0) + current.days
+            let newAggregate = previous
+            if (total) {
+              newAggregate =
+                // eslint-disable-next-line no-param-reassign
+                ((previous[current.adjustmentArithmeticType][current.adjustmentTypeText] = total), previous)
+            }
+            return newAggregate
+          },
+          { ADDITION: {}, DEDUCTION: {} },
+        )
 
       return res.render('pages/prisoner/overview', { prisoner, nextCourtEvent, aggregatedAdjustments, adaIntercept })
     }
