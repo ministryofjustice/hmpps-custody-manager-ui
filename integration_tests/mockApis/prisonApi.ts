@@ -2,8 +2,8 @@ import { SuperAgentRequest } from 'superagent'
 import { stubFor } from './wiremock'
 
 export default {
-  stubGetNextCourtEvent: (): SuperAgentRequest => {
-    return stubFor({
+  stubGetNextCourtEvent: (): SuperAgentRequest =>
+    stubFor({
       request: {
         method: 'GET',
         urlPattern: '/prison-api/api/court/1234/next-court-event',
@@ -19,6 +19,17 @@ export default {
           caseReference: 'A1473295B',
         },
       },
-    })
-  },
+    }),
+  stubGetActiveCaseCount: (): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: '/prison-api/api/court/1234/count-active-cases',
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: 1,
+      },
+    }),
 }
