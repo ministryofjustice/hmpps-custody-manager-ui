@@ -80,7 +80,7 @@ describe('Route Handlers - Overview', () => {
         .expect(res => {
           expect(res.text).toContain('Overview')
           expect(res.text).toContain('Adjustments')
-          expect(res.text).toContain('Calculations and release dates')
+          expect(res.text).toContain('Release dates and calculations')
         })
     })
   })
