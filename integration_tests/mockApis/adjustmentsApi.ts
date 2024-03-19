@@ -40,6 +40,7 @@ export default {
             },
             sentenceSequence: 0,
             adjustmentTypeText: 'string',
+            adjustmentArithmeticType: 'DEDUCTION',
             prisonName: 'Leeds',
             prisonId: 'LDS',
             lastUpdatedBy: 'string',
