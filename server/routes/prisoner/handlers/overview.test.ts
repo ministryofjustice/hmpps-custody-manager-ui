@@ -100,7 +100,7 @@ describe('Route Handlers - Overview', () => {
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
         .expect(res => {
-          expect(res.text).toContain('<h3 class="govuk-heading-m">Next court hearing</h3>')
+          expect(res.text).toContain('<h2 class="govuk-heading-l">Upcoming court hearing</h2>')
           expect(res.text).toMatch(/Case reference\s*<\/dt>\s*<dd class="govuk-summary-list__value">\s*TS0001/)
           expect(res.text).toMatch(/Location\s*<\/dt>\s*<dd class="govuk-summary-list__value">\s*The Old Bailey/)
           expect(res.text).toMatch(/Hearing type\s*<\/dt>\s*<dd class="govuk-summary-list__value">\s*Court Appearance/)
@@ -137,8 +137,8 @@ describe('Route Handlers - Overview', () => {
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
         .expect(res => {
-          expect(res.text).toContain('<h3 class="govuk-heading-m">Next court hearing</h3>')
-          expect(res.text).toContain('No upcoming court hearing.')
+          expect(res.text).toContain('<h2 class="govuk-heading-l">Upcoming court hearing</h2>')
+          expect(res.text).toContain('There are no upcoming court hearings')
         })
     })
   })
@@ -157,7 +157,7 @@ describe('Route Handlers - Overview', () => {
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
         .expect(res => {
-          expect(res.text).toContain('<h3 class="govuk-heading-m">Adjustments</h3>')
+          expect(res.text).toContain('<h2 class="govuk-heading-l">Adjustments</h2>')
           expect(res.text).toContain('There are no active adjustments for Jane Doe')
           expect(res.text).toContain('<h1 class="govuk-heading-xl">Overview</h1>')
         })
@@ -173,22 +173,27 @@ describe('Route Handlers - Overview', () => {
       adjustmentsService.getAdjustments.mockResolvedValue([
         {
           adjustmentTypeText: 'Remand',
+          adjustmentArithmeticType: 'DEDUCTION',
           days: 5,
         } as Adjustment,
         {
           adjustmentTypeText: 'Remand',
+          adjustmentArithmeticType: 'DEDUCTION',
           days: 10,
         } as Adjustment,
         {
           adjustmentTypeText: 'UAL',
+          adjustmentArithmeticType: 'ADDITION',
           days: 6,
         } as Adjustment,
         {
           adjustmentTypeText: 'RADA',
+          adjustmentArithmeticType: 'DEDUCTION',
           days: 1,
         } as Adjustment,
         {
           adjustmentTypeText: 'Tagged bail',
+          adjustmentArithmeticType: 'DEDUCTION',
           days: 0,
         } as Adjustment,
       ])
@@ -196,7 +201,9 @@ describe('Route Handlers - Overview', () => {
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
         .expect(res => {
-          expect(res.text).toContain('<h3 class="govuk-heading-m">Adjustments</h3>')
+          expect(res.text).toContain('<h2 class="govuk-heading-l">Adjustments</h2>')
+          expect(res.text).toContain('<h3 class="govuk-heading-m">Additions</h3>')
+          expect(res.text).toContain('<h3 class="govuk-heading-m">Deductions</h3>')
           expect(res.text).toMatch(/Remand\s*<\/dt>\s*<dd class="govuk-summary-list__value">\s*15 Days/)
           expect(res.text).toMatch(/UAL\s*<\/dt>\s*<dd class="govuk-summary-list__value">\s*6 Days/)
           expect(res.text).toMatch(/RADA\s*<\/dt>\s*<dd class="govuk-summary-list__value">\s*1 Day/)
@@ -216,11 +223,13 @@ describe('Route Handlers - Overview', () => {
         {
           adjustmentType: 'LAWFULLY_AT_LARGE',
           adjustmentTypeText: 'Lawfully at large',
+          adjustmentArithmeticType: 'NONE',
           days: 5,
         } as Adjustment,
         {
           adjustmentType: 'SPECIAL_REMISSION',
           adjustmentTypeText: 'Special remission',
+          adjustmentArithmeticType: 'NONE',
           days: 10,
         } as Adjustment,
       ])
@@ -229,7 +238,7 @@ describe('Route Handlers - Overview', () => {
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
         .expect(res => {
-          expect(res.text).toContain('<h3 class="govuk-heading-m">Adjustments</h3>')
+          expect(res.text).toContain('<h2 class="govuk-heading-l">Adjustments</h2>')
           expect(res.text).toContain('There are no active adjustments for Jane Doe')
         })
     })
