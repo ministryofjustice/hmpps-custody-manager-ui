@@ -18,16 +18,4 @@
             {{ miniProfile(person, '/prisoner/' + prisoner.prisonerNumber + '/image', digitalPrisonServicesUrl + '/prisoner/' + prisoner.prisonerNumber) }}
         {% endblock %}
     </aside>
-    {% block subNavigation %}
-        {% set navigation = {
-                activeSubNav: activeSubNav,
-                courtCases: {
-                    enabled: false
-                },
-                documents: {
-                    enabled: false
-                }
-            } %}
-        {{ subNavigation(environment, navigation, prisoner.prisonerNumber) }}
-    {% endblock %}
 {% endblock %}
