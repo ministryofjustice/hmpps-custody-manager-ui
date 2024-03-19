@@ -6,9 +6,9 @@
 {% set pageTitle = prisoner.prisonerNumber %}
 {% set activeSubNav = 'overview' %}
 
-{%- set adjustmentSummarys = [] -%}
+{%- set adjustmentAdditionSummarys = [] -%}
 
-{% for adjustmentText, days in aggregatedAdjustments | dictsort %}
+{% for adjustmentText, days in aggregatedAdjustments.ADDITION | dictsort %}
   {%- set adjustmentRow= {
     key: {
       text: adjustmentText
@@ -17,8 +17,23 @@
       text: days + " Day" + ("s" if days != 1 else "")
     }
   } -%}
-  {% set adjustmentSummarys = (adjustmentSummarys.push(adjustmentRow), adjustmentSummarys) %}
+  {% set adjustmentAdditionSummarys = (adjustmentAdditionSummarys.push(adjustmentRow), adjustmentAdditionSummarys) %}
 {% endfor %}
+
+{%- set adjustmentDeductionSummarys = [] -%}
+
+{% for adjustmentText, days in aggregatedAdjustments.DEDUCTION | dictsort %}
+  {%- set adjustmentRow= {
+    key: {
+      text: adjustmentText
+    },
+    value: {
+      text: days + " Day" + ("s" if days != 1 else "")
+    }
+  } -%}
+  {% set adjustmentDeductionSummarys = (adjustmentDeductionSummarys.push(adjustmentRow), adjustmentDeductionSummarys) %}
+{% endfor %}
+
 {% block content %}
 
   {% if adaIntercept.type !== 'NONE' %}
@@ -27,12 +42,27 @@
   <h1 class="govuk-heading-xl">Overview</h1>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h3 class="govuk-heading-m">Adjustments</h3>
-      {% if aggregatedAdjustments | length %}
+      <h2 class="govuk-heading-l">Adjustments</h2>
+      {% if aggregatedAdjustments.ADDITION | length or aggregatedAdjustments.DEDUCTION | length %}
+
+      {% if adjustmentAdditionSummarys | length %}
+        <h3 class="govuk-heading-m">Additions</h3>
         {{ govukSummaryList({
-          rows: adjustmentSummarys,
+          rows: adjustmentAdditionSummarys,
           classes: "govuk-!-margin-bottom-2"
         }) }}
+
+      {% endif %}
+
+      {% if adjustmentDeductionSummarys | length %}
+        <h3 class="govuk-heading-m">Deductions</h3>
+        {{ govukSummaryList({
+          rows: adjustmentDeductionSummarys,
+          classes: "govuk-!-margin-bottom-2"
+        }) }}
+
+      {% endif %}
+
       {% else %}
         <p class="govuk-body govuk-!-margin-bottom-2">There are no active adjustments for {{ prisoner | firstNameSpaceLastName }}</p>
       {% endif %}
@@ -45,10 +75,10 @@
 
       <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 
-      <h3 class="govuk-heading-m">Next court hearing</h3>
+      <h2 class="govuk-heading-l">Upcoming court hearing</h2>
 
       {% if not (nextCourtEvent | length) %}
-        <p class="govuk-body">No upcoming court hearing.</p>
+        <p class="govuk-body">There are no upcoming court hearings</p>
       {% else %}
         {{ govukSummaryList({
           rows: [

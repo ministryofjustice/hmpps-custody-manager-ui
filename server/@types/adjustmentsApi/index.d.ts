@@ -216,11 +216,6 @@ export interface components {
       unlawfullyAtLarge?: components['schemas']['UnlawfullyAtLargeDto']
       taggedBail?: components['schemas']['TaggedBailDto']
       /**
-       * @description The prison where the prisoner was located at the time the adjustment was created (a 3 character code identifying the prison)
-       * @example LDS
-       */
-      prisonId?: string
-      /**
        * Format: int32
        * @description The NOMIS sentence sequence of the adjustment
        */
@@ -228,10 +223,20 @@ export interface components {
       /** @description Human readable text for type of adjustment */
       adjustmentTypeText?: string
       /**
+       * @description Indicates whether the adjustment was an addition or deduction
+       * @enum {string}
+       */
+      adjustmentArithmeticType?: 'ADDITION' | 'DEDUCTION' | 'NONE'
+      /**
        * @description The name name of the prison where the prisoner was located at the time the adjustment was created
        * @example Leeds
        */
       prisonName?: string
+      /**
+       * @description The prison where the prisoner was located at the time the adjustment was created (a 3 character code identifying the prison)
+       * @example LDS
+       */
+      prisonId?: string
       /** @description The person last updating this adjustment */
       lastUpdatedBy?: string
       /**
