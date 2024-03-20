@@ -40,7 +40,7 @@ export default class OverviewRoutes {
             }
             return newAggregate
           },
-          { ADDITION: {}, DEDUCTION: {} },
+          { ADDITION: {}, DEDUCTION: {}, NONE: {} },
         )
 
       return res.render('pages/prisoner/overview', { prisoner, nextCourtEvent, aggregatedAdjustments, adaIntercept })
