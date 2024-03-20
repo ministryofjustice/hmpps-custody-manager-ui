@@ -195,6 +195,11 @@ describe('Route Handlers - Overview', () => {
           adjustmentArithmeticType: 'DEDUCTION',
           days: 0,
         } as Adjustment,
+        {
+          adjustmentTypeText: 'Unused deductions',
+          adjustmentArithmeticType: 'NONE',
+          days: 5,
+        } as Adjustment,
       ])
       return request(app)
         .get('/prisoner/A12345B/overview')
