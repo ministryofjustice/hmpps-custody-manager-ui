@@ -100,7 +100,7 @@ describe('Route Handlers - Overview', () => {
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
         .expect(res => {
-          expect(res.text).toContain('<h2 class="govuk-heading-l">Upcoming court hearing</h2>')
+          expect(res.text).toContain('<h2 class="govuk-heading-l">Next court hearing</h2>')
           expect(res.text).toMatch(/Case reference\s*<\/dt>\s*<dd class="govuk-summary-list__value">\s*TS0001/)
           expect(res.text).toMatch(/Location\s*<\/dt>\s*<dd class="govuk-summary-list__value">\s*The Old Bailey/)
           expect(res.text).toMatch(/Hearing type\s*<\/dt>\s*<dd class="govuk-summary-list__value">\s*Court Appearance/)
@@ -137,7 +137,7 @@ describe('Route Handlers - Overview', () => {
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
         .expect(res => {
-          expect(res.text).toContain('<h2 class="govuk-heading-l">Upcoming court hearing</h2>')
+          expect(res.text).toContain('<h2 class="govuk-heading-l">Next court hearing</h2>')
           expect(res.text).toContain('There are no upcoming court hearings')
         })
     })
