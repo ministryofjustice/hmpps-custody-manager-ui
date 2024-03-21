@@ -7,6 +7,7 @@ import {
   personDateOfBirth,
   personStatus,
   firstNameSpaceLastName,
+  hmppsFormatDate,
 } from 'hmpps-court-cases-release-dates-design/hmpps/utils/utils'
 import dayjs from 'dayjs'
 import { initialiseName } from './utils'
@@ -27,6 +28,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   app.locals.appInsightsConnectionString = config.appInsightsConnectionString
   app.locals.appInsightsApplicationName = applicationInfo.applicationName
   app.locals.buildNumber = config.buildNumber
+  app.locals.calculateReleaseDatesUIUrl = config.calculateReleaseDatesUiUrl
 
   if (config.environmentName === 'LOCAL') {
     app.locals.environment = 'local'
@@ -73,4 +75,5 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   njkEnv.addFilter('date', date => dayjs(date).format('DD MMMM YYYY'))
   njkEnv.addFilter('dateTime', date => `${dayjs(date).format('dddd, DD MMMM YYYY')} at ${dayjs(date).format('HH:mm')}`)
   njkEnv.addFilter('firstNameSpaceLastName', firstNameSpaceLastName)
+  njkEnv.addFilter('hmppsFormatDate', hmppsFormatDate)
 }
