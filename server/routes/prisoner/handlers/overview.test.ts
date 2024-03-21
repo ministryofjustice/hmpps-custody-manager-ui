@@ -9,14 +9,17 @@ import { CourtEventDetails } from '../../../@types/prisonApi/types'
 import AdjustmentsService from '../../../services/adjustmentsService'
 import { AdaIntercept, Adjustment } from '../../../@types/adjustmentsApi/types'
 import config from '../../../config'
+import CalculateReleaseDatesService from '../../../services/calculateReleaseDatesService'
 
 jest.mock('../../../services/prisonerService')
 jest.mock('../../../services/prisonerSearchService')
 jest.mock('../../../services/adjustmentsService')
+jest.mock('../../../services/calculateReleaseDatesService')
 
 const prisonerService = new PrisonerService(null) as jest.Mocked<PrisonerService>
 const prisonerSearchService = new PrisonerSearchService(null) as jest.Mocked<PrisonerSearchService>
 const adjustmentsService = new AdjustmentsService() as jest.Mocked<AdjustmentsService>
+const calculateReleaseDatesService = new CalculateReleaseDatesService() as jest.Mocked<CalculateReleaseDatesService>
 
 let app: Express
 
@@ -26,6 +29,7 @@ beforeEach(() => {
       prisonerService,
       prisonerSearchService,
       adjustmentsService,
+      calculateReleaseDatesService,
     },
     userSupplier: () => {
       return { ...user, hasAdjustmentsAccess: true }
@@ -389,6 +393,65 @@ describe('Route Handlers - Overview', () => {
         .expect(res => {
           expect(res.text).not.toContain('<h1 class="govuk-heading-xl">There is a problem</h1>')
           expect(res.text).toContain('<h1 class="govuk-heading-xl">Overview</h1>')
+        })
+    })
+  })
+
+  describe('Release dates', () => {
+    it('should render release dates section correctly when no latest calculation', () => {
+      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
+        prisonerNumber: 'A12345B',
+        firstName: 'Jane',
+        lastName: 'Doe',
+      } as Prisoner)
+      prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
+      adjustmentsService.getAdjustments.mockResolvedValue([])
+      adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
+      calculateReleaseDatesService.getLatestCalculationForPrisoner.mockResolvedValue(undefined)
+      return request(app)
+        .get('/prisoner/A12345B/overview')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          expect(res.text).toContain('<h2 class="govuk-heading-l">Release dates</h2>')
+          expect(res.text).toContain('<h1 class="govuk-heading-xl">Overview</h1>')
+          expect(res.text).not.toContain('<div class="govuk-summary-card latest-calculation-card">')
+        })
+    })
+
+    it('should render the latest calculation component when there is a latest calculation', () => {
+      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
+        prisonerNumber: 'A12345B',
+        firstName: 'Jane',
+        lastName: 'Doe',
+      } as Prisoner)
+      prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
+      adjustmentsService.getAdjustments.mockResolvedValue([])
+      adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
+      calculateReleaseDatesService.getLatestCalculationForPrisoner.mockResolvedValue({
+        calculatedAt: '2024-06-01T10:30:45',
+        establishment: 'HMP Kirkham',
+        reason: 'Transfer check',
+        source: 'CRDS',
+        dates: [
+          {
+            type: 'CRD',
+            description: 'Conditional release date',
+            date: '2034-02-19',
+            hints: [
+              {
+                text: 'Friday, 17 February 2034 when adjusted to a working day',
+              },
+            ],
+          },
+        ],
+      })
+      return request(app)
+        .get('/prisoner/A12345B/overview')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          expect(res.text).toContain('<h2 class="govuk-heading-l">Release dates</h2>')
+          expect(res.text).toContain('<h1 class="govuk-heading-xl">Overview</h1>')
+          expect(res.text).toContain('<div class="govuk-summary-card latest-calculation-card">')
         })
     })
   })

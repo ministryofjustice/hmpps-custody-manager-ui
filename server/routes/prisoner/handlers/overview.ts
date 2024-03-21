@@ -2,11 +2,13 @@ import { Request, Response } from 'express'
 import PrisonerService from '../../../services/prisonerService'
 import AdjustmentsService from '../../../services/adjustmentsService'
 import config from '../../../config'
+import CalculateReleaseDatesService from '../../../services/calculateReleaseDatesService'
 
 export default class OverviewRoutes {
   constructor(
     private readonly prisonerService: PrisonerService,
     private readonly adjustmentsService: AdjustmentsService,
+    private readonly calculateReleaseDatesService: CalculateReleaseDatesService,
   ) {}
 
   GET = async (req: Request, res: Response): Promise<void> => {
@@ -21,10 +23,11 @@ export default class OverviewRoutes {
     }
 
     if (res.locals.user.hasAdjustmentsAccess === true) {
-      const [nextCourtEvent, adjustments, adaIntercept] = await Promise.all([
+      const [nextCourtEvent, adjustments, adaIntercept, latestCalculationConfig] = await Promise.all([
         this.prisonerService.getNextCourtEvent(prisoner.bookingId as unknown as number, token),
         this.adjustmentsService.getAdjustments(prisoner.prisonerNumber, token),
         this.adjustmentsService.getAdaIntercept(prisoner.prisonerNumber, token),
+        this.calculateReleaseDatesService.getLatestCalculationForPrisoner(prisoner.prisonerNumber, token),
       ])
 
       const aggregatedAdjustments = adjustments
@@ -43,7 +46,13 @@ export default class OverviewRoutes {
           { ADDITION: {}, DEDUCTION: {}, NONE: {} },
         )
 
-      return res.render('pages/prisoner/overview', { prisoner, nextCourtEvent, aggregatedAdjustments, adaIntercept })
+      return res.render('pages/prisoner/overview', {
+        prisoner,
+        nextCourtEvent,
+        aggregatedAdjustments,
+        adaIntercept,
+        latestCalculationConfig,
+      })
     }
     return res.redirect(`${config.calculateReleaseDatesUiUrl}?prisonId=${prisoner.prisonerNumber}`)
   }

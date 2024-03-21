@@ -13,6 +13,7 @@ context('Sign In', () => {
     cy.task('stubGetActiveCaseCount')
     cy.task('stubGetAdjustments')
     cy.task('stubGetIntercept')
+    cy.task('stubGetLatestCalculation')
   })
 
   it('Unauthenticated user directed to auth', () => {

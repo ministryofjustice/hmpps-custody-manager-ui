@@ -2,6 +2,7 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "hmpps/components/court-cases-release-dates/service-header/macro.njk" import serviceHeader %}
 {% from "../../partials/adjustmentsIntercept.njk" import adjustmentsIntercept %}
+{% from "hmpps/components/court-cases-release-dates/latest-calculation-card/macro.njk" import latestCalculationCard %}
 
 {% set pageTitle = prisoner.prisonerNumber %}
 {% set activeSubNav = 'overview' %}
@@ -42,6 +43,20 @@
   <h1 class="govuk-heading-xl">Overview</h1>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+      <h2 class="govuk-heading-l">Release dates</h2>
+
+      {% if latestCalculationConfig %}
+        {{ latestCalculationCard(latestCalculationConfig) }}
+      {% endif %}
+
+      <p class="govuk-body govuk-!-margin-top-4">
+
+        <a href="{{ calculateReleaseDatesUIUrl }}?{{ prisoner.prisonerNumber }}">View all release dates</a>
+
+      </p>
+
+      <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
       <h2 class="govuk-heading-l">Adjustments</h2>
       {% if aggregatedAdjustments.ADDITION | length or aggregatedAdjustments.DEDUCTION | length %}
 
