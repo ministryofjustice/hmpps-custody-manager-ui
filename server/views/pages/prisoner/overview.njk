@@ -49,7 +49,7 @@
         <h3 class="govuk-heading-m">Additions</h3>
         {{ govukSummaryList({
           rows: adjustmentAdditionSummarys,
-          classes: "govuk-!-margin-bottom-2"
+          classes: "govuk-!-margin-bottom-7"
         }) }}
 
       {% endif %}
@@ -58,16 +58,16 @@
         <h3 class="govuk-heading-m">Deductions</h3>
         {{ govukSummaryList({
           rows: adjustmentDeductionSummarys,
-          classes: "govuk-!-margin-bottom-2"
+          classes: "govuk-!-margin-bottom-7"
         }) }}
 
       {% endif %}
 
       {% else %}
-        <p class="govuk-body govuk-!-margin-bottom-2">There are no active adjustments for {{ prisoner | firstNameSpaceLastName }}</p>
+        <p class="govuk-body govuk-!-margin-bottom-7">There are no active adjustments for {{ prisoner | firstNameSpaceLastName }}</p>
       {% endif %}
 
-      <p class="govuk-body govuk-!-margin-top-6">
+      <p class="govuk-body govuk-!-margin-top-4">
 
         <a href="{{ adjustmentsUIUrl }}/{{ prisoner.prisonerNumber }}">View all adjustments</a>
 
