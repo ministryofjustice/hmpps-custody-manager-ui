@@ -11,6 +11,13 @@ class FullPageError extends Error {
     error.status = 404
     return error
   }
+
+  static prisonerOutError(): FullPageError {
+    const error = new FullPageError('Prisoner is out')
+    error.errorKey = FullPageErrorType.PRISONER_OUT
+    error.status = 404
+    return error
+  }
 }
 
 export default FullPageError

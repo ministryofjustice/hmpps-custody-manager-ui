@@ -46,6 +46,9 @@ export default {
           {
             caseLoadId: 'MDI',
           },
+          {
+            caseLoadId: 'OUT',
+          },
         ],
       },
     }),
