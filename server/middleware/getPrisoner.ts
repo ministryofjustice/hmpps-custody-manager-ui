@@ -15,6 +15,9 @@ export default function getPrisoner(prisonerSearchService: PrisonerSearchService
         if (!user.caseloads.includes(prisoner.prisonId)) {
           throw FullPageError.notInCaseLoadError()
         }
+        if (prisoner.prisonId === 'OUT') {
+          throw FullPageError.prisonerOutError()
+        }
       } catch (error) {
         logger.error(error, `Failed to get prisoner with prisoner number: ${prisonerNumber}`)
         return next(error)
