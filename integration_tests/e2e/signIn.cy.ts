@@ -14,6 +14,7 @@ context('Sign In', () => {
     cy.task('stubGetAdjustments')
     cy.task('stubGetIntercept')
     cy.task('stubGetLatestCalculation')
+    cy.task('stubGetUserCaseload')
   })
 
   it('Unauthenticated user directed to auth', () => {

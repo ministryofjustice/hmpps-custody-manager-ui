@@ -47,6 +47,7 @@ describe('Route Handlers - Overview', () => {
       prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
         prisonerNumber: 'A12345B',
         imprisonmentStatusDescription: 'Life imprisonment',
+        prisonId: 'MDI',
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
@@ -61,7 +62,10 @@ describe('Route Handlers - Overview', () => {
     })
 
     it('should render service header', () => {
-      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({ prisonerNumber: 'A12345B' } as Prisoner)
+      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
+        prisonerNumber: 'A12345B',
+        prisonId: 'MDI',
+      } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
 
@@ -74,7 +78,10 @@ describe('Route Handlers - Overview', () => {
     })
 
     it('should render sub nav', () => {
-      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({ prisonerNumber: 'A12345B' } as Prisoner)
+      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
+        prisonerNumber: 'A12345B',
+        prisonId: 'MDI',
+      } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
 
@@ -91,7 +98,10 @@ describe('Route Handlers - Overview', () => {
 
   describe('Next Court Hearing tests', () => {
     it('should render next-court-hearing section when all details are populated', () => {
-      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({ prisonerNumber: 'A12345B' } as Prisoner)
+      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
+        prisonerNumber: 'A12345B',
+        prisonId: 'MDI',
+      } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({
         caseReference: 'TS0001',
         startTime: '2025-02-08T15:55:54',
@@ -116,7 +126,10 @@ describe('Route Handlers - Overview', () => {
     })
 
     it('should render next-court-hearing section correctly with no case reference', () => {
-      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({ prisonerNumber: 'A12345B' } as Prisoner)
+      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
+        prisonerNumber: 'A12345B',
+        prisonId: 'MDI',
+      } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({
         startTime: '2025-02-08T15:55:54',
         courtLocation: 'The Old Bailey',
@@ -133,7 +146,10 @@ describe('Route Handlers - Overview', () => {
     })
 
     it('should render next-court-hearing section correctly if no court hearing', () => {
-      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({ prisonerNumber: 'A12345B' } as Prisoner)
+      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
+        prisonerNumber: 'A12345B',
+        prisonId: 'MDI',
+      } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
 
@@ -153,6 +169,7 @@ describe('Route Handlers - Overview', () => {
         prisonerNumber: 'A12345B',
         firstName: 'Jane',
         lastName: 'Doe',
+        prisonId: 'MDI',
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
@@ -172,6 +189,7 @@ describe('Route Handlers - Overview', () => {
         prisonerNumber: 'A12345B',
         firstName: 'Jane',
         lastName: 'Doe',
+        prisonId: 'MDI',
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([
@@ -226,6 +244,7 @@ describe('Route Handlers - Overview', () => {
         prisonerNumber: 'A12345B',
         firstName: 'Jane',
         lastName: 'Doe',
+        prisonId: 'MDI',
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([
@@ -259,6 +278,7 @@ describe('Route Handlers - Overview', () => {
         prisonerNumber: 'A12345B',
         firstName: 'Jane',
         lastName: 'Doe',
+        prisonId: 'MDI',
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
@@ -279,6 +299,7 @@ describe('Route Handlers - Overview', () => {
         prisonerNumber: 'A12345B',
         firstName: 'Jane',
         lastName: 'Doe',
+        prisonId: 'MDI',
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
@@ -299,6 +320,7 @@ describe('Route Handlers - Overview', () => {
         prisonerNumber: 'A12345B',
         firstName: 'Jane',
         lastName: 'Doe',
+        prisonId: 'MDI',
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
@@ -319,6 +341,7 @@ describe('Route Handlers - Overview', () => {
         prisonerNumber: 'A12345B',
         firstName: 'Jane',
         lastName: 'Doe',
+        prisonId: 'MDI',
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
@@ -341,6 +364,7 @@ describe('Route Handlers - Overview', () => {
       prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
         prisonerNumber: 'A12345B',
         imprisonmentStatusDescription: 'Life imprisonment',
+        prisonId: 'MDI',
       } as Prisoner)
       app = appWithAllRoutes({
         services: {
@@ -365,6 +389,7 @@ describe('Route Handlers - Overview', () => {
         prisonerNumber: 'A12345B',
         firstName: 'Jane',
         lastName: 'Doe',
+        prisonId: 'MDI',
       } as Prisoner)
       prisonerService.getActiveCourtCaseCount.mockResolvedValue(0)
 
@@ -382,6 +407,7 @@ describe('Route Handlers - Overview', () => {
         prisonerNumber: 'A12345B',
         firstName: 'Jane',
         lastName: 'Doe',
+        prisonId: 'MDI',
       } as Prisoner)
       prisonerService.getActiveCourtCaseCount.mockResolvedValue(1)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
@@ -403,6 +429,7 @@ describe('Route Handlers - Overview', () => {
         prisonerNumber: 'A12345B',
         firstName: 'Jane',
         lastName: 'Doe',
+        prisonId: 'MDI',
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
@@ -423,6 +450,7 @@ describe('Route Handlers - Overview', () => {
         prisonerNumber: 'A12345B',
         firstName: 'Jane',
         lastName: 'Doe',
+        prisonId: 'MDI',
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])

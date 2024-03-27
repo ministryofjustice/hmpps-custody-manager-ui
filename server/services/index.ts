@@ -9,11 +9,11 @@ import CalculateReleaseDatesService from './calculateReleaseDatesService'
 export const services = () => {
   const { applicationInfo, hmppsAuthClient, manageUsersApiClient, feComponentsClient } = dataAccess()
 
-  const userService = new UserService(manageUsersApiClient)
-
   const feComponentsService = new FeComponentsService(feComponentsClient)
 
   const prisonerService = new PrisonerService(hmppsAuthClient)
+
+  const userService = new UserService(manageUsersApiClient, prisonerService)
 
   const prisonerSearchService = new PrisonerSearchService(hmppsAuthClient)
 
