@@ -26,6 +26,7 @@ export const user: Express.User = {
   active: true,
   activeCaseLoadId: 'MDI',
   authSource: 'NOMIS',
+  caseloads: ['MDI'],
 }
 
 export const flashProvider = jest.fn()

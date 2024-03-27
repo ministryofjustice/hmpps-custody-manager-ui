@@ -1,7 +1,7 @@
 import { Readable } from 'stream'
 import config, { ApiConfig } from '../config'
 import RestClient from './restClient'
-import { CourtEventDetails } from '../@types/prisonApi/types'
+import { CourtEventDetails, PrisonApiUserCaseloads } from '../@types/prisonApi/types'
 
 export default class PrisonApiClient {
   restClient: RestClient
@@ -22,5 +22,9 @@ export default class PrisonApiClient {
 
   async getActiveCourtCaseCount(bookingId: number): Promise<number> {
     return (await this.restClient.get({ path: `/api/court/${bookingId}/count-active-cases` })) as number
+  }
+
+  async getUsersCaseloads(): Promise<PrisonApiUserCaseloads[]> {
+    return this.restClient.get({ path: `/api/users/me/caseLoads` }) as Promise<PrisonApiUserCaseloads[]>
   }
 }
