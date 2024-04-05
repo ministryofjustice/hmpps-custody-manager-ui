@@ -7,6 +7,7 @@ import CourtCasesRoutes from './handlers/courtCases'
 import ImageRoutes from './handlers/image'
 import OverviewRoutes from './handlers/overview'
 import ReleaseDatesRoutes from './handlers/releaseDates'
+import setupUnparsedPath from '../../middleware/setupUnparsedPath'
 
 export default function Index({
   prisonerService,
@@ -16,7 +17,7 @@ export default function Index({
 }: Services): Router {
   const router = Router()
   const get = (path: string | string[], handler: RequestHandler) =>
-    router.get(path, getPrisoner(prisonerSearchService), asyncMiddleware(handler))
+    router.get(path, getPrisoner(prisonerSearchService), setupUnparsedPath(), asyncMiddleware(handler))
 
   router.get('/:prisonerNumber/image', new ImageRoutes(prisonerService).GET)
 

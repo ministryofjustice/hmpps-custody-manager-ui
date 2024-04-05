@@ -40,7 +40,7 @@
           envelope.tags["ai.cloud.role"] = "{{ appInsightsApplicationName }}"
           envelope.tags["ai.application.ver"] = "{{ buildNumber }}"
         });
-      appInsights.trackPageView();
+      appInsights.trackPageView("{{ unparsedPath }}");
     </script>
   {% endif %}
 
