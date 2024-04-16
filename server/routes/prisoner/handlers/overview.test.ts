@@ -482,5 +482,51 @@ describe('Route Handlers - Overview', () => {
           expect(res.text).toContain('<div class="govuk-summary-card latest-calculation-card">')
         })
     })
+
+    it('should render indeterminate sentences and release dates section correctly when indeterminate sentences exist', () => {
+      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
+        prisonerNumber: 'A12345B',
+        firstName: 'Jane',
+        lastName: 'Doe',
+        prisonId: 'MDI',
+      } as Prisoner)
+      prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
+      adjustmentsService.getAdjustments.mockResolvedValue([])
+      adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
+      calculateReleaseDatesService.hasIndeterminateSentences.mockResolvedValue(true)
+      return request(app)
+        .get('/prisoner/A12345B/overview')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          expect(res.text).toContain('<h2 class="govuk-heading-l">Release dates</h2>')
+          expect(res.text).toContain('<h1 class="govuk-heading-xl">Overview</h1>')
+          expect(res.text).not.toContain('<div class="govuk-summary-card latest-calculation-card">')
+          expect(res.text).toContain('This person is serving an indeterminate sentence and has no calculated dates.')
+        })
+    })
+
+    it('should render indeterminate sentences and release dates section correctly when no indeterminate sentences exist', () => {
+      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
+        prisonerNumber: 'A12345B',
+        firstName: 'Jane',
+        lastName: 'Doe',
+        prisonId: 'MDI',
+      } as Prisoner)
+      prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
+      adjustmentsService.getAdjustments.mockResolvedValue([])
+      adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
+      calculateReleaseDatesService.hasIndeterminateSentences.mockResolvedValue(false)
+      return request(app)
+        .get('/prisoner/A12345B/overview')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          expect(res.text).toContain('<h2 class="govuk-heading-l">Release dates</h2>')
+          expect(res.text).toContain('<h1 class="govuk-heading-xl">Overview</h1>')
+          expect(res.text).not.toContain('<div class="govuk-summary-card latest-calculation-card">')
+          expect(res.text).not.toContain(
+            'This person is serving an indeterminate sentence and has no calculated dates.',
+          )
+        })
+    })
   })
 })

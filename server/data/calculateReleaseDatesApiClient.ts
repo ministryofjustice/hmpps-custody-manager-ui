@@ -18,4 +18,10 @@ export default class CalculateReleaseDatesApiClient {
       path: `/calculation/${prisonerNumber}/latest`,
     }) as Promise<LatestCalculation>
   }
+
+  hasIndeterminateSentences(bookingId: number): Promise<boolean> {
+    return this.restClient.get({
+      path: `/manual-calculation/${bookingId}/has-indeterminate-sentences`,
+    }) as Promise<boolean>
+  }
 }

@@ -23,12 +23,16 @@ export default class OverviewRoutes {
     }
 
     if (res.locals.user.hasAdjustmentsAccess === true) {
-      const [nextCourtEvent, adjustments, adaIntercept, latestCalculationConfig] = await Promise.all([
+      const [nextCourtEvent, adjustments, adaIntercept, hasIndeterminateSentences] = await Promise.all([
         this.prisonerService.getNextCourtEvent(prisoner.bookingId as unknown as number, token),
         this.adjustmentsService.getAdjustments(prisoner.prisonerNumber, token),
         this.adjustmentsService.getAdaIntercept(prisoner.prisonerNumber, token),
-        this.calculateReleaseDatesService.getLatestCalculationForPrisoner(prisoner.prisonerNumber, token),
+        this.calculateReleaseDatesService.hasIndeterminateSentences(prisoner.bookingId as unknown as number, token),
       ])
+
+      const latestCalculationConfig =
+        !hasIndeterminateSentences &&
+        (await this.calculateReleaseDatesService.getLatestCalculationForPrisoner(prisoner.prisonerNumber, token))
 
       const aggregatedAdjustments = adjustments
         .filter(adjustment => !['LAWFULLY_AT_LARGE', 'SPECIAL_REMISSION'].includes(adjustment.adjustmentType))
@@ -52,6 +56,7 @@ export default class OverviewRoutes {
         aggregatedAdjustments,
         adaIntercept,
         latestCalculationConfig,
+        hasIndeterminateSentences,
       })
     }
     return res.redirect(`${config.calculateReleaseDatesUiUrl}?prisonId=${prisoner.prisonerNumber}`)
