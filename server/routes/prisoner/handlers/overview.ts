@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import { LatestCalculationCardConfig } from 'hmpps-court-cases-release-dates-design/hmpps/@types'
 import PrisonerService from '../../../services/prisonerService'
 import AdjustmentsService from '../../../services/adjustmentsService'
 import config from '../../../config'
@@ -30,6 +31,13 @@ export default class OverviewRoutes {
         this.calculateReleaseDatesService.getLatestCalculationForPrisoner(prisoner.prisonerNumber, token),
       ])
 
+      const isIndeterminateAndHasNoCalculatedDates =
+        !latestCalculationConfig?.dates?.length &&
+        (await this.calculateReleaseDatesService.hasIndeterminateSentences(
+          prisoner.bookingId as unknown as number,
+          token,
+        ))
+
       const aggregatedAdjustments = adjustments
         .filter(adjustment => !['LAWFULLY_AT_LARGE', 'SPECIAL_REMISSION'].includes(adjustment.adjustmentType))
         .reduce(
@@ -52,8 +60,18 @@ export default class OverviewRoutes {
         aggregatedAdjustments,
         adaIntercept,
         latestCalculationConfig,
+        isIndeterminateAndHasNoCalculatedDates,
       })
     }
     return res.redirect(`${config.calculateReleaseDatesUiUrl}?prisonId=${prisoner.prisonerNumber}`)
+  }
+
+  private datesDontExistInCalc(latestCalculationConfig: LatestCalculationCardConfig): boolean {
+    return (
+      latestCalculationConfig === undefined ||
+      latestCalculationConfig.dates === null ||
+      latestCalculationConfig.dates === undefined ||
+      latestCalculationConfig.dates.length === 0
+    )
   }
 }

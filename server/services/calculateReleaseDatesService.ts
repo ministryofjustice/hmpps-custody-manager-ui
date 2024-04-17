@@ -20,6 +20,10 @@ export default class CalculateReleaseDatesService {
     }
   }
 
+  async hasIndeterminateSentences(bookingId: number, token: string): Promise<boolean> {
+    return new CalculateReleaseDatesApiClient(token).hasIndeterminateSentences(bookingId)
+  }
+
   private latestCalculationComponentConfig(latestCalculation: LatestCalculation): LatestCalculationCardConfig {
     const dates: LatestCalculationCardDate[] = Object.values(latestCalculation.dates).map(date => {
       const cardDate: LatestCalculationCardDate = {
