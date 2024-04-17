@@ -1,6 +1,7 @@
 import { Express } from 'express'
 
 import request from 'supertest'
+import * as cheerio from 'cheerio'
 import PrisonerService from '../../../services/prisonerService'
 import { appWithAllRoutes, user } from '../../testutils/appSetup'
 import { Prisoner } from '../../../@types/prisonerSearchApi/types'
@@ -483,7 +484,49 @@ describe('Route Handlers - Overview', () => {
         })
     })
 
-    it('should render indeterminate sentences and release dates section correctly when indeterminate sentences exist', () => {
+    it('should render the latest calculation component when there is a latest calculation and indeterminate sentences exist', () => {
+      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
+        prisonerNumber: 'A12345B',
+        firstName: 'Jane',
+        lastName: 'Doe',
+        prisonId: 'MDI',
+      } as Prisoner)
+      prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
+      adjustmentsService.getAdjustments.mockResolvedValue([])
+      adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
+      calculateReleaseDatesService.getLatestCalculationForPrisoner.mockResolvedValue({
+        calculatedAt: '2024-06-01T10:30:45',
+        establishment: 'HMP Kirkham',
+        reason: 'Transfer check',
+        source: 'CRDS',
+        dates: [
+          {
+            type: 'CRD',
+            description: 'Conditional release date',
+            date: '2034-02-19',
+            hints: [
+              {
+                text: 'Friday, 17 February 2034 when adjusted to a working day',
+              },
+            ],
+          },
+        ],
+      })
+      calculateReleaseDatesService.hasIndeterminateSentences.mockResolvedValue(true)
+      return request(app)
+        .get('/prisoner/A12345B/overview')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          expect(res.text).toContain('<h2 class="govuk-heading-l">Release dates</h2>')
+          expect(res.text).toContain('<h1 class="govuk-heading-xl">Overview</h1>')
+          expect(res.text).toContain('<div class="govuk-summary-card latest-calculation-card">')
+          expect(res.text).not.toContain(
+            'This person is serving an indeterminate sentence and has no calculated dates.',
+          )
+        })
+    })
+
+    it('should render indeterminate sentences and release dates section correctly when indeterminate sentences exist and no calculated dates exist', () => {
       prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
         prisonerNumber: 'A12345B',
         firstName: 'Jane',
@@ -498,6 +541,10 @@ describe('Route Handlers - Overview', () => {
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
         .expect(res => {
+          const $ = cheerio.load(res.text)
+          const manualCalcLink = $('[data-qa=manual-calc-link]').first()
+
+          expect(manualCalcLink.attr('href')).toStrictEqual('http://127.0.0.1:3000/crds/calculation/A12345B/reason')
           expect(res.text).toContain('<h2 class="govuk-heading-l">Release dates</h2>')
           expect(res.text).toContain('<h1 class="govuk-heading-xl">Overview</h1>')
           expect(res.text).not.toContain('<div class="govuk-summary-card latest-calculation-card">')
