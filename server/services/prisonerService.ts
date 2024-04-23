@@ -1,7 +1,7 @@
 import { Readable } from 'stream'
 import PrisonApiClient from '../data/prisonApiClient'
 import { HmppsAuthClient } from '../data'
-import { CourtEventDetails, OffenderSentenceAndOffences, PrisonApiUserCaseloads } from '../@types/prisonApi/types'
+import { CourtEventDetails, PrisonApiUserCaseloads } from '../@types/prisonApi/types'
 
 export default class PrisonerService {
   constructor(private readonly hmppsAuthClient: HmppsAuthClient) {}
