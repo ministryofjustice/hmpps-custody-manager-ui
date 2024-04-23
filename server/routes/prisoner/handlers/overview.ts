@@ -61,7 +61,7 @@ export default class OverviewRoutes {
         adaIntercept,
         latestCalculationConfig,
         isIndeterminateAndHasNoCalculatedDates,
-        activeSentencesExist: hasActiveSentences,
+        hasActiveSentences,
       })
     }
     return res.redirect(`${config.calculateReleaseDatesUiUrl}?prisonId=${prisoner.prisonerNumber}`)
