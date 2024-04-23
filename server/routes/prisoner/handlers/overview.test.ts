@@ -24,33 +24,6 @@ const calculateReleaseDatesService = new CalculateReleaseDatesService() as jest.
 
 let app: Express
 
-const sentenceAndOffenceBaseRecord = {
-  terms: [
-    {
-      years: 3,
-    },
-  ],
-  sentenceTypeDescription: 'SDS Standard Sentence',
-  caseSequence: 1,
-  lineSequence: 1,
-  caseReference: 'CASE001',
-  courtDescription: 'Court 1',
-  sentenceSequence: 1,
-  sentenceStatus: 'A',
-  offences: [
-    {
-      offenderChargeId: 1,
-      offenceDescription: 'Doing a crime',
-      offenceStartDate: '2021-01-04',
-      offenceEndDate: '2021-01-05',
-    },
-    { offenderChargeId: 2, offenceDescription: 'Doing a different crime', offenceStartDate: '2021-03-06' },
-  ],
-} as OffenderSentenceAndOffences
-
-const activeSentencesAndOffences = [sentenceAndOffenceBaseRecord]
-const inactiveSentencesAndOffences = [{ ...sentenceAndOffenceBaseRecord, sentenceStatus: 'I' }]
-
 beforeEach(() => {
   app = appWithAllRoutes({
     services: {
@@ -79,7 +52,7 @@ describe('Route Handlers - Overview', () => {
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
-      prisonerService.getSentencesAndOffences.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -97,7 +70,7 @@ describe('Route Handlers - Overview', () => {
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
-      prisonerService.getSentencesAndOffences.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -114,7 +87,7 @@ describe('Route Handlers - Overview', () => {
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
-      prisonerService.getSentencesAndOffences.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -140,7 +113,7 @@ describe('Route Handlers - Overview', () => {
         courtEventType: 'Court Appearance',
       } as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
-      prisonerService.getSentencesAndOffences.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -168,7 +141,7 @@ describe('Route Handlers - Overview', () => {
         courtEventType: 'Court Appearance',
       } as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
-      prisonerService.getSentencesAndOffences.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -185,7 +158,7 @@ describe('Route Handlers - Overview', () => {
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
-      prisonerService.getSentencesAndOffences.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -208,7 +181,7 @@ describe('Route Handlers - Overview', () => {
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
       adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
-      prisonerService.getSentencesAndOffences.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
       return request(app)
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
@@ -259,7 +232,7 @@ describe('Route Handlers - Overview', () => {
           days: 5,
         } as Adjustment,
       ])
-      prisonerService.getSentencesAndOffences.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
       return request(app)
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
@@ -298,7 +271,7 @@ describe('Route Handlers - Overview', () => {
         } as Adjustment,
       ])
       adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
-      prisonerService.getSentencesAndOffences.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
       return request(app)
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
@@ -320,7 +293,7 @@ describe('Route Handlers - Overview', () => {
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
       adjustmentsService.getAdaIntercept.mockResolvedValue({ type: 'UPDATE' } as AdaIntercept)
-      prisonerService.getSentencesAndOffences.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -341,7 +314,7 @@ describe('Route Handlers - Overview', () => {
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
       adjustmentsService.getAdaIntercept.mockResolvedValue({ type: 'FIRST_TIME' } as AdaIntercept)
-      prisonerService.getSentencesAndOffences.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -362,7 +335,7 @@ describe('Route Handlers - Overview', () => {
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
       adjustmentsService.getAdaIntercept.mockResolvedValue({ type: 'PADA' } as AdaIntercept)
-      prisonerService.getSentencesAndOffences.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -382,7 +355,7 @@ describe('Route Handlers - Overview', () => {
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
-      prisonerService.getSentencesAndOffences.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
 
       adjustmentsService.getAdaIntercept.mockResolvedValue({ type: 'NONE' } as AdaIntercept)
 
@@ -450,7 +423,7 @@ describe('Route Handlers - Overview', () => {
       prisonerService.getActiveCourtCaseCount.mockResolvedValue(1)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
-      prisonerService.getSentencesAndOffences.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -474,7 +447,7 @@ describe('Route Handlers - Overview', () => {
       adjustmentsService.getAdjustments.mockResolvedValue([])
       adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
       calculateReleaseDatesService.getLatestCalculationForPrisoner.mockResolvedValue(undefined)
-      prisonerService.getSentencesAndOffences.mockResolvedValue(inactiveSentencesAndOffences)
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -502,7 +475,7 @@ describe('Route Handlers - Overview', () => {
       adjustmentsService.getAdjustments.mockResolvedValue([])
       adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
       calculateReleaseDatesService.getLatestCalculationForPrisoner.mockResolvedValue(undefined)
-      prisonerService.getSentencesAndOffences.mockResolvedValue(activeSentencesAndOffences)
+      prisonerService.hasActiveSentences.mockResolvedValue(true)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -543,7 +516,7 @@ describe('Route Handlers - Overview', () => {
           },
         ],
       })
-      prisonerService.getSentencesAndOffences.mockResolvedValue(activeSentencesAndOffences)
+      prisonerService.hasActiveSentences.mockResolvedValue(true)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -585,7 +558,7 @@ describe('Route Handlers - Overview', () => {
         ],
       })
       calculateReleaseDatesService.hasIndeterminateSentences.mockResolvedValue(true)
-      prisonerService.getSentencesAndOffences.mockResolvedValue(activeSentencesAndOffences)
+      prisonerService.hasActiveSentences.mockResolvedValue(true)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -612,7 +585,7 @@ describe('Route Handlers - Overview', () => {
       adjustmentsService.getAdjustments.mockResolvedValue([])
       adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
       calculateReleaseDatesService.hasIndeterminateSentences.mockResolvedValue(true)
-      prisonerService.getSentencesAndOffences.mockResolvedValue(activeSentencesAndOffences)
+      prisonerService.hasActiveSentences.mockResolvedValue(true)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -640,7 +613,7 @@ describe('Route Handlers - Overview', () => {
       adjustmentsService.getAdjustments.mockResolvedValue([])
       adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
       calculateReleaseDatesService.hasIndeterminateSentences.mockResolvedValue(false)
-      prisonerService.getSentencesAndOffences.mockResolvedValue(activeSentencesAndOffences)
+      prisonerService.hasActiveSentences.mockResolvedValue(true)
 
       return request(app)
         .get('/prisoner/A12345B/overview')

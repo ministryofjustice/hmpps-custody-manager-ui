@@ -22,21 +22,19 @@ export default class OverviewRoutes {
     }
 
     if (res.locals.user.hasAdjustmentsAccess === true) {
-      const [nextCourtEvent, adjustments, adaIntercept, sentencesAndOffences] = await Promise.all([
+      const [nextCourtEvent, adjustments, adaIntercept, hasActiveSentences] = await Promise.all([
         this.prisonerService.getNextCourtEvent(bookingId, token),
         this.adjustmentsService.getAdjustments(prisoner.prisonerNumber, token),
         this.adjustmentsService.getAdaIntercept(prisoner.prisonerNumber, token),
-        this.prisonerService.getSentencesAndOffences(bookingId, token),
+        this.prisonerService.hasActiveSentences(bookingId, token),
       ])
 
-      const activeSentencesExist = sentencesAndOffences.some(it => it.sentenceStatus === 'A')
-
-      const latestCalculationConfig = activeSentencesExist
+      const latestCalculationConfig = hasActiveSentences
         ? await this.calculateReleaseDatesService.getLatestCalculationForPrisoner(prisoner.prisonerNumber, token)
         : null
 
       const isIndeterminateAndHasNoCalculatedDates =
-        activeSentencesExist && !latestCalculationConfig?.dates?.length
+        hasActiveSentences && !latestCalculationConfig?.dates?.length
           ? await this.calculateReleaseDatesService.hasIndeterminateSentences(bookingId, token)
           : false
 
@@ -63,7 +61,7 @@ export default class OverviewRoutes {
         adaIntercept,
         latestCalculationConfig,
         isIndeterminateAndHasNoCalculatedDates,
-        activeSentencesExist,
+        activeSentencesExist: hasActiveSentences,
       })
     }
     return res.redirect(`${config.calculateReleaseDatesUiUrl}?prisonId=${prisoner.prisonerNumber}`)
