@@ -1,7 +1,7 @@
 import { Readable } from 'stream'
 import config, { ApiConfig } from '../config'
 import RestClient from './restClient'
-import { CourtEventDetails, PrisonApiUserCaseloads } from '../@types/prisonApi/types'
+import { CourtEventDetails, OffenderSentenceAndOffences, PrisonApiUserCaseloads } from '../@types/prisonApi/types'
 
 export default class PrisonApiClient {
   restClient: RestClient
@@ -26,5 +26,11 @@ export default class PrisonApiClient {
 
   async getUsersCaseloads(): Promise<PrisonApiUserCaseloads[]> {
     return this.restClient.get({ path: `/api/users/me/caseLoads` }) as Promise<PrisonApiUserCaseloads[]>
+  }
+
+  async getSentencesAndOffences(bookingId: number): Promise<OffenderSentenceAndOffences[]> {
+    return (await this.restClient.get({
+      path: `/api/offender-sentences/booking/${bookingId}/sentences-and-offences`,
+    })) as Promise<unknown> as Promise<OffenderSentenceAndOffences[]>
   }
 }

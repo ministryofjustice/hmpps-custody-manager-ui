@@ -1,7 +1,7 @@
 import { Readable } from 'stream'
 import PrisonApiClient from '../data/prisonApiClient'
 import { HmppsAuthClient } from '../data'
-import { CourtEventDetails, PrisonApiUserCaseloads } from '../@types/prisonApi/types'
+import { CourtEventDetails, OffenderSentenceAndOffences, PrisonApiUserCaseloads } from '../@types/prisonApi/types'
 
 export default class PrisonerService {
   constructor(private readonly hmppsAuthClient: HmppsAuthClient) {}
@@ -20,6 +20,10 @@ export default class PrisonerService {
 
   async getUsersCaseloads(token: string): Promise<PrisonApiUserCaseloads[]> {
     return new PrisonApiClient(token).getUsersCaseloads()
+  }
+
+  async getSentencesAndOffences(bookingId: number, token: string): Promise<OffenderSentenceAndOffences[]> {
+    return new PrisonApiClient(token).getSentencesAndOffences(bookingId)
   }
 
   private async getSystemClientToken(username: string): Promise<string> {
