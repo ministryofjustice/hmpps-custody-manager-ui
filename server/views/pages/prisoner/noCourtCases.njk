@@ -4,11 +4,10 @@
 {% set pageTitle = 'No court cases' %}
 
 {% block content %}
-  <h1 class="govuk-heading-xl">There is a problem</h1>
+  <h1 class="govuk-heading-xl">There are no sentences recorded</h1>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <p class="govuk-body">There are no court cases recorded for {{ prisoner | personProfileName }}.</p>
-      <p class="gouk-body">Check the details in NOMIS and then <a class="govuk-link" href="/prisoner/{{ prisoner.prisonerNumber }}/overview">try again</a>.</p>
+      <p class="gouk-body">Check the details in NOMIS and then <a id="no-court-cases-try-again-link-id" data-qa="no-court-cases-try-again-link" class="govuk-link" href=".">try again</a>.</p>
     </div>
   </div>
 {% endblock %}
