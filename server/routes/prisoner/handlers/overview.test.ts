@@ -52,6 +52,7 @@ describe('Route Handlers - Overview', () => {
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -69,6 +70,7 @@ describe('Route Handlers - Overview', () => {
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -85,6 +87,7 @@ describe('Route Handlers - Overview', () => {
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -110,6 +113,7 @@ describe('Route Handlers - Overview', () => {
         courtEventType: 'Court Appearance',
       } as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -137,6 +141,7 @@ describe('Route Handlers - Overview', () => {
         courtEventType: 'Court Appearance',
       } as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -153,6 +158,7 @@ describe('Route Handlers - Overview', () => {
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -175,6 +181,7 @@ describe('Route Handlers - Overview', () => {
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
       adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
       return request(app)
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
@@ -225,6 +232,7 @@ describe('Route Handlers - Overview', () => {
           days: 5,
         } as Adjustment,
       ])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
       return request(app)
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
@@ -263,6 +271,7 @@ describe('Route Handlers - Overview', () => {
         } as Adjustment,
       ])
       adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
       return request(app)
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
@@ -283,8 +292,8 @@ describe('Route Handlers - Overview', () => {
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
-
       adjustmentsService.getAdaIntercept.mockResolvedValue({ type: 'UPDATE' } as AdaIntercept)
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -304,8 +313,8 @@ describe('Route Handlers - Overview', () => {
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
-
       adjustmentsService.getAdaIntercept.mockResolvedValue({ type: 'FIRST_TIME' } as AdaIntercept)
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -325,8 +334,8 @@ describe('Route Handlers - Overview', () => {
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
-
       adjustmentsService.getAdaIntercept.mockResolvedValue({ type: 'PADA' } as AdaIntercept)
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -346,6 +355,7 @@ describe('Route Handlers - Overview', () => {
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
 
       adjustmentsService.getAdaIntercept.mockResolvedValue({ type: 'NONE' } as AdaIntercept)
 
@@ -413,6 +423,7 @@ describe('Route Handlers - Overview', () => {
       prisonerService.getActiveCourtCaseCount.mockResolvedValue(1)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -425,6 +436,34 @@ describe('Route Handlers - Overview', () => {
   })
 
   describe('Release dates', () => {
+    it('should render release dates section correctly when no active sentences', () => {
+      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
+        prisonerNumber: 'A12345B',
+        firstName: 'Jane',
+        lastName: 'Doe',
+        prisonId: 'MDI',
+      } as Prisoner)
+      prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
+      adjustmentsService.getAdjustments.mockResolvedValue([])
+      adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
+      calculateReleaseDatesService.getLatestCalculationForPrisoner.mockResolvedValue(undefined)
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
+
+      return request(app)
+        .get('/prisoner/A12345B/overview')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          expect(res.text).toContain('<h2 class="govuk-heading-l">Release dates</h2>')
+          expect(res.text).toContain('<h1 class="govuk-heading-xl">Overview</h1>')
+          expect(res.text).not.toContain('<div class="govuk-summary-card latest-calculation-card">')
+          expect(res.text).toContain('This person has no active sentences.')
+          const $ = cheerio.load(res.text)
+          const noActiveSentencesTryAgainLink = $('[data-qa=try-again-no-active-sentences-link]').first()
+
+          expect(noActiveSentencesTryAgainLink.attr('href')).toStrictEqual('.')
+        })
+    })
+
     it('should render release dates section correctly when no latest calculation', () => {
       prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
         prisonerNumber: 'A12345B',
@@ -436,6 +475,8 @@ describe('Route Handlers - Overview', () => {
       adjustmentsService.getAdjustments.mockResolvedValue([])
       adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
       calculateReleaseDatesService.getLatestCalculationForPrisoner.mockResolvedValue(undefined)
+      prisonerService.hasActiveSentences.mockResolvedValue(true)
+
       return request(app)
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
@@ -443,6 +484,7 @@ describe('Route Handlers - Overview', () => {
           expect(res.text).toContain('<h2 class="govuk-heading-l">Release dates</h2>')
           expect(res.text).toContain('<h1 class="govuk-heading-xl">Overview</h1>')
           expect(res.text).not.toContain('<div class="govuk-summary-card latest-calculation-card">')
+          expect(res.text).not.toContain('This person has no active sentences.')
         })
     })
 
@@ -474,6 +516,8 @@ describe('Route Handlers - Overview', () => {
           },
         ],
       })
+      prisonerService.hasActiveSentences.mockResolvedValue(true)
+
       return request(app)
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
@@ -481,6 +525,7 @@ describe('Route Handlers - Overview', () => {
           expect(res.text).toContain('<h2 class="govuk-heading-l">Release dates</h2>')
           expect(res.text).toContain('<h1 class="govuk-heading-xl">Overview</h1>')
           expect(res.text).toContain('<div class="govuk-summary-card latest-calculation-card">')
+          expect(res.text).not.toContain('This person has no active sentences.')
         })
     })
 
@@ -513,6 +558,8 @@ describe('Route Handlers - Overview', () => {
         ],
       })
       calculateReleaseDatesService.hasIndeterminateSentences.mockResolvedValue(true)
+      prisonerService.hasActiveSentences.mockResolvedValue(true)
+
       return request(app)
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
@@ -523,6 +570,7 @@ describe('Route Handlers - Overview', () => {
           expect(res.text).not.toContain(
             'This person is serving an indeterminate sentence and has no calculated dates.',
           )
+          expect(res.text).not.toContain('This person has no active sentences.')
         })
     })
 
@@ -537,6 +585,8 @@ describe('Route Handlers - Overview', () => {
       adjustmentsService.getAdjustments.mockResolvedValue([])
       adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
       calculateReleaseDatesService.hasIndeterminateSentences.mockResolvedValue(true)
+      prisonerService.hasActiveSentences.mockResolvedValue(true)
+
       return request(app)
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
@@ -563,6 +613,8 @@ describe('Route Handlers - Overview', () => {
       adjustmentsService.getAdjustments.mockResolvedValue([])
       adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
       calculateReleaseDatesService.hasIndeterminateSentences.mockResolvedValue(false)
+      prisonerService.hasActiveSentences.mockResolvedValue(true)
+
       return request(app)
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)

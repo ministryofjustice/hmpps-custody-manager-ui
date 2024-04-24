@@ -15,28 +15,28 @@ export default class OverviewRoutes {
   GET = async (req: Request, res: Response): Promise<void> => {
     const { prisoner } = req
     const { token } = res.locals.user
-    const activeCourtCaseCount = await this.prisonerService.getActiveCourtCaseCount(
-      prisoner.bookingId as unknown as number,
-      token,
-    )
+    const bookingId = prisoner.bookingId as unknown as number
+    const activeCourtCaseCount = await this.prisonerService.getActiveCourtCaseCount(bookingId, token)
     if (activeCourtCaseCount === 0) {
       return res.render('pages/prisoner/noCourtCases', { prisoner })
     }
 
     if (res.locals.user.hasAdjustmentsAccess === true) {
-      const [nextCourtEvent, adjustments, adaIntercept, latestCalculationConfig] = await Promise.all([
-        this.prisonerService.getNextCourtEvent(prisoner.bookingId as unknown as number, token),
+      const [nextCourtEvent, adjustments, adaIntercept, hasActiveSentences] = await Promise.all([
+        this.prisonerService.getNextCourtEvent(bookingId, token),
         this.adjustmentsService.getAdjustments(prisoner.prisonerNumber, token),
         this.adjustmentsService.getAdaIntercept(prisoner.prisonerNumber, token),
-        this.calculateReleaseDatesService.getLatestCalculationForPrisoner(prisoner.prisonerNumber, token),
+        this.prisonerService.hasActiveSentences(bookingId, token),
       ])
 
+      const latestCalculationConfig = hasActiveSentences
+        ? await this.calculateReleaseDatesService.getLatestCalculationForPrisoner(prisoner.prisonerNumber, token)
+        : null
+
       const isIndeterminateAndHasNoCalculatedDates =
-        !latestCalculationConfig?.dates?.length &&
-        (await this.calculateReleaseDatesService.hasIndeterminateSentences(
-          prisoner.bookingId as unknown as number,
-          token,
-        ))
+        hasActiveSentences && !latestCalculationConfig?.dates?.length
+          ? await this.calculateReleaseDatesService.hasIndeterminateSentences(bookingId, token)
+          : false
 
       const aggregatedAdjustments = adjustments
         .filter(adjustment => !['LAWFULLY_AT_LARGE', 'SPECIAL_REMISSION'].includes(adjustment.adjustmentType))
@@ -61,6 +61,7 @@ export default class OverviewRoutes {
         adaIntercept,
         latestCalculationConfig,
         isIndeterminateAndHasNoCalculatedDates,
+        hasActiveSentences,
       })
     }
     return res.redirect(`${config.calculateReleaseDatesUiUrl}?prisonId=${prisoner.prisonerNumber}`)

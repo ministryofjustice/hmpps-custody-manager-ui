@@ -22,6 +22,11 @@ export default class PrisonerService {
     return new PrisonApiClient(token).getUsersCaseloads()
   }
 
+  async hasActiveSentences(bookingId: number, token: string): Promise<boolean> {
+    const sentencesAndOffences = await new PrisonApiClient(token).getSentencesAndOffences(bookingId)
+    return sentencesAndOffences.some(it => it.sentenceStatus === 'A')
+  }
+
   private async getSystemClientToken(username: string): Promise<string> {
     return this.hmppsAuthClient.getSystemClientToken(username)
   }
