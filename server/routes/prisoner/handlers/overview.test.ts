@@ -408,8 +408,12 @@ describe('Route Handlers - Overview', () => {
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
         .expect(res => {
-          expect(res.text).toContain('<h1 class="govuk-heading-xl">There is a problem</h1>')
+          expect(res.text).toContain('<h1 class="govuk-heading-xl">There are no sentences recorded</h1>')
           expect(res.text).not.toContain('<h1 class="govuk-heading-xl">Overview</h1>')
+          const $ = cheerio.load(res.text)
+          const noCourtCasesTryAgainLink = $('[data-qa=no-court-cases-try-again-link]').first()
+
+          expect(noCourtCasesTryAgainLink.attr('href')).toStrictEqual('.')
         })
     })
 
