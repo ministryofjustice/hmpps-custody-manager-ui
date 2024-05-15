@@ -94,12 +94,24 @@ export interface paths {
      */
     post: operations['restore']
   }
+  '/adjustments/additional-days/{person}/reject-prospective-ada': {
+    /** Reject prospective ADA. */
+    post: operations['rejectProspectiveAda']
+  }
   '/queue-admin/get-dlq-messages/{dlqName}': {
     get: operations['getDlqMessages']
   }
   '/adjustments/{person}/intercept': {
     /** Determine if there needs to be an adjustment-interception for this person */
     get: operations['determineAdaIntercept']
+  }
+  '/adjustments/additional-days/{person}/intercept': {
+    /** Determine if there needs to be an adjustment-interception for this person */
+    get: operations['determineAdaIntercept_1']
+  }
+  '/adjustments/additional-days/{person}/adjudication-details': {
+    /** Get all details of adjudications and associated adjustments */
+    get: operations['getAdaAdjudicationDetails']
   }
 }
 
@@ -162,11 +174,13 @@ export interface components {
       active: boolean
       /** @description Has the prisoner been released from the NOMIS booking */
       bookingReleased: boolean
+      /** @description The ID of the agency the prisoner is located */
+      agencyId?: string
     }
     /** @description The details of an additional days awarded (ADA) adjustment */
     AdditionalDaysAwardedDto: {
       /** @description The id of the adjudication that resulted in the ADA */
-      adjudicationId: number[]
+      adjudicationId: string[]
       prospective: boolean
     }
     /** @description The adjustment and its identifier */
@@ -333,6 +347,21 @@ export interface components {
       /** @description The IDs of the adjustments to restore */
       ids: string[]
     }
+    /** @description The DTO representing the PADAs rejected */
+    ProspectiveAdaRejectionDto: {
+      /** @description The NOMIS ID of the person this pada is rejected applies to */
+      person: string
+      /**
+       * Format: int32
+       * @description The number of days that were rejected
+       */
+      days: number
+      /**
+       * Format: date
+       * @description The date of the charges proved that were rejected
+       */
+      dateChargeProved: string
+    }
     GetDlqResult: {
       /** Format: int32 */
       messagesFoundCount: number
@@ -348,6 +377,51 @@ export interface components {
       anyProspective: boolean
       messageArguments: string[]
       message?: string
+    }
+    Ada: {
+      /** Format: date */
+      dateChargeProved: string
+      chargeNumber: string
+      toBeServed?: string
+      heardAt?: string
+      /** @enum {string} */
+      status: 'AWARDED_OR_PENDING' | 'SUSPENDED' | 'QUASHED' | 'PROSPECTIVE'
+      /** Format: int32 */
+      days: number
+      sequence?: string
+      consecutiveToSequence?: string
+    }
+    AdaAdjudicationDetails: {
+      awarded: components['schemas']['AdasByDateCharged'][]
+      /** Format: int32 */
+      totalAwarded: number
+      suspended: components['schemas']['AdasByDateCharged'][]
+      /** Format: int32 */
+      totalSuspended: number
+      quashed: components['schemas']['AdasByDateCharged'][]
+      /** Format: int32 */
+      totalQuashed: number
+      awaitingApproval: components['schemas']['AdasByDateCharged'][]
+      /** Format: int32 */
+      totalAwaitingApproval: number
+      prospective: components['schemas']['AdasByDateCharged'][]
+      /** Format: int32 */
+      totalProspective: number
+      intercept: components['schemas']['AdaIntercept']
+      /** Format: int32 */
+      totalExistingAdas: number
+      showExistingAdaMessage: boolean
+    }
+    AdasByDateCharged: {
+      /** Format: date */
+      dateChargeProved: string
+      charges: components['schemas']['Ada'][]
+      /** Format: int32 */
+      total?: number
+      /** @enum {string} */
+      status?: 'AWARDED' | 'PENDING_APPROVAL' | 'SUSPENDED' | 'QUASHED' | 'PROSPECTIVE'
+      /** Format: uuid */
+      adjustmentId?: string
     }
   }
   responses: never
@@ -772,6 +846,37 @@ export interface operations {
       }
     }
   }
+  /** Reject prospective ADA. */
+  rejectProspectiveAda: {
+    parameters: {
+      path: {
+        /**
+         * @description The noms ID of the person
+         * @example AA1256A
+         */
+        person: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ProspectiveAdaRejectionDto']
+      }
+    }
+    responses: {
+      /** @description Reject a prospective ADA */
+      200: {
+        content: never
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        content: never
+      }
+      /** @description Adjustment not found */
+      404: {
+        content: never
+      }
+    }
+  }
   getDlqMessages: {
     parameters: {
       query?: {
@@ -818,6 +923,82 @@ export interface operations {
       404: {
         content: {
           'application/json': components['schemas']['AdaIntercept']
+        }
+      }
+    }
+  }
+  /** Determine if there needs to be an adjustment-interception for this person */
+  determineAdaIntercept_1: {
+    parameters: {
+      path: {
+        /**
+         * @description The noms ID of the person
+         * @example AA1256A
+         */
+        person: string
+      }
+    }
+    responses: {
+      /** @description Intercept decision returned */
+      200: {
+        content: {
+          'application/json': components['schemas']['AdaIntercept']
+        }
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        content: {
+          'application/json': components['schemas']['AdaIntercept']
+        }
+      }
+      /** @description Adjustment not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['AdaIntercept']
+        }
+      }
+    }
+  }
+  /** Get all details of adjudications and associated adjustments */
+  getAdaAdjudicationDetails: {
+    parameters: {
+      query?: {
+        /**
+         * @description The dates of selected prospective adas
+         * @example 2022-01-10,2022-02-11
+         */
+        selectedProspectiveAdaDates?: string[]
+        /**
+         * @description Which service to look adas from, defaults to prison api.
+         * @example PRISON-API
+         */
+        service?: string
+      }
+      path: {
+        /**
+         * @description The noms ID of the person
+         * @example AA1256A
+         */
+        person: string
+      }
+    }
+    responses: {
+      /** @description Details of adjudications and adjustments returned */
+      200: {
+        content: {
+          'application/json': components['schemas']['AdaAdjudicationDetails']
+        }
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        content: {
+          'application/json': components['schemas']['AdaAdjudicationDetails']
+        }
+      }
+      /** @description Adjustment not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['AdaAdjudicationDetails']
         }
       }
     }

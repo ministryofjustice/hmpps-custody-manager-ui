@@ -21,6 +21,7 @@ generic-service:
     ADJUSTMENTS_API_URL: "https://adjustments-api.hmpps.service.justice.gov.uk"
     CALCULATE_RELEASE_DATES_UI_URL: "https://calculate-release-dates.hmpps.service.justice.gov.uk"
     CALCULATE_RELEASE_DATES_API_URL: "https://calculate-release-dates-api.hmpps.service.justice.gov.uk"
+    DEFAULT_ADA_API: 'PRISON-API'
 
 generic-prometheus-alerts:
   alertSeverity: legacy-replacement-alerts

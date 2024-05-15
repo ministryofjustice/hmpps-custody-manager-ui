@@ -56,7 +56,12 @@ export default {
     return stubFor({
       request: {
         method: 'GET',
-        urlPath: '/adjustments-api/adjustments/A1234AB/intercept',
+        urlPath: '/adjustments-api/adjustments/additional-days/A1234AB/adjudication-details',
+        queryParameters: {
+          service: {
+            equalTo: 'PRISON-API',
+          },
+        },
       },
       response: {
         status: 200,
