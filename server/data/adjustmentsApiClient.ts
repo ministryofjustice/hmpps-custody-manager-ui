@@ -1,4 +1,4 @@
-import { AdaIntercept, Adjustment } from '../@types/adjustmentsApi/types'
+import { AdaAdjudicationDetails, AdaIntercept, Adjustment } from '../@types/adjustmentsApi/types'
 import config, { ApiConfig } from '../config'
 import RestClient from './restClient'
 
@@ -18,9 +18,11 @@ export default class AdjustmentApiClient {
     })) as unknown as Promise<Adjustment[]>
   }
 
-  async getAdaIntercept(person: string): Promise<AdaIntercept> {
-    return (await this.restClient.get({
-      path: `/adjustments/${person}/intercept`,
-    })) as unknown as Promise<AdaIntercept>
+  async getAdaIntercept(person: string, activeCaseLoadId: string): Promise<AdaIntercept> {
+    const details = await (this.restClient.get({
+      path: `/adjustments/additional-days/${person}/adjudication-details?service=${config.featureToggles.defaultAdaApi}`,
+      headers: { 'Active-Caseload': activeCaseLoadId },
+    }) as Promise<AdaAdjudicationDetails>)
+    return details.intercept
   }
 }

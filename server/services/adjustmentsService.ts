@@ -6,7 +6,7 @@ export default class AdjustmentsService {
     return new AdjustmentApiClient(token).getAdjustments(person)
   }
 
-  async getAdaIntercept(person: string, token: string): Promise<AdaIntercept> {
-    return new AdjustmentApiClient(token).getAdaIntercept(person)
+  async getAdaIntercept(person: string, activeCaseLoadId: string, token: string): Promise<AdaIntercept> {
+    return new AdjustmentApiClient(token).getAdaIntercept(person, activeCaseLoadId)
   }
 }
