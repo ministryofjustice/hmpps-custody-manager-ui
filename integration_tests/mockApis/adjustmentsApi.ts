@@ -56,7 +56,7 @@ export default {
     return stubFor({
       request: {
         method: 'GET',
-        urlPath: '/adjustments-api/adjustments/A1234AB/intercept',
+        urlPath: '/adjustments/additional-days/A1234AB/adjudication-details.*',
       },
       response: {
         status: 200,
