@@ -17,7 +17,7 @@ export const services = () => {
 
   const prisonerSearchService = new PrisonerSearchService(hmppsAuthClient)
 
-  const adjustmentsService = new AdjustmentsService()
+  const adjustmentsService = new AdjustmentsService(hmppsAuthClient)
 
   const calculateReleaseDatesService = new CalculateReleaseDatesService()
 

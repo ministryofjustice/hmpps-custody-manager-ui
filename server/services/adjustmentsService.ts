@@ -1,12 +1,19 @@
+import { HmppsAuthClient } from '../data'
 import { AdaIntercept, Adjustment } from '../@types/adjustmentsApi/types'
 import AdjustmentApiClient from '../data/adjustmentsApiClient'
 
 export default class AdjustmentsService {
-  async getAdjustments(person: string, token: string): Promise<Adjustment[]> {
-    return new AdjustmentApiClient(token).getAdjustments(person)
+  constructor(private readonly hmppsAuthClient: HmppsAuthClient) {}
+
+  async getAdjustments(person: string, username: string): Promise<Adjustment[]> {
+    return new AdjustmentApiClient(await this.getSystemClientToken(username)).getAdjustments(person)
   }
 
-  async getAdaIntercept(person: string, activeCaseLoadId: string, token: string): Promise<AdaIntercept> {
-    return new AdjustmentApiClient(token).getAdaIntercept(person, activeCaseLoadId)
+  async getAdaIntercept(person: string, activeCaseLoadId: string, username: string): Promise<AdaIntercept> {
+    return new AdjustmentApiClient(await this.getSystemClientToken(username)).getAdaIntercept(person, activeCaseLoadId)
+  }
+
+  private async getSystemClientToken(username: string): Promise<string> {
+    return this.hmppsAuthClient.getSystemClientToken(username)
   }
 }
