@@ -3,6 +3,7 @@
 {% from "hmpps/components/court-cases-release-dates/service-header/macro.njk" import serviceHeader %}
 {% from "../../partials/adjustmentsIntercept.njk" import adjustmentsIntercept %}
 {% from "hmpps/components/court-cases-release-dates/latest-calculation-card/macro.njk" import latestCalculationCard %}
+{% from "../components/sds40-policy-banner/macro.njk" import sds40PolicyNotificationBanner %}
 
 {% set pageTitle = "Court cases and release dates - overview" %}
 {% set activeSubNav = 'overview' %}
@@ -43,6 +44,7 @@
   <h1 class="govuk-heading-xl">Overview</h1>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+      {{ sds40PolicyNotificationBanner() }}
       <h2 class="govuk-heading-l">Release dates</h2>
 
       {% if not hasActiveSentences %}
