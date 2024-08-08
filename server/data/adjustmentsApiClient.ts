@@ -9,13 +9,14 @@ export default class AdjustmentApiClient {
     this.restClient = new RestClient('Adjustments API Client', config.apis.adjustmentsApi as ApiConfig, token)
   }
 
-  async getAdjustments(person: string): Promise<Adjustment[]> {
-    return (await this.restClient.get({
-      path: '/adjustments',
-      query: {
-        person,
-      },
-    })) as unknown as Promise<Adjustment[]>
+  async findByPerson(person: string, earliestSentenceDate?: string): Promise<Adjustment[]> {
+    let url = `/adjustments?person=${person}`
+    if (earliestSentenceDate) {
+      url += `&sentenceEnvelopeDate=${earliestSentenceDate}`
+    }
+    return this.restClient.get({
+      path: url,
+    }) as Promise<Adjustment[]>
   }
 
   async getAdaIntercept(person: string, activeCaseLoadId: string): Promise<AdaIntercept> {

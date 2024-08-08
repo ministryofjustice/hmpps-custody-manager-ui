@@ -22,9 +22,10 @@ export default class OverviewRoutes {
     }
 
     if (res.locals.user.hasAdjustmentsAccess === true) {
+      const getStartOfSentenceEnvelope = await this.prisonerService.getStartOfSentenceEnvelope(bookingId, token)
       const [nextCourtEvent, adjustments, adaIntercept, hasActiveSentences] = await Promise.all([
         this.prisonerService.getNextCourtEvent(bookingId, token),
-        this.adjustmentsService.getAdjustments(prisoner.prisonerNumber, username),
+        this.adjustmentsService.getAdjustments(prisoner.prisonerNumber, getStartOfSentenceEnvelope, username),
         this.adjustmentsService.getAdaIntercept(prisoner.prisonerNumber, activeCaseLoadId, username),
         this.prisonerService.hasActiveSentences(bookingId, token),
       ])

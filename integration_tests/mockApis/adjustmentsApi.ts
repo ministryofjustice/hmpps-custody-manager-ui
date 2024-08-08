@@ -11,6 +11,9 @@ export default {
           person: {
             equalTo: 'A1234AB',
           },
+          sentenceEnvelopeDate: {
+            equalTo: '2001-01-01',
+          },
         },
       },
       response: {

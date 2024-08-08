@@ -1,7 +1,7 @@
 import { Readable } from 'stream'
 import PrisonApiClient from '../data/prisonApiClient'
 import { HmppsAuthClient } from '../data'
-import { CourtEventDetails, PrisonApiUserCaseloads } from '../@types/prisonApi/types'
+import { CourtEventDetails, OffenderSentenceAndOffences, PrisonApiUserCaseloads } from '../@types/prisonApi/types'
 
 export default class PrisonerService {
   constructor(private readonly hmppsAuthClient: HmppsAuthClient) {}
@@ -20,6 +20,23 @@ export default class PrisonerService {
 
   async getUsersCaseloads(token: string): Promise<PrisonApiUserCaseloads[]> {
     return new PrisonApiClient(token).getUsersCaseloads()
+  }
+
+  async getStartOfSentenceEnvelope(bookingId: number, token: string): Promise<Date> {
+    const sentencesAndOffences = await new PrisonApiClient(token).getSentencesAndOffences(bookingId)
+    return this.findStartOfSentenceEvelope(sentencesAndOffences)
+  }
+
+  private findStartOfSentenceEvelope(sentences: OffenderSentenceAndOffences[]): Date {
+    if (sentences.length) {
+      return new Date(
+        Math.min.apply(
+          null,
+          sentences.filter(it => it.sentenceStatus === 'A').map(it => new Date(it.sentenceDate)),
+        ),
+      )
+    }
+    return null
   }
 
   async hasActiveSentences(bookingId: number, token: string): Promise<boolean> {
