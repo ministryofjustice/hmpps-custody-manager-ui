@@ -50,6 +50,7 @@ describe('Route Handlers - Overview', () => {
         imprisonmentStatusDescription: 'Life imprisonment',
         prisonId: 'MDI',
       } as Prisoner)
+      prisonerService.getStartOfSentenceEnvelope.mockResolvedValue(new Date())
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
       prisonerService.hasActiveSentences.mockResolvedValue(false)
