@@ -8,7 +8,7 @@ export default class AdjustmentsService {
   async getAdjustments(person: string, earliestSentenceDate: Date, username: string): Promise<Adjustment[]> {
     return new AdjustmentApiClient(await this.getSystemClientToken(username)).findByPerson(
       person,
-      earliestSentenceDate.toISOString().substring(0, 10),
+      earliestSentenceDate?.toISOString()?.substring(0, 10),
     )
   }
 
