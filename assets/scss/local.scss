@@ -16,3 +16,8 @@
 .hmpps-profile-banner-alert p + p {
   margin: 0;
 }
+
+.hmpps-profile-banner-alertx + .mini-profile {
+  margin-top: 0;  // Remove top margin only when directly after the banner
+  padding-top: 0;  // Remove top padding only when directly after the banner
+}
