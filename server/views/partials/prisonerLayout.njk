@@ -2,10 +2,18 @@
 
 {% from "hmpps/components/mini-profile/macro.njk" import miniProfile %}
 {% from "hmpps/components/court-cases-release-dates/sub-navigation/macro.njk" import subNavigation %}
+{% from "hmpps/components/court-cases-release-dates/profile-banner/macro.njk" import profileBanner %}
 
 {% block beforeContent %}
     <aside role="complementary">
         {% block banner %}
+            {% set params = {
+                dataQa: "personOutsideBanner",
+                heading: "This person has been released",
+                paragraphText: "Some information may be hidden"
+            } %}
+
+            {{ profileBanner(params) }}
             {% set person = {
                 firstName: prisoner.firstName,
                 lastName: prisoner.lastName,
