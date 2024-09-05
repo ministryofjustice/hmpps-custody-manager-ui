@@ -99,6 +99,67 @@ describe('Route Handlers - Overview', () => {
           expect(res.text).toContain('Release dates and calculations')
         })
     })
+
+    it('displays the "prisoner released" banner when the prisoner is inactive and the user has the required access to view inactive bookings', async () => {
+      app = appWithAllRoutes({
+        services: {
+          prisonerService,
+          prisonerSearchService,
+          adjustmentsService,
+          calculateReleaseDatesService,
+        },
+        userSupplier: () => {
+          return { ...user, hasInactiveBookingAccess: true, hasAdjustmentsAccess: true }
+        },
+      })
+      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
+        prisonerNumber: 'A12345B',
+        imprisonmentStatusDescription: 'Life imprisonment',
+        prisonId: 'OUT',
+      } as Prisoner)
+      prisonerService.getStartOfSentenceEnvelope.mockResolvedValue(new Date())
+      prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
+      adjustmentsService.getAdjustments.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
+
+      return request(app)
+        .get('/prisoner/A12345B/overview')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          expect(res.text).toContain('This person has been released')
+          expect(res.text).toContain('Some information may be hidden')
+        })
+    })
+
+    it('displays an error page when the prisoner is inactive and the user lacks access to view inactive bookings', () => {
+      app = appWithAllRoutes({
+        services: {
+          prisonerService,
+          prisonerSearchService,
+          adjustmentsService,
+          calculateReleaseDatesService,
+        },
+        userSupplier: () => {
+          return { ...user, hasInactiveBookingAccess: false, hasAdjustmentsAccess: true }
+        },
+      })
+      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
+        prisonerNumber: 'A12345B',
+        imprisonmentStatusDescription: 'Life imprisonment',
+        prisonId: 'OUT',
+      } as Prisoner)
+      prisonerService.getStartOfSentenceEnvelope.mockResolvedValue(new Date())
+      prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
+      adjustmentsService.getAdjustments.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
+
+      return request(app)
+        .get('/prisoner/A12345B/overview')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          expect(res.text).toContain('The details for this person cannot be found')
+        })
+    })
   })
 
   describe('Next Court Hearing tests', () => {
@@ -392,51 +453,6 @@ describe('Route Handlers - Overview', () => {
         .get('/prisoner/A12345B/overview')
         .expect(302)
         .expect('Location', `${config.calculateReleaseDatesUiUrl}?prisonId=A12345B`)
-    })
-  })
-
-  describe('Number of active court cases tests', () => {
-    it('Zero active cases shows error page', () => {
-      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
-        prisonerNumber: 'A12345B',
-        firstName: 'Jane',
-        lastName: 'Doe',
-        prisonId: 'MDI',
-      } as Prisoner)
-      prisonerService.getActiveCourtCaseCount.mockResolvedValue(0)
-
-      return request(app)
-        .get('/prisoner/A12345B/overview')
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          expect(res.text).toContain('<h1 class="govuk-heading-xl">There are no sentences recorded</h1>')
-          expect(res.text).not.toContain('<h1 class="govuk-heading-xl">Overview</h1>')
-          const $ = cheerio.load(res.text)
-          const noCourtCasesTryAgainLink = $('[data-qa=no-court-cases-try-again-link]').first()
-
-          expect(noCourtCasesTryAgainLink.attr('href')).toStrictEqual('.')
-        })
-    })
-
-    it('If there are active cases then error page is not shown', () => {
-      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
-        prisonerNumber: 'A12345B',
-        firstName: 'Jane',
-        lastName: 'Doe',
-        prisonId: 'MDI',
-      } as Prisoner)
-      prisonerService.getActiveCourtCaseCount.mockResolvedValue(1)
-      prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
-      adjustmentsService.getAdjustments.mockResolvedValue([])
-      prisonerService.hasActiveSentences.mockResolvedValue(false)
-
-      return request(app)
-        .get('/prisoner/A12345B/overview')
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          expect(res.text).not.toContain('<h1 class="govuk-heading-xl">There is a problem</h1>')
-          expect(res.text).toContain('<h1 class="govuk-heading-xl">Overview</h1>')
-        })
     })
   })
 
