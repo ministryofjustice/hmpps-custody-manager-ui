@@ -12,10 +12,12 @@ export default function getPrisoner(prisonerSearchService: PrisonerSearchService
       try {
         const prisoner = await prisonerSearchService.getByPrisonerNumber(res.locals.user.username, prisonerNumber)
         req.prisoner = prisoner
-        if (!user.caseloads.includes(prisoner.prisonId)) {
+        const isInCaseload = user.caseloads.includes(prisoner.prisonId)
+        const isPrisonerOutside = prisoner.prisonId === 'OUT'
+        if (!isInCaseload && !(user.hasInactiveBookingAccess && isPrisonerOutside)) {
           throw FullPageError.notInCaseLoadError()
         }
-        if (prisoner.prisonId === 'OUT') {
+        if (isPrisonerOutside && !user.hasInactiveBookingAccess) {
           throw FullPageError.prisonerOutError()
         }
       } catch (error) {

@@ -16,10 +16,6 @@ export default class OverviewRoutes {
     const { prisoner } = req
     const { token, activeCaseLoadId, username } = res.locals.user
     const bookingId = prisoner.bookingId as unknown as number
-    const activeCourtCaseCount = await this.prisonerService.getActiveCourtCaseCount(bookingId, token)
-    if (activeCourtCaseCount === 0) {
-      return res.render('pages/prisoner/noCourtCases', { prisoner })
-    }
 
     if (res.locals.user.hasAdjustmentsAccess === true) {
       const getStartOfSentenceEnvelope = await this.prisonerService.getStartOfSentenceEnvelope(bookingId, token)
