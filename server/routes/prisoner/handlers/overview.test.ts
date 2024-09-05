@@ -99,6 +99,67 @@ describe('Route Handlers - Overview', () => {
           expect(res.text).toContain('Release dates and calculations')
         })
     })
+
+    it('displays the "prisoner released" banner when the prisoner is inactive and the user has the required access to view inactive bookings', async () => {
+      app = appWithAllRoutes({
+        services: {
+          prisonerService,
+          prisonerSearchService,
+          adjustmentsService,
+          calculateReleaseDatesService,
+        },
+        userSupplier: () => {
+          return { ...user, hasInactiveBookingAccess: true, hasAdjustmentsAccess: true }
+        },
+      })
+      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
+        prisonerNumber: 'A12345B',
+        imprisonmentStatusDescription: 'Life imprisonment',
+        prisonId: 'OUT',
+      } as Prisoner)
+      prisonerService.getStartOfSentenceEnvelope.mockResolvedValue(new Date())
+      prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
+      adjustmentsService.getAdjustments.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
+
+      return request(app)
+        .get('/prisoner/A12345B/overview')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          expect(res.text).toContain('This person has been released')
+          expect(res.text).toContain('Some information may be hidden')
+        })
+    })
+
+    it('displays an error page when the prisoner is inactive and the user lacks access to view inactive bookings', () => {
+      app = appWithAllRoutes({
+        services: {
+          prisonerService,
+          prisonerSearchService,
+          adjustmentsService,
+          calculateReleaseDatesService,
+        },
+        userSupplier: () => {
+          return { ...user, hasInactiveBookingAccess: false, hasAdjustmentsAccess: true }
+        },
+      })
+      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
+        prisonerNumber: 'A12345B',
+        imprisonmentStatusDescription: 'Life imprisonment',
+        prisonId: 'OUT',
+      } as Prisoner)
+      prisonerService.getStartOfSentenceEnvelope.mockResolvedValue(new Date())
+      prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
+      adjustmentsService.getAdjustments.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
+
+      return request(app)
+        .get('/prisoner/A12345B/overview')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          expect(res.text).toContain('The details for this person cannot be found')
+        })
+    })
   })
 
   describe('Next Court Hearing tests', () => {

@@ -12,8 +12,9 @@
                 heading: "This person has been released",
                 paragraphText: "Some information may be hidden"
             } %}
-
-            {{ profileBanner(params) }}
+            {% if prisoner.prisonId == 'OUT' %}
+                {{ profileBanner(params) }}
+            {% endif %}
 
             {% set person = {
                 firstName: prisoner.firstName,
