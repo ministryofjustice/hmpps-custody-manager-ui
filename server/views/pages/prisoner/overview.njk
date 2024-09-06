@@ -7,37 +7,39 @@
 {% set pageTitle = "Court cases and release dates - overview" %}
 {% set activeSubNav = 'overview' %}
 
-{%- set adjustmentAdditionSummarys = [] -%}
+{% if showAdjustments %}
+  {%- set adjustmentAdditionSummarys = [] -%}
 
-{% for adjustmentText, days in aggregatedAdjustments.ADDITION | dictsort %}
-  {%- set adjustmentRow= {
-    key: {
-      text: adjustmentText
-    },
-    value: {
-      text: days + " Day" + ("s" if days != 1 else "")
-    }
-  } -%}
-  {% set adjustmentAdditionSummarys = (adjustmentAdditionSummarys.push(adjustmentRow), adjustmentAdditionSummarys) %}
-{% endfor %}
+  {% for adjustmentText, days in aggregatedAdjustments.ADDITION | dictsort %}
+    {%- set adjustmentRow= {
+      key: {
+        text: adjustmentText
+      },
+      value: {
+        text: days + " Day" + ("s" if days != 1 else "")
+      }
+    } -%}
+    {% set adjustmentAdditionSummarys = (adjustmentAdditionSummarys.push(adjustmentRow), adjustmentAdditionSummarys) %}
+  {% endfor %}
 
-{%- set adjustmentDeductionSummarys = [] -%}
+  {%- set adjustmentDeductionSummarys = [] -%}
 
-{% for adjustmentText, days in aggregatedAdjustments.DEDUCTION | dictsort %}
-  {%- set adjustmentRow= {
-    key: {
-      text: adjustmentText
-    },
-    value: {
-      text: days + " Day" + ("s" if days != 1 else "")
-    }
-  } -%}
-  {% set adjustmentDeductionSummarys = (adjustmentDeductionSummarys.push(adjustmentRow), adjustmentDeductionSummarys) %}
-{% endfor %}
+  {% for adjustmentText, days in aggregatedAdjustments.DEDUCTION | dictsort %}
+    {%- set adjustmentRow= {
+      key: {
+        text: adjustmentText
+      },
+      value: {
+        text: days + " Day" + ("s" if days != 1 else "")
+      }
+    } -%}
+    {% set adjustmentDeductionSummarys = (adjustmentDeductionSummarys.push(adjustmentRow), adjustmentDeductionSummarys) %}
+  {% endfor %}
+{% endif %}
 
 {% block content %}
 
-  {% if adaIntercept.type !== 'NONE' %}
+  {% if adaIntercept and adaIntercept.type !== 'NONE' %}
     {{ adjustmentsIntercept(adaIntercept, prisoner.prisonerNumber, adjustmentsUIUrl) }}
   {% endif %}
   <h1 class="govuk-heading-xl">Overview</h1>
@@ -47,11 +49,15 @@
 
       {% if not hasActiveSentences %}
         <p class="govuk-body">This person has no active sentences.</p>
-        <p class="govuk-body">To calculate the release dates, you must enter active sentence information in NOMIS and <a id="try-again-no-active-sentences-id" data-qa="try-again-no-active-sentences-link" href=".">try again</a>.</p>
-      {% elif isIndeterminateAndHasNoCalculatedDates %}
+        <p class="govuk-body">To calculate the release dates, you must enter active sentence information in NOMIS and <a
+              id="try-again-no-active-sentences-id" data-qa="try-again-no-active-sentences-link" href=".">try again</a>.
+        </p>
+        {% elif isIndeterminateAndHasNoCalculatedDates %}
         <p class="govuk-body">This person is serving an indeterminate sentence and has no calculated dates.</p>
-        <p class="govuk-body">You will need to <a id="manual-calc-link-id" data-qa="manual-calc-link" href="{{ calculateReleaseDatesUIUrl }}/calculation/{{ prisoner.prisonerNumber }}/reason">manually enter the approved dates</a>.</p>
-      {% elif latestCalculationConfig %}
+        <p class="govuk-body">You will need to <a id="manual-calc-link-id" data-qa="manual-calc-link"
+                                                  href="{{ calculateReleaseDatesUIUrl }}/calculation/{{ prisoner.prisonerNumber }}/reason">manually
+            enter the approved dates</a>.</p>
+        {% elif latestCalculationConfig %}
         {{ latestCalculationCard(latestCalculationConfig) }}
       {% endif %}
 
@@ -63,38 +69,41 @@
 
       <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 
-      <h2 class="govuk-heading-l">Adjustments</h2>
-      {% if aggregatedAdjustments.ADDITION | length or aggregatedAdjustments.DEDUCTION | length %}
+      {% if showAdjustments %}
+        <h2 class="govuk-heading-l">Adjustments</h2>
+        {% if aggregatedAdjustments.ADDITION | length or aggregatedAdjustments.DEDUCTION | length %}
 
-      {% if adjustmentAdditionSummarys | length %}
-        <h3 class="govuk-heading-m">Additions</h3>
-        {{ govukSummaryList({
-          rows: adjustmentAdditionSummarys,
-          classes: "govuk-!-margin-bottom-7"
-        }) }}
+          {% if adjustmentAdditionSummarys | length %}
+            <h3 class="govuk-heading-m">Additions</h3>
+            {{ govukSummaryList({
+              rows: adjustmentAdditionSummarys,
+              classes: "govuk-!-margin-bottom-7"
+            }) }}
+
+          {% endif %}
+
+          {% if adjustmentDeductionSummarys | length %}
+            <h3 class="govuk-heading-m">Deductions</h3>
+            {{ govukSummaryList({
+              rows: adjustmentDeductionSummarys,
+              classes: "govuk-!-margin-bottom-7"
+            }) }}
+
+          {% endif %}
+
+        {% else %}
+          <p class="govuk-body govuk-!-margin-bottom-7">There are no active adjustments for {{ prisoner | firstNameSpaceLastName }}</p>
+        {% endif %}
+
+        <p class="govuk-body govuk-!-margin-top-4">
+
+          <a href="{{ adjustmentsUIUrl }}/{{ prisoner.prisonerNumber }}">View all adjustments</a>
+
+        </p>
+
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 
       {% endif %}
-
-      {% if adjustmentDeductionSummarys | length %}
-        <h3 class="govuk-heading-m">Deductions</h3>
-        {{ govukSummaryList({
-          rows: adjustmentDeductionSummarys,
-          classes: "govuk-!-margin-bottom-7"
-        }) }}
-
-      {% endif %}
-
-      {% else %}
-        <p class="govuk-body govuk-!-margin-bottom-7">There are no active adjustments for {{ prisoner | firstNameSpaceLastName }}</p>
-      {% endif %}
-
-      <p class="govuk-body govuk-!-margin-top-4">
-
-        <a href="{{ adjustmentsUIUrl }}/{{ prisoner.prisonerNumber }}">View all adjustments</a>
-
-      </p>
-
-      <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 
       <h2 class="govuk-heading-l">Next court hearing</h2>
 
