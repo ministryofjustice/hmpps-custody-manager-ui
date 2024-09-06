@@ -14,7 +14,8 @@ export default function getPrisoner(prisonerSearchService: PrisonerSearchService
         req.prisoner = prisoner
         const isInCaseload = user.caseloads.includes(prisoner.prisonId)
         const isPrisonerOutside = prisoner.prisonId === 'OUT'
-        if (!isInCaseload && !(user.hasInactiveBookingAccess && isPrisonerOutside)) {
+        const isPrisonerBeingTransferred = prisoner.prisonId === 'TRN'
+        if (!isInCaseload && !(user.hasInactiveBookingAccess && (isPrisonerOutside || isPrisonerBeingTransferred))) {
           throw FullPageError.notInCaseLoadError()
         }
         if (isPrisonerOutside && !user.hasInactiveBookingAccess) {
