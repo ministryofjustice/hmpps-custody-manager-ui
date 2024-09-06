@@ -100,7 +100,7 @@ describe('Route Handlers - Overview', () => {
         })
     })
 
-    it('displays the "prisoner released" banner when the prisoner is inactive and the user has the required access to view inactive bookings', async () => {
+    it('displays the "prisoner released" banner when the prisoner is inactive OUT and the user has the required access to view inactive bookings', async () => {
       app = appWithAllRoutes({
         services: {
           prisonerService,
@@ -127,6 +127,37 @@ describe('Route Handlers - Overview', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           expect(res.text).toContain('This person has been released')
+          expect(res.text).toContain('Some information may be hidden')
+        })
+    })
+
+    it('displays the "prisoner released" banner when the prisoner is inactive TRN (transferred) and the user has the required access to view inactive bookings', async () => {
+      app = appWithAllRoutes({
+        services: {
+          prisonerService,
+          prisonerSearchService,
+          adjustmentsService,
+          calculateReleaseDatesService,
+        },
+        userSupplier: () => {
+          return { ...user, hasInactiveBookingAccess: true, hasAdjustmentsAccess: true }
+        },
+      })
+      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
+        prisonerNumber: 'A12345B',
+        imprisonmentStatusDescription: 'Life imprisonment',
+        prisonId: 'TRN',
+      } as Prisoner)
+      prisonerService.getStartOfSentenceEnvelope.mockResolvedValue(new Date())
+      prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
+      adjustmentsService.getAdjustments.mockResolvedValue([])
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
+
+      return request(app)
+        .get('/prisoner/A12345B/overview')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          expect(res.text).toContain('This person has been transferred')
           expect(res.text).toContain('Some information may be hidden')
         })
     })
