@@ -25,24 +25,24 @@ export default class CalculateReleaseDatesService {
   }
 
   async hasNewOrUpdatedSentenceOrAdjustments(bookingId: number, token: string): Promise<boolean> {
-    const sentenceAndOffences = await new CalculateReleaseDatesApiClient(token).getSentenceAndOffences(bookingId)
-
-    const filteredSentences = sentenceAndOffences.filter((sentence: { sentenceAndOffenceAnalysis: string }) =>
+    const client = new CalculateReleaseDatesApiClient(token)
+    const [sentenceAndOffences, adjustments] = await Promise.all([
+      client.getSentenceAndOffences(bookingId),
+      client.getAdjustments(bookingId),
+    ])
+    const filteredSentences = sentenceAndOffences.some((sentence: { sentenceAndOffenceAnalysis: string }) =>
       ['NEW', 'UPDATED'].includes(sentence.sentenceAndOffenceAnalysis),
     )
-
-    const adjustments = await new CalculateReleaseDatesApiClient(token).getAdjustments(bookingId)
-
     // @ts-expect-error BookingAdjustments does exist
-    const filteredBookingAdjustments = adjustments.bookingAdjustments.filter((adjustment: { analysisResult: string }) =>
+    const filteredBookingAdjustments = adjustments.bookingAdjustments.some((adjustment: { analysisResult: string }) =>
       ['NEW', 'UPDATED'].includes(adjustment.analysisResult),
     )
     // @ts-expect-error sentenceAdjustments does exist
-    const filteredSentenceAdjustments = adjustments.sentenceAdjustments.filter(
-      (adjustment: { analysisResult: string }) => ['NEW', 'UPDATED'].includes(adjustment.analysisResult),
+    const filteredSentenceAdjustments = adjustments.sentenceAdjustments.some((adjustment: { analysisResult: string }) =>
+      ['NEW', 'UPDATED'].includes(adjustment.analysisResult),
     )
 
-    return filteredSentences.length + filteredSentenceAdjustments.length + filteredBookingAdjustments.length > 0
+    return filteredSentences || filteredSentenceAdjustments || filteredBookingAdjustments
   }
 
   private latestCalculationComponentConfig(latestCalculation: LatestCalculation): LatestCalculationCardConfig {

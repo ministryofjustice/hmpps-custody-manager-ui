@@ -51,11 +51,11 @@
       {% if not hasActiveSentences %}
         <p class="govuk-body">This person has no active sentences.</p>
         <p class="govuk-body">To calculate the release dates, you must enter active sentence information in NOMIS and <a id="try-again-no-active-sentences-id" data-qa="try-again-no-active-sentences-link" href=".">try again</a>.</p>
+      {% elif requiresNewCalculation %}
+              {{ recalcRequiredPanel(prisoner.prisonerNumber, calculateReleaseDatesUIUrl) }}
       {% elif isIndeterminateAndHasNoCalculatedDates %}
         <p class="govuk-body">This person is serving an indeterminate sentence and has no calculated dates.</p>
         <p class="govuk-body">You will need to <a id="manual-calc-link-id" data-qa="manual-calc-link" href="{{ calculateReleaseDatesUIUrl }}/calculation/{{ prisoner.prisonerNumber }}/reason">manually enter the approved dates</a>.</p>
-      {% elif requiresNewCalculation %}
-        {{ recalcRequiredPanel(prisoner.prisonerNumber, calculateReleaseDatesUIUrl) }}
       {% elif latestCalculationConfig %}
         {{ latestCalculationCard(latestCalculationConfig) }}
       {% endif %}

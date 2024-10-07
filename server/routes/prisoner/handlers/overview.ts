@@ -32,7 +32,7 @@ export default class OverviewRoutes {
         : null
 
       const aggregatedAdjustments = showAdjustments
-        ? await this.getAggratedAdjustments(prisoner, startOfSentenceEnvelope, username)
+        ? await this.getAggregatedAdjustments(prisoner, startOfSentenceEnvelope, username)
         : null
 
       const latestCalculationConfig = hasActiveSentences
@@ -44,6 +44,7 @@ export default class OverviewRoutes {
           ? await this.calculateReleaseDatesService.hasIndeterminateSentences(bookingId, token)
           : false
 
+      // TODO When feature flag is removed, add to the Promise.all above
       const requiresNewCalculation = config.featureFlags.thingsToDo
         ? await this.calculateReleaseDatesService.hasNewOrUpdatedSentenceOrAdjustments(bookingId, token)
         : false
@@ -63,7 +64,7 @@ export default class OverviewRoutes {
     return res.redirect(`${config.calculateReleaseDatesUiUrl}?prisonId=${prisoner.prisonerNumber}`)
   }
 
-  private async getAggratedAdjustments(prisoner: Prisoner, startOfSentenceEnvelope: Date, username: string) {
+  private async getAggregatedAdjustments(prisoner: Prisoner, startOfSentenceEnvelope: Date, username: string) {
     const adjustments = await this.adjustmentsService.getAdjustments(
       prisoner.prisonerNumber,
       startOfSentenceEnvelope,
