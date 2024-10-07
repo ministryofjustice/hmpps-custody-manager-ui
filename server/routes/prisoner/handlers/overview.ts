@@ -44,6 +44,10 @@ export default class OverviewRoutes {
           ? await this.calculateReleaseDatesService.hasIndeterminateSentences(bookingId, token)
           : false
 
+      const requiresNewCalculation = config.featureFlags.thingsToDo
+        ? await this.calculateReleaseDatesService.hasNewOrUpdatedSentenceOrAdjustments(bookingId, token)
+        : false
+
       return res.render('pages/prisoner/overview', {
         prisoner,
         nextCourtEvent,
@@ -53,6 +57,7 @@ export default class OverviewRoutes {
         isIndeterminateAndHasNoCalculatedDates,
         hasActiveSentences,
         showAdjustments,
+        requiresNewCalculation,
       })
     }
     return res.redirect(`${config.calculateReleaseDatesUiUrl}?prisonId=${prisoner.prisonerNumber}`)
