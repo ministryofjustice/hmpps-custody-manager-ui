@@ -2,6 +2,7 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import prisonerRoutes from './prisoner'
+import configRoutes from './config'
 import config from '../config'
 
 export default function routes(services: Services): Router {
@@ -11,6 +12,7 @@ export default function routes(services: Services): Router {
   get('/', async (_, res) => res.redirect(config.digitalPrisonServicesUrl))
 
   router.use('/prisoner', prisonerRoutes(services))
+  router.use('/config', configRoutes(services))
 
   return router
 }

@@ -1,7 +1,13 @@
 import { Readable } from 'stream'
 import PrisonApiClient from '../data/prisonApiClient'
 import { HmppsAuthClient } from '../data'
-import { CourtEventDetails, OffenderSentenceAndOffences, PrisonApiUserCaseloads } from '../@types/prisonApi/types'
+import {
+  CourtEventDetails,
+  OffenderSentenceAndOffences,
+  PrisonApiUserCaseloads,
+  PrisonApiPrison,
+  PrisonApiPrisonDetails,
+} from '../@types/prisonApi/types'
 
 export default class PrisonerService {
   constructor(private readonly hmppsAuthClient: HmppsAuthClient) {}
@@ -46,5 +52,24 @@ export default class PrisonerService {
 
   private async getSystemClientToken(username: string): Promise<string> {
     return this.hmppsAuthClient.getSystemClientToken(username)
+  }
+
+  async getActivePrisons(token: string): Promise<PrisonApiPrison[]> {
+    return new PrisonApiClient(token).getActivePrisons()
+  }
+
+  async getPrisonsWithServiceCode(serviceCode: string): Promise<PrisonApiPrisonDetails[]> {
+    const token = await this.hmppsAuthClient.getSystemClientToken()
+    return new PrisonApiClient(token).getPrisonsWithServiceCode(serviceCode)
+  }
+
+  async postServiceCodeForPrison(serviceCode: string, prisonId: string): Promise<PrisonApiPrisonDetails> {
+    const token = await this.hmppsAuthClient.getSystemClientToken()
+    return new PrisonApiClient(token).postServiceCodeForPrison(serviceCode, prisonId)
+  }
+
+  async deleteServiceCodeForPrison(serviceCode: string, prisonId: string): Promise<PrisonApiPrisonDetails> {
+    const token = await this.hmppsAuthClient.getSystemClientToken()
+    return new PrisonApiClient(token).deleteServiceCodeForPrison(serviceCode, prisonId)
   }
 }

@@ -14,7 +14,8 @@ export default class OverviewRoutes {
 
   GET = async (req: Request, res: Response): Promise<void> => {
     const { prisoner } = req
-    const { token, activeCaseLoadId, username, hasInactiveBookingAccess } = res.locals.user
+    const { token, activeCaseLoadId, username, hasInactiveBookingAccess, hasReadOnlyNomisConfigAccess } =
+      res.locals.user
     const bookingId = prisoner.bookingId as unknown as number
     const isPrisonerOutside = prisoner.prisonId === 'OUT'
     const isPrisonerBeingTransferred = prisoner.prisonId === 'TRN'
@@ -59,6 +60,7 @@ export default class OverviewRoutes {
         hasActiveSentences,
         showAdjustments,
         requiresNewCalculation,
+        hasReadOnlyNomisConfigAccess,
       })
     }
     return res.redirect(`${config.calculateReleaseDatesUiUrl}?prisonId=${prisoner.prisonerNumber}`)

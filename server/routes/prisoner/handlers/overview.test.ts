@@ -780,4 +780,55 @@ describe('Route Handlers - Overview', () => {
         })
     })
   })
+  describe('Config section', () => {
+    it('Config section not visible without the correct role', () => {
+      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
+        prisonerNumber: 'A12345B',
+        firstName: 'Jane',
+        lastName: 'Doe',
+        prisonId: 'MDI',
+      } as Prisoner)
+      prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
+      adjustmentsService.getAdjustments.mockResolvedValue([])
+      adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
+      return request(app)
+        .get('/prisoner/A12345B/overview')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          expect(res.text).not.toContain('Configuration')
+          expect(res.text).not.toContain('<a href="/config">Configure Nomis read only screens</a>')
+        })
+    })
+    it('Config section visible when the user has the correct role', () => {
+      app = appWithAllRoutes({
+        services: {
+          prisonerService,
+          prisonerSearchService,
+          adjustmentsService,
+          calculateReleaseDatesService,
+        },
+        userSupplier: () => {
+          return { ...user, hasReadOnlyNomisConfigAccess: true, hasAdjustmentsAccess: true }
+        },
+      })
+      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
+        prisonerNumber: 'A12345B',
+        firstName: 'Jane',
+        lastName: 'Doe',
+        prisonId: 'MDI',
+      } as Prisoner)
+      prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
+      prisonerService.hasActiveSentences.mockResolvedValue(false)
+      adjustmentsService.getAdjustments.mockResolvedValue([])
+      adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
+      return request(app)
+        .get('/prisoner/A12345B/overview')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          expect(res.text).toContain('Configuration')
+          expect(res.text).toContain('<a href="/config">Configure Nomis read only screens</a>')
+        })
+    })
+  })
 })

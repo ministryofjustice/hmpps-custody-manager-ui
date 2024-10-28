@@ -9,6 +9,7 @@ export interface UserDetails extends User {
   roles: string[]
   hasAdjustmentsAccess: boolean
   hasInactiveBookingAccess: boolean
+  hasReadOnlyNomisConfigAccess: boolean
   caseloads: string[]
   caseloadDescriptions: string[]
   caseloadMap: Map<string, string>
@@ -32,6 +33,7 @@ export default class UserService {
       displayName: convertToTitleCase(user.name),
       hasAdjustmentsAccess: this.hasAdjustmentsAccess(roles),
       hasInactiveBookingAccess: this.hasInactiveBookingAccess(roles),
+      hasReadOnlyNomisConfigAccess: this.hasReadOnlyNomisConfigAccess(roles),
       caseloads: userCaseloads.map(uc => uc.caseLoadId),
       caseloadDescriptions: userCaseloads.map(uc => uc.description),
       caseloadMap: new Map(userCaseloads.map(uc => [uc.caseLoadId, uc.description])),
@@ -49,5 +51,9 @@ export default class UserService {
 
   hasInactiveBookingAccess(roles: string[]): boolean {
     return roles.includes('INACTIVE_BOOKINGS')
+  }
+
+  hasReadOnlyNomisConfigAccess(roles: string[]): boolean {
+    return roles.includes('COURTCASE_RELEASEDATE_SUPPORT')
   }
 }
