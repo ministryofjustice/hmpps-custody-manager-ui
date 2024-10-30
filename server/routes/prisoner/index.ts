@@ -7,6 +7,7 @@ import CourtCasesRoutes from './handlers/courtCases'
 import ImageRoutes from './handlers/image'
 import OverviewRoutes from './handlers/overview'
 import ReleaseDatesRoutes from './handlers/releaseDates'
+import ConfigRoutes from '../config/ConfigRoutes'
 
 export default function Index({
   prisonerService,
@@ -27,6 +28,9 @@ export default function Index({
     new OverviewRoutes(prisonerService, adjustmentsService, calculateReleaseDatesService).GET,
   )
   get('/:prisonerNumber/release-dates', new ReleaseDatesRoutes().GET)
+
+  router.get('/config', new ConfigRoutes(prisonerService).getConfig)
+  router.post('/config', new ConfigRoutes(prisonerService).postConfig)
 
   return router
 }
