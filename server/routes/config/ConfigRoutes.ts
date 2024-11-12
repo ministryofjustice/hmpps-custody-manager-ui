@@ -13,6 +13,23 @@ export default class ConfigRoutes {
   public getConfig: RequestHandler = async (req, res) => {
     const { token, hasReadOnlyNomisConfigAccess } = res.locals.user
     const activePrisons = await this.prisonerService.getActivePrisons(token)
+    const updateId = req.query.id as string
+    const readOnly = (req.query.readonly as string)?.split(',')
+    const notReadOnly = (req.query.notreadonly as string)?.split(',')
+
+    let readOnlyChanges: string[] = []
+    let notReadOnlyChanges: string[] = []
+    let updatedScreen
+
+    if (readOnly) {
+      readOnlyChanges = readOnly.map(it => activePrisons.find(i => i.agencyId === it)?.description)
+    }
+    if (notReadOnly) {
+      notReadOnlyChanges = notReadOnly.map(it => activePrisons.find(i => i.agencyId === it)?.description)
+    }
+    if (updateId) {
+      updatedScreen = readOnlyNomisScreens.find(it => it.id === updateId)?.display
+    }
 
     const readOnlyPrisonResults = await Promise.all(
       readOnlyNomisScreens.map(async it => {
@@ -24,7 +41,13 @@ export default class ConfigRoutes {
     )
     if (hasReadOnlyNomisConfigAccess) {
       return res.render('pages/config/index', {
-        model: new ConfigurationViewModel(activePrisons, readOnlyPrisonResults),
+        model: new ConfigurationViewModel(
+          activePrisons,
+          readOnlyPrisonResults,
+          readOnlyChanges,
+          notReadOnlyChanges,
+          updatedScreen,
+        ),
       })
     }
     return res.redirect('/')
@@ -35,16 +58,18 @@ export default class ConfigRoutes {
     const checkedBoxes = [req.body.checkedBoxes === undefined ? [] : req.body.checkedBoxes].flat()
     const redirectSection = readOnlyNomisScreens.find(it => it.apiId === req.body.apiId).id
 
-    this.enableCheckedBoxes(checkedBoxes, currentEnabledPrisons, req.body.apiId)
-    this.disableUncheckedBoxes(checkedBoxes, currentEnabledPrisons, req.body.apiId)
+    const newReadOnly = this.enableCheckedBoxes(checkedBoxes, currentEnabledPrisons, req.body.apiId)
+    const newUnchecked = this.disableUncheckedBoxes(checkedBoxes, currentEnabledPrisons, req.body.apiId)
 
-    res.redirect(`/config#${redirectSection}`)
+    res.redirect(
+      `/config?id=${redirectSection}&readonly=${newReadOnly.join(',')}&notreadonly=${newUnchecked.join(',')}`,
+    )
   }
 
   private enableCheckedBoxes(checkedBoxes: string[], currentEnabledPrisons: PrisonApiPrisonDetails[], apiId: string) {
-    checkedBoxes
-      .filter(it => !currentEnabledPrisons.map(i => i.prisonId).includes(it))
-      .forEach(it => this.prisonerService.postServiceCodeForPrison(apiId, it))
+    const newBoxes = checkedBoxes.filter(it => !currentEnabledPrisons.map(i => i.prisonId).includes(it))
+    newBoxes.forEach(it => this.prisonerService.postServiceCodeForPrison(apiId, it))
+    return newBoxes
   }
 
   private disableUncheckedBoxes(
@@ -52,8 +77,8 @@ export default class ConfigRoutes {
     currentEnabledPrisons: PrisonApiPrisonDetails[],
     apiId: string,
   ) {
-    currentEnabledPrisons
-      .filter(it => !checkedBoxes.includes(it.prisonId))
-      .forEach(it => this.prisonerService.deleteServiceCodeForPrison(apiId, it.prisonId))
+    const newboxes = currentEnabledPrisons.filter(it => !checkedBoxes.includes(it.prisonId))
+    newboxes.forEach(it => this.prisonerService.deleteServiceCodeForPrison(apiId, it.prisonId))
+    return newboxes.map(it => it.prisonId)
   }
 }

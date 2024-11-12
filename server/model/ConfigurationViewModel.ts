@@ -6,6 +6,9 @@ export default class ConfigurationViewModel {
   constructor(
     public allPrisons: PrisonApiPrison[],
     public readOnlyPrisonResults: ReadOnlyPrisonResult[],
+    public readOnlyChanges: string[],
+    public notReadOnlyChanges: string[],
+    public updatedScreen: string,
   ) {}
 
   public checkboxes(adjustmentId: string) {
@@ -23,6 +26,27 @@ export default class ConfigurationViewModel {
       hint: { text: `Checked prisons are read only` },
       items: this.getItems(adjustmentId),
     }
+  }
+
+  public updateHtml() {
+    let html = ''
+    if (this.readOnlyChanges.every(it => it !== undefined)) {
+      html += this.getBannerText('read only', this.readOnlyChanges)
+    }
+    if (this.notReadOnlyChanges.every(it => it !== undefined)) {
+      html += this.getBannerText('active', this.notReadOnlyChanges)
+    }
+    return html
+  }
+
+  private getBannerText(action: string, prisons: string[]) {
+    return `<h3 class="govuk-notification-banner__heading">
+            The ${this.updatedScreen} screen is now ${action} in ${this.getEnding(prisons.length)}</h3>
+            <p>${prisons.join('<br>')}</p>`
+  }
+
+  private getEnding(length: number) {
+    return length === 1 ? 'this prison' : 'these prisons'
   }
 
   public tabs() {
