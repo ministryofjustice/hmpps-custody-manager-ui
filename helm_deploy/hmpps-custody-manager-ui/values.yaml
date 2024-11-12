@@ -60,6 +60,7 @@ generic-service:
     cymulate-2: 52.208.202.111/32
     cymulate-3: 52.49.144.209/32
     groups:
+      - circleci
       - internal
       - prisons
       - private_prisons
