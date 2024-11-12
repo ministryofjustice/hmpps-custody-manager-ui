@@ -3,13 +3,24 @@
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+
 
 {% set pageTitle = applicationName + " - Configure Nomis screens" %}
 {% set pageId = "configure" %}
 
 {% block content %}
 
-<br>
+  <br>
+  {% if model.updateHtml() %}
+    {{ govukNotificationBanner({
+      html: model.updateHtml(),
+      type: 'success',
+      attributes: {'data-qa': 'success-message'},
+      classes: 'govuk-notification-banner__no-header'
+    }) }}
+  {% endif %}
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
       <h1 class="govuk-heading-xl">

@@ -119,4 +119,16 @@ describe('Compare routes tests', () => {
         expect(prisonerService.deleteServiceCodeForPrison).toHaveBeenCalledWith('ADJUSTMENTS', 'BFI')
       })
   })
+
+  it('POST /config creates the correct update url for the update banner', () => {
+    prisonerService.getActivePrisons.mockResolvedValue(allPrisons)
+    prisonerService.getPrisonsWithServiceCode.mockResolvedValue([{ prisonId: 'BFI', prison: 'Bedford (HMP)' }])
+
+    return request(app)
+      .post('/config')
+      .type('form')
+      .send({ apiId: 'ADJUSTMENTS', checkedBoxes: ['ALI', 'ACI'] })
+      .expect(302)
+      .expect('Location', '/config/update?id=adjustments&readonly=ALI,ACI&notreadonly=BFI')
+  })
 })
