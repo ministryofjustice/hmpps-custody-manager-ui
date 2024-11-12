@@ -129,6 +129,72 @@ describe('Compare routes tests', () => {
       .type('form')
       .send({ apiId: 'ADJUSTMENTS', checkedBoxes: ['ALI', 'ACI'] })
       .expect(302)
-      .expect('Location', '/config/update?id=adjustments&readonly=ALI,ACI&notreadonly=BFI')
+      .expect('Location', '/config?id=adjustments&readonly=ALI,ACI&notreadonly=BFI')
+  })
+
+  it('GET /config should show the banner describing the changes', () => {
+    prisonerService.getActivePrisons.mockResolvedValue(allPrisons)
+    prisonerService.getPrisonsWithServiceCode.mockResolvedValue([])
+    app = appWithAllRoutes({
+      services: { prisonerService },
+      userSupplier: () => {
+        return { ...user, hasReadOnlyNomisConfigAccess: true }
+      },
+    })
+
+    return request(app)
+      .get('/config?id=adjustments&readonly=ALI,ACI&notreadonly=AYI,BFI')
+      .expect(200)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).toContain('The Adjustments screen is now read only in these prisons')
+        expect(res.text).toContain('The Adjustments screen is now active in these prisons')
+      })
+  })
+
+  it('GET /config should show the banner describing the changes (singular for one prison)', () => {
+    prisonerService.getActivePrisons.mockResolvedValue(allPrisons)
+    prisonerService.getPrisonsWithServiceCode.mockResolvedValue([])
+    app = appWithAllRoutes({
+      services: { prisonerService },
+      userSupplier: () => {
+        return { ...user, hasReadOnlyNomisConfigAccess: true }
+      },
+    })
+
+    return request(app)
+      .get('/config?id=adjustments&readonly=ALI&notreadonly=BFI')
+      .expect(200)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).toContain('The Adjustments screen is now read only in this prison')
+        expect(res.text).toContain('The Adjustments screen is now active in this prison')
+      })
+  })
+
+  test.each`
+    url
+    ${'/config?id=adjustments&readonly=&notreadonly='}
+    ${'/config'}
+  `('GET $url should show the banner describing the changes (singular for one prison)', ({ url }) => {
+    prisonerService.getActivePrisons.mockResolvedValue(allPrisons)
+    prisonerService.getPrisonsWithServiceCode.mockResolvedValue([])
+    app = appWithAllRoutes({
+      services: { prisonerService },
+      userSupplier: () => {
+        return { ...user, hasReadOnlyNomisConfigAccess: true }
+      },
+    })
+
+    return request(app)
+      .get(url)
+      .expect(200)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).not.toContain('The Adjustments screen is now read only in this prison')
+        expect(res.text).not.toContain('The Adjustments screen is now read only in these prisons')
+        expect(res.text).not.toContain('The Adjustments screen is now active in this prison')
+        expect(res.text).not.toContain('The Adjustments screen is now active in these prisons')
+      })
   })
 })

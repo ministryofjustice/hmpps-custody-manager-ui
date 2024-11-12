@@ -13,22 +13,22 @@ export default class ConfigRoutes {
   public getConfig: RequestHandler = async (req, res) => {
     const { token, hasReadOnlyNomisConfigAccess } = res.locals.user
     const activePrisons = await this.prisonerService.getActivePrisons(token)
-    const updateId = req.flash('id')
-    const readOnly = req.flash('readOnly')
-    const notReadOnly = req.flash('notReadOnly')
+    const updateId = req.query.id as string
+    const readOnly = (req.query.readonly as string)?.split(',')
+    const notReadOnly = (req.query.notreadonly as string)?.split(',')
 
-    let readOnlyChanges
-    let notReadOnlyChanges
+    let readOnlyChanges: string[] = []
+    let notReadOnlyChanges: string[] = []
     let updatedScreen
 
-    if (readOnly && readOnly[0]) {
-      readOnlyChanges = readOnly[0].split(',').map(it => activePrisons.find(i => i.agencyId === it).description)
+    if (readOnly) {
+      readOnlyChanges = readOnly.map(it => activePrisons.find(i => i.agencyId === it)?.description)
     }
-    if (notReadOnly && notReadOnly[0]) {
-      notReadOnlyChanges = notReadOnly[0].split(',').map(it => activePrisons.find(i => i.agencyId === it).description)
+    if (notReadOnly) {
+      notReadOnlyChanges = notReadOnly.map(it => activePrisons.find(i => i.agencyId === it)?.description)
     }
-    if (updateId && updateId[0]) {
-      updatedScreen = readOnlyNomisScreens.find(it => it.id === updateId[0]).display
+    if (updateId) {
+      updatedScreen = readOnlyNomisScreens.find(it => it.id === updateId)?.display
     }
 
     const readOnlyPrisonResults = await Promise.all(
@@ -53,13 +53,6 @@ export default class ConfigRoutes {
     return res.redirect('/')
   }
 
-  public update: RequestHandler = async (req, res): Promise<void> => {
-    req.flash('id', req.query.id as string)
-    req.flash('readOnly', req.query.readonly as string)
-    req.flash('notReadOnly', req.query.notreadonly as string)
-    return res.redirect(`/config`)
-  }
-
   public postConfig: RequestHandler = async (req, res) => {
     const currentEnabledPrisons = await this.prisonerService.getPrisonsWithServiceCode(req.body.apiId)
     const checkedBoxes = [req.body.checkedBoxes === undefined ? [] : req.body.checkedBoxes].flat()
@@ -69,7 +62,7 @@ export default class ConfigRoutes {
     const newUnchecked = this.disableUncheckedBoxes(checkedBoxes, currentEnabledPrisons, req.body.apiId)
 
     res.redirect(
-      `/config/update?id=${redirectSection}&readonly=${newReadOnly.join(',')}&notreadonly=${newUnchecked.join(',')}`,
+      `/config?id=${redirectSection}&readonly=${newReadOnly.join(',')}&notreadonly=${newUnchecked.join(',')}`,
     )
   }
 

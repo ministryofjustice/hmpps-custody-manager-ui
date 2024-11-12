@@ -30,10 +30,10 @@ export default class ConfigurationViewModel {
 
   public updateHtml() {
     let html = ''
-    if (this.readOnlyChanges) {
+    if (this.readOnlyChanges.every(it => it !== undefined)) {
       html += this.getBannerText('read only', this.readOnlyChanges)
     }
-    if (this.notReadOnlyChanges) {
+    if (this.notReadOnlyChanges.every(it => it !== undefined)) {
       html += this.getBannerText('active', this.notReadOnlyChanges)
     }
     return html
