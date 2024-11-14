@@ -176,7 +176,7 @@ describe('Compare routes tests', () => {
     url
     ${'/config?id=adjustments&readonly=&notreadonly='}
     ${'/config'}
-  `('GET $url should show the banner describing the changes (singular for one prison)', ({ url }) => {
+  `('GET $url should not show the banner if now parameters are passed', ({ url }) => {
     prisonerService.getActivePrisons.mockResolvedValue(allPrisons)
     prisonerService.getPrisonsWithServiceCode.mockResolvedValue([])
     app = appWithAllRoutes({
@@ -191,10 +191,11 @@ describe('Compare routes tests', () => {
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
-        expect(res.text).not.toContain('The Adjustments screen is now read only in this prison')
-        expect(res.text).not.toContain('The Adjustments screen is now read only in these prisons')
-        expect(res.text).not.toContain('The Adjustments screen is now active in this prison')
-        expect(res.text).not.toContain('The Adjustments screen is now active in these prisons')
+        expect(res.text).not.toContain('Success')
+        expect(res.text).not.toContain('screen is now read only in this prison')
+        expect(res.text).not.toContain('screen is now read only in these prisons')
+        expect(res.text).not.toContain('screen is now active in this prison')
+        expect(res.text).not.toContain('screen is now active in these prisons')
       })
   })
 })
