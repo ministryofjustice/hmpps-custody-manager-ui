@@ -24,27 +24,6 @@ export default class CalculateReleaseDatesService {
     return new CalculateReleaseDatesApiClient(token).hasIndeterminateSentences(bookingId)
   }
 
-  async hasNewOrUpdatedSentenceOrAdjustments(bookingId: number, token: string): Promise<boolean> {
-    const client = new CalculateReleaseDatesApiClient(token)
-    const [sentenceAndOffences, adjustments] = await Promise.all([
-      client.getSentenceAndOffences(bookingId),
-      client.getAdjustments(bookingId),
-    ])
-    const filteredSentences = sentenceAndOffences.some((sentence: { sentenceAndOffenceAnalysis: string }) =>
-      ['NEW', 'UPDATED'].includes(sentence.sentenceAndOffenceAnalysis),
-    )
-    // @ts-expect-error BookingAdjustments does exist
-    const filteredBookingAdjustments = adjustments.bookingAdjustments.some((adjustment: { analysisResult: string }) =>
-      ['NEW', 'UPDATED'].includes(adjustment.analysisResult),
-    )
-    // @ts-expect-error sentenceAdjustments does exist
-    const filteredSentenceAdjustments = adjustments.sentenceAdjustments.some((adjustment: { analysisResult: string }) =>
-      ['NEW', 'UPDATED'].includes(adjustment.analysisResult),
-    )
-
-    return filteredSentences || filteredSentenceAdjustments || filteredBookingAdjustments
-  }
-
   private latestCalculationComponentConfig(latestCalculation: LatestCalculation): LatestCalculationCardConfig {
     const dates: LatestCalculationCardDate[] = Object.values(latestCalculation.dates).map(date => {
       const cardDate: LatestCalculationCardDate = {
