@@ -42,8 +42,9 @@ export default class OverviewRoutes {
           : false
 
       // TODO When feature flag is removed, add to the Promise.all above
-      const requiresNewCalculation =
-        config.featureFlags.thingsToDo && thingsToDo.calculationThingsToDo.includes('CALCULATION_REQUIRED')
+      const requiresNewCalculation = config.featureFlags.thingsToDo
+        ? await this.calculateReleaseDatesService.hasNewOrUpdatedSentenceOrAdjustments(bookingId, token)
+        : false
 
       return res.render('pages/prisoner/overview', {
         prisoner,
