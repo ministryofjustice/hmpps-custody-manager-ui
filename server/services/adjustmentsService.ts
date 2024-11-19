@@ -1,5 +1,5 @@
 import { HmppsAuthClient } from '../data'
-import { AdaIntercept, Adjustment } from '../@types/adjustmentsApi/types'
+import { Adjustment } from '../@types/adjustmentsApi/types'
 import AdjustmentApiClient from '../data/adjustmentsApiClient'
 
 export default class AdjustmentsService {

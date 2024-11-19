@@ -1,4 +1,4 @@
-import { AdaAdjudicationDetails, AdaIntercept, Adjustment } from '../@types/adjustmentsApi/types'
+import { Adjustment } from '../@types/adjustmentsApi/types'
 import config, { ApiConfig } from '../config'
 import RestClient from './restClient'
 
