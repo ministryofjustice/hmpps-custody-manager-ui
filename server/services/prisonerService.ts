@@ -4,10 +4,12 @@ import { HmppsAuthClient } from '../data'
 import {
   CourtEventDetails,
   OffenderSentenceAndOffences,
-  PrisonApiUserCaseloads,
   PrisonApiPrison,
   PrisonApiPrisonDetails,
+  PrisonApiUserCaseloads,
 } from '../@types/prisonApi/types'
+import CourtCasesReleaseDatesApiClient from '../data/courtCasesReleaseDatesApiClient'
+import { ThingsToDo } from '../@types/courtCasesReleaseDatesApi/types'
 
 export default class PrisonerService {
   constructor(private readonly hmppsAuthClient: HmppsAuthClient) {}
@@ -71,5 +73,10 @@ export default class PrisonerService {
   async deleteServiceCodeForPrison(serviceCode: string, prisonId: string): Promise<PrisonApiPrisonDetails> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     return new PrisonApiClient(token).deleteServiceCodeForPrison(serviceCode, prisonId)
+  }
+
+  async getThingsToDo(prisonerId: string): Promise<ThingsToDo> {
+    const token = await this.hmppsAuthClient.getSystemClientToken()
+    return new CourtCasesReleaseDatesApiClient(token).getThingsToDoForPrisoner(prisonerId)
   }
 }

@@ -3,6 +3,7 @@
 {% from "hmpps/components/court-cases-release-dates/service-header/macro.njk" import serviceHeader %}
 {% from "../../partials/adjustmentsIntercept.njk" import adjustmentsIntercept %}
 {% from "../../partials/recalculationRequiredPanel.njk" import recalcRequiredPanel %}
+{% from "../../partials/thingsToDoPanel.njk" import thingsToDoPanel %}
 {% from "hmpps/components/court-cases-release-dates/latest-calculation-card/macro.njk" import latestCalculationCard %}
 
 {% set pageTitle = "Court cases and release dates - overview" %}
@@ -40,22 +41,18 @@
 
 {% block content %}
 
-  {% if adaIntercept and adaIntercept.type !== 'NONE' %}
-    {{ adjustmentsIntercept(adaIntercept, prisoner.prisonerNumber, adjustmentsUIUrl) }}
-  {% endif %}
   <h1 class="govuk-heading-xl">Overview</h1>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <h2 class="govuk-heading-l">Release dates</h2>
-
       {% if not hasActiveSentences %}
         <p class="govuk-body">This person has no active sentences.</p>
         <p class="govuk-body">To calculate the release dates, you must enter active sentence information in NOMIS and <a id="try-again-no-active-sentences-id" data-qa="try-again-no-active-sentences-link" href=".">try again</a>.</p>
-      {% elif requiresNewCalculation %}
-              {{ recalcRequiredPanel(prisoner.prisonerNumber, calculateReleaseDatesUIUrl) }}
       {% elif isIndeterminateAndHasNoCalculatedDates %}
         <p class="govuk-body">This person is serving an indeterminate sentence and has no calculated dates.</p>
         <p class="govuk-body">You will need to <a id="manual-calc-link-id" data-qa="manual-calc-link" href="{{ calculateReleaseDatesUIUrl }}/calculation/{{ prisoner.prisonerNumber }}/reason">manually enter the approved dates</a>.</p>
+      {% elif thingsToDo.hasAdjustmentThingsToDo or thingsToDo.hasCalculationThingsToDo %}
+        {{ thingsToDoPanel(thingsToDo, prisoner.prisonerNumber, calculateReleaseDatesUIUrl, adjustmentsUIUrl) }}
       {% elif latestCalculationConfig %}
         {{ latestCalculationCard(latestCalculationConfig) }}
       {% endif %}

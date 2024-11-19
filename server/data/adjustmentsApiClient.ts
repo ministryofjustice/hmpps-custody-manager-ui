@@ -18,12 +18,4 @@ export default class AdjustmentApiClient {
       path: url,
     }) as Promise<Adjustment[]>
   }
-
-  async getAdaIntercept(person: string, activeCaseLoadId: string): Promise<AdaIntercept> {
-    const details = await (this.restClient.get({
-      path: `/adjustments/additional-days/${person}/adjudication-details`,
-      headers: { 'Active-Caseload': activeCaseLoadId },
-    }) as Promise<AdaAdjudicationDetails>)
-    return details.intercept
-  }
 }

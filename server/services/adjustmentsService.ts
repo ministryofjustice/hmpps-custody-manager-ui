@@ -12,10 +12,6 @@ export default class AdjustmentsService {
     )
   }
 
-  async getAdaIntercept(person: string, activeCaseLoadId: string, username: string): Promise<AdaIntercept> {
-    return new AdjustmentApiClient(await this.getSystemClientToken(username)).getAdaIntercept(person, activeCaseLoadId)
-  }
-
   private async getSystemClientToken(username: string): Promise<string> {
     return this.hmppsAuthClient.getSystemClientToken(username)
   }

@@ -14,8 +14,7 @@ export default class OverviewRoutes {
 
   GET = async (req: Request, res: Response): Promise<void> => {
     const { prisoner } = req
-    const { token, activeCaseLoadId, username, hasInactiveBookingAccess, hasReadOnlyNomisConfigAccess } =
-      res.locals.user
+    const { token, username, hasInactiveBookingAccess, hasReadOnlyNomisConfigAccess } = res.locals.user
     const bookingId = prisoner.bookingId as unknown as number
     const isPrisonerOutside = prisoner.prisonId === 'OUT'
     const isPrisonerBeingTransferred = prisoner.prisonId === 'TRN'
@@ -23,14 +22,11 @@ export default class OverviewRoutes {
 
     if (res.locals.user.hasAdjustmentsAccess === true) {
       const startOfSentenceEnvelope = await this.prisonerService.getStartOfSentenceEnvelope(bookingId, token)
-      const [nextCourtEvent, hasActiveSentences] = await Promise.all([
+      const [nextCourtEvent, hasActiveSentences, thingsToDo] = await Promise.all([
         this.prisonerService.getNextCourtEvent(bookingId, token),
         this.prisonerService.hasActiveSentences(bookingId, token),
+        this.prisonerService.getThingsToDo(prisoner.prisonerNumber),
       ])
-
-      const adaIntercept = showAdjustments
-        ? await this.adjustmentsService.getAdaIntercept(prisoner.prisonerNumber, activeCaseLoadId, username)
-        : null
 
       const aggregatedAdjustments = showAdjustments
         ? await this.getAggregatedAdjustments(prisoner, startOfSentenceEnvelope, username)
@@ -46,21 +42,20 @@ export default class OverviewRoutes {
           : false
 
       // TODO When feature flag is removed, add to the Promise.all above
-      const requiresNewCalculation = config.featureFlags.thingsToDo
-        ? await this.calculateReleaseDatesService.hasNewOrUpdatedSentenceOrAdjustments(bookingId, token)
-        : false
+      const requiresNewCalculation =
+        config.featureFlags.thingsToDo && thingsToDo.calculationThingsToDo.includes('CALCULATION_REQUIRED')
 
       return res.render('pages/prisoner/overview', {
         prisoner,
         nextCourtEvent,
         aggregatedAdjustments,
-        adaIntercept,
         latestCalculationConfig,
         isIndeterminateAndHasNoCalculatedDates,
         hasActiveSentences,
         showAdjustments,
         requiresNewCalculation,
         hasReadOnlyNomisConfigAccess,
+        thingsToDo,
       })
     }
     return res.redirect(`${config.calculateReleaseDatesUiUrl}?prisonId=${prisoner.prisonerNumber}`)
