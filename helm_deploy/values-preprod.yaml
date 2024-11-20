@@ -1,5 +1,5 @@
 ---
-# Per environment values which override defaults in hmpps-custody-manager-ui/values.yaml
+# Per environment values which override defaults in hmpps-court-cases-release-dates/values.yaml
 
 generic-service:
   replicaCount: 2

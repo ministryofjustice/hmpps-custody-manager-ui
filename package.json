@@ -1,8 +1,8 @@
 {
-  "name": "hmpps-custody-manager-ui",
+  "name": "hmpps-court-cases-release-dates",
   "version": "0.0.1",
   "description": "HMPPS Custody Manager",
-  "repository": "git@github.com:ministryofjustice/hmpps-custody-manager-ui.git",
+  "repository": "git@github.com:ministryofjustice/hmpps-court-cases-release-dates.git",
   "license": "MIT",
   "scripts": {
     "prepare": "husky",

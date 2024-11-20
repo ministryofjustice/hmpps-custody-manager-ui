@@ -1,11 +1,11 @@
 generic-service:
-  nameOverride: hmpps-custody-manager-ui
+  nameOverride: hmpps-court-cases-release-dates
   productId: "DPS014" # productId for the product that this belongs too, i.e. DPS001, see README.md for details
 
   replicaCount: 4
 
   image:
-    repository: quay.io/hmpps/hmpps-custody-manager-ui
+    repository: quay.io/hmpps/hmpps-court-cases-release-dates
     tag: app_version # override at deployment time
     port: 3000
 
@@ -42,7 +42,7 @@ generic-service:
   #     [name of environment variable as seen by app]: [key of kubernetes secret to load]
 
   namespace_secrets:
-    hmpps-custody-manager-ui:
+    hmpps-court-cases-release-dates:
       APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
       API_CLIENT_ID: "API_CLIENT_ID"
       API_CLIENT_SECRET: "API_CLIENT_SECRET"
@@ -66,4 +66,4 @@ generic-service:
       - private_prisons
 
 generic-prometheus-alerts:
-  targetApplication: hmpps-custody-manager-ui
+  targetApplication: hmpps-court-cases-release-dates
