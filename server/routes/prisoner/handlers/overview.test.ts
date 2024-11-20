@@ -11,6 +11,7 @@ import AdjustmentsService from '../../../services/adjustmentsService'
 import { AdaIntercept, Adjustment } from '../../../@types/adjustmentsApi/types'
 import config from '../../../config'
 import CalculateReleaseDatesService from '../../../services/calculateReleaseDatesService'
+import { ThingsToDo } from '../../../@types/courtCasesReleaseDatesApi/types'
 
 jest.mock('../../../services/prisonerService')
 jest.mock('../../../services/prisonerSearchService')
@@ -273,7 +274,6 @@ describe('Route Handlers - Overview', () => {
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
-      adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
       prisonerService.hasActiveSentences.mockResolvedValue(false)
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -363,7 +363,6 @@ describe('Route Handlers - Overview', () => {
           days: 10,
         } as Adjustment,
       ])
-      adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
       prisonerService.hasActiveSentences.mockResolvedValue(false)
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -375,91 +374,85 @@ describe('Route Handlers - Overview', () => {
     })
   })
 
-  describe('Adjustment intercept tests', () => {
-    it('should display correct message if intercept type is UPDATE', () => {
-      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
-        prisonerNumber: 'A12345B',
-        firstName: 'Jane',
-        lastName: 'Doe',
-        prisonId: 'MDI',
-      } as Prisoner)
-      prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
-      adjustmentsService.getAdjustments.mockResolvedValue([])
-      adjustmentsService.getAdaIntercept.mockResolvedValue({ type: 'UPDATE' } as AdaIntercept)
-      prisonerService.hasActiveSentences.mockResolvedValue(false)
+  describe('Things To Do (notification) tests', () => {
+    describe('Adjustment intercept tests', () => {
+      it('should display correct message if intercept type is UPDATE', () => {
+        prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
+          prisonerNumber: 'A12345B',
+          firstName: 'Jane',
+          lastName: 'Doe',
+          prisonId: 'MDI',
+        } as Prisoner)
+        prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
+        adjustmentsService.getAdjustments.mockResolvedValue([])
+        prisonerService.hasActiveSentences.mockResolvedValue(true)
+        prisonerService.getThingsToDo.mockResolvedValue({
+          hasCalculationThingsToDo: false,
+          hasAdjustmentThingsToDo: true,
+          calculationThingsToDo: [],
+          adjustmentThingsToDo: { adaIntercept: { type: 'UPDATE' } as AdaIntercept },
+        } as ThingsToDo)
 
-      return request(app)
-        .get('/prisoner/A12345B/overview')
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          expect(res.text).toContain('Before you continue, you must')
-          expect(res.text).toContain('review the updated ADA information')
-        })
-    })
+        return request(app)
+          .get('/prisoner/A12345B/overview')
+          .expect('Content-Type', /html/)
+          .expect(res => {
+            expect(res.text).toContain('The ADA information needs to be reviewed')
+            expect(res.text).toContain('Review updated ADA information')
+          })
+      })
 
-    it('should display correct message if intercept type is FIRST_TIME', () => {
-      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
-        prisonerNumber: 'A12345B',
-        firstName: 'Jane',
-        lastName: 'Doe',
-        prisonId: 'MDI',
-      } as Prisoner)
-      prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
-      adjustmentsService.getAdjustments.mockResolvedValue([])
-      adjustmentsService.getAdaIntercept.mockResolvedValue({ type: 'FIRST_TIME' } as AdaIntercept)
-      prisonerService.hasActiveSentences.mockResolvedValue(false)
+      it('should display correct message if intercept type is FIRST_TIME', () => {
+        prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
+          prisonerNumber: 'A12345B',
+          firstName: 'Jane',
+          lastName: 'Doe',
+          prisonId: 'MDI',
+        } as Prisoner)
+        prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
+        adjustmentsService.getAdjustments.mockResolvedValue([])
+        prisonerService.hasActiveSentences.mockResolvedValue(true)
+        prisonerService.getThingsToDo.mockResolvedValue({
+          hasCalculationThingsToDo: false,
+          hasAdjustmentThingsToDo: true,
+          calculationThingsToDo: [],
+          adjustmentThingsToDo: { adaIntercept: { type: 'FIRST_TIME' } as AdaIntercept },
+        } as ThingsToDo)
 
-      return request(app)
-        .get('/prisoner/A12345B/overview')
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          expect(res.text).toContain('Before you continue, you must')
-          expect(res.text).toContain('review existing ADA information')
-        })
-    })
+        return request(app)
+          .get('/prisoner/A12345B/overview')
+          .expect('Content-Type', /html/)
+          .expect(res => {
+            expect(res.text).toContain('The ADA information needs to be reviewed')
+            expect(res.text).toContain('Review ADA information')
+          })
+      })
 
-    it('should display correct message if intercept type is PADA', () => {
-      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
-        prisonerNumber: 'A12345B',
-        firstName: 'Jane',
-        lastName: 'Doe',
-        prisonId: 'MDI',
-      } as Prisoner)
-      prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
-      adjustmentsService.getAdjustments.mockResolvedValue([])
-      adjustmentsService.getAdaIntercept.mockResolvedValue({ type: 'PADA' } as AdaIntercept)
-      prisonerService.hasActiveSentences.mockResolvedValue(false)
+      it('should display correct message if intercept type is PADA', () => {
+        prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
+          prisonerNumber: 'A12345B',
+          firstName: 'Jane',
+          lastName: 'Doe',
+          prisonId: 'MDI',
+        } as Prisoner)
+        prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
+        adjustmentsService.getAdjustments.mockResolvedValue([])
+        prisonerService.hasActiveSentences.mockResolvedValue(true)
+        prisonerService.getThingsToDo.mockResolvedValue({
+          hasCalculationThingsToDo: false,
+          hasAdjustmentThingsToDo: true,
+          calculationThingsToDo: [],
+          adjustmentThingsToDo: { adaIntercept: { type: 'PADA' } as AdaIntercept },
+        } as ThingsToDo)
 
-      return request(app)
-        .get('/prisoner/A12345B/overview')
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          expect(res.text).toContain('Before you continue, you must')
-          expect(res.text).toContain('review prospective ADA information')
-        })
-    })
-
-    it('should display correct message if intercept type is NONE', () => {
-      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
-        prisonerNumber: 'A12345B',
-        firstName: 'Jane',
-        lastName: 'Doe',
-        prisonId: 'MDI',
-      } as Prisoner)
-      prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
-      adjustmentsService.getAdjustments.mockResolvedValue([])
-      prisonerService.hasActiveSentences.mockResolvedValue(false)
-
-      adjustmentsService.getAdaIntercept.mockResolvedValue({ type: 'NONE' } as AdaIntercept)
-
-      return request(app)
-        .get('/prisoner/A12345B/overview')
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          expect(res.text).not.toContain('review the updated ADA information')
-          expect(res.text).not.toContain('review existing ADA information')
-          expect(res.text).not.toContain('review prospective ADA information')
-        })
+        return request(app)
+          .get('/prisoner/A12345B/overview')
+          .expect('Content-Type', /html/)
+          .expect(res => {
+            expect(res.text).toContain('The ADA information needs to be reviewed')
+            expect(res.text).toContain('Review prospective ADA information')
+          })
+      })
     })
   })
 
@@ -497,7 +490,6 @@ describe('Route Handlers - Overview', () => {
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
-      adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
       calculateReleaseDatesService.getLatestCalculationForPrisoner.mockResolvedValue(undefined)
       prisonerService.hasActiveSentences.mockResolvedValue(false)
 
@@ -525,7 +517,6 @@ describe('Route Handlers - Overview', () => {
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
-      adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
       calculateReleaseDatesService.getLatestCalculationForPrisoner.mockResolvedValue(undefined)
       prisonerService.hasActiveSentences.mockResolvedValue(true)
 
@@ -549,7 +540,6 @@ describe('Route Handlers - Overview', () => {
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
-      adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
       calculateReleaseDatesService.getLatestCalculationForPrisoner.mockResolvedValue({
         calculatedAt: '2024-06-01T10:30:45',
         establishment: 'HMP Kirkham',
@@ -590,7 +580,6 @@ describe('Route Handlers - Overview', () => {
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
-      adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
       calculateReleaseDatesService.getLatestCalculationForPrisoner.mockResolvedValue({
         calculatedAt: '2024-06-01T10:30:45',
         establishment: 'HMP Kirkham',
@@ -635,7 +624,6 @@ describe('Route Handlers - Overview', () => {
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
-      adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
       calculateReleaseDatesService.hasIndeterminateSentences.mockResolvedValue(true)
       prisonerService.hasActiveSentences.mockResolvedValue(true)
 
@@ -663,7 +651,6 @@ describe('Route Handlers - Overview', () => {
       } as Prisoner)
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
-      adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
       calculateReleaseDatesService.hasIndeterminateSentences.mockResolvedValue(false)
       prisonerService.hasActiveSentences.mockResolvedValue(true)
 
@@ -768,7 +755,6 @@ describe('Route Handlers - Overview', () => {
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       prisonerService.hasActiveSentences.mockResolvedValue(false)
       adjustmentsService.getAdjustments.mockResolvedValue([])
-      adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
       return request(app)
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
@@ -791,7 +777,6 @@ describe('Route Handlers - Overview', () => {
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       prisonerService.hasActiveSentences.mockResolvedValue(false)
       adjustmentsService.getAdjustments.mockResolvedValue([])
-      adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
       return request(app)
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
@@ -821,7 +806,6 @@ describe('Route Handlers - Overview', () => {
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       prisonerService.hasActiveSentences.mockResolvedValue(false)
       adjustmentsService.getAdjustments.mockResolvedValue([])
-      adjustmentsService.getAdaIntercept.mockResolvedValue({} as AdaIntercept)
       return request(app)
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)

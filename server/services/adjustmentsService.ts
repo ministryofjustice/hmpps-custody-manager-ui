@@ -1,5 +1,5 @@
 import { HmppsAuthClient } from '../data'
-import { AdaIntercept, Adjustment } from '../@types/adjustmentsApi/types'
+import { Adjustment } from '../@types/adjustmentsApi/types'
 import AdjustmentApiClient from '../data/adjustmentsApiClient'
 
 export default class AdjustmentsService {
@@ -10,10 +10,6 @@ export default class AdjustmentsService {
       person,
       earliestSentenceDate?.toISOString()?.substring(0, 10),
     )
-  }
-
-  async getAdaIntercept(person: string, activeCaseLoadId: string, username: string): Promise<AdaIntercept> {
-    return new AdjustmentApiClient(await this.getSystemClientToken(username)).getAdaIntercept(person, activeCaseLoadId)
   }
 
   private async getSystemClientToken(username: string): Promise<string> {
