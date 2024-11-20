@@ -6,7 +6,6 @@ generic-service:
 
   ingress:
     host: court-cases-release-dates-dev.hmpps.service.justice.gov.uk
-    tlsSecretName: hmpps-custody-manager-cert
 
   env:
     INGRESS_URL: "https://court-cases-release-dates-dev.hmpps.service.justice.gov.uk"
