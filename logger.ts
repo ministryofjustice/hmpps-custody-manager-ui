@@ -4,6 +4,6 @@ import config from './server/config'
 
 const formatOut = bunyanFormat({ outputMode: 'short', color: !config.production })
 
-const logger = bunyan.createLogger({ name: 'HMPPS Custody Manager', stream: formatOut, level: 'debug' })
+const logger = bunyan.createLogger({ name: 'HMPPS Court Cases and Release Dates', stream: formatOut, level: 'debug' })
 
 export default logger
