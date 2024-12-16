@@ -32,15 +32,16 @@ export default class PrisonerService {
 
   async getStartOfSentenceEnvelope(bookingId: number, token: string): Promise<Date> {
     const sentencesAndOffences = await new PrisonApiClient(token).getSentencesAndOffences(bookingId)
-    return this.findStartOfSentenceEvelope(sentencesAndOffences)
+    return this.findStartOfSentenceEnvelope(sentencesAndOffences)
   }
 
-  private findStartOfSentenceEvelope(sentences: OffenderSentenceAndOffences[]): Date {
-    if (sentences.length) {
+  private findStartOfSentenceEnvelope(sentences: OffenderSentenceAndOffences[]): Date {
+    const activeSentences = sentences.filter(it => it.sentenceStatus === 'A')
+    if (activeSentences.length) {
       return new Date(
         Math.min.apply(
           null,
-          sentences.filter(it => it.sentenceStatus === 'A').map(it => new Date(it.sentenceDate)),
+          activeSentences.map(it => new Date(it.sentenceDate)),
         ),
       )
     }
