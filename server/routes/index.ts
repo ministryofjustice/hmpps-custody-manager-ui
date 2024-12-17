@@ -9,7 +9,7 @@ export default function routes(services: Services): Router {
   const router = Router()
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
-  get('/', async (_, res) => res.redirect(config.digitalPrisonServicesUrl))
+  get('/', async (_, res) => res.redirect(config.applications.digitalPrisonServices.url))
 
   router.use('/prisoner', prisonerRoutes(services))
   router.use('/config', configRoutes(services))

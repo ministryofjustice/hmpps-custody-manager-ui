@@ -7,7 +7,7 @@ export default class CourtCasesReleaseDatesApiClient {
 
   constructor(token: string) {
     this.restClient = new RestClient(
-      'Calculate Release Dates API',
+      'Court Cases Release Dates API',
       config.apis.courtCasesReleaseDatesApi as ApiConfig,
       token,
     )

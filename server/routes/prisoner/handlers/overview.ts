@@ -4,17 +4,19 @@ import AdjustmentsService from '../../../services/adjustmentsService'
 import config from '../../../config'
 import CalculateReleaseDatesService from '../../../services/calculateReleaseDatesService'
 import { Prisoner } from '../../../@types/prisonerSearchApi/types'
+import RemandAndSentencingService from '../../../services/remandAndSentencingService'
 
 export default class OverviewRoutes {
   constructor(
     private readonly prisonerService: PrisonerService,
     private readonly adjustmentsService: AdjustmentsService,
     private readonly calculateReleaseDatesService: CalculateReleaseDatesService,
+    private readonly remandAndSentencingService: RemandAndSentencingService,
   ) {}
 
   GET = async (req: Request, res: Response): Promise<void> => {
     const { prisoner } = req
-    const { token, username, hasInactiveBookingAccess, hasReadOnlyNomisConfigAccess } = res.locals.user
+    const { token, username, hasInactiveBookingAccess, hasReadOnlyNomisConfigAccess, hasRasAccess } = res.locals.user
     const bookingId = prisoner.bookingId as unknown as number
     const isPrisonerOutside = prisoner.prisonId === 'OUT'
     const isPrisonerBeingTransferred = prisoner.prisonId === 'TRN'
@@ -45,6 +47,10 @@ export default class OverviewRoutes {
       const requiresNewCalculation =
         config.featureFlags.thingsToDo && thingsToDo.calculationThingsToDo.includes('CALCULATION_REQUIRED')
 
+      const latestRecall = hasRasAccess
+        ? await this.remandAndSentencingService.getMostRecentRecall(prisoner.prisonerNumber, token)
+        : null
+
       return res.render('pages/prisoner/overview', {
         prisoner,
         nextCourtEvent,
@@ -56,9 +62,11 @@ export default class OverviewRoutes {
         requiresNewCalculation,
         hasReadOnlyNomisConfigAccess,
         thingsToDo,
+        showRecalls: hasRasAccess,
+        latestRecall,
       })
     }
-    return res.redirect(`${config.calculateReleaseDatesUiUrl}?prisonId=${prisoner.prisonerNumber}`)
+    return res.redirect(`${config.applications.calculateReleaseDates.url}?prisonId=${prisoner.prisonerNumber}`)
   }
 
   private async getAggregatedAdjustments(prisoner: Prisoner, startOfSentenceEnvelope: Date, username: string) {
