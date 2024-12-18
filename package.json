@@ -100,7 +100,7 @@
   "dependencies": {
     "@microsoft/applicationinsights-clickanalytics-js": "^3.3.4",
     "@microsoft/applicationinsights-web": "^3.3.4",
-    "@ministryofjustice/frontend": "^3.2.0",
+    "@ministryofjustice/frontend": "^3.2.1",
     "agentkeepalive": "^4.5.0",
     "applicationinsights": "^3.4.0",
     "body-parser": "^1.20.3",
@@ -144,7 +144,7 @@
     "@types/http-errors": "^2.0.4",
     "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.7",
-    "@types/node": "^20.17.9",
+    "@types/node": "^20.17.10",
     "@types/nunjucks": "^3.2.6",
     "@types/passport": "^1.0.17",
     "@types/passport-oauth2": "^1.4.17",
@@ -179,7 +179,7 @@
     "openapi-typescript": "^7.4.4",
     "prettier": "^3.4.2",
     "prettier-plugin-jinja-template": "^2.0.0",
-    "sass": "^1.82.0",
+    "sass": "^1.83.0",
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.5",
     "typescript": "^5.7.2"
