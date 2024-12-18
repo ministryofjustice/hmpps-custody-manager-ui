@@ -476,7 +476,7 @@ describe('Route Handlers - Overview', () => {
       return request(app)
         .get('/prisoner/A12345B/overview')
         .expect(302)
-        .expect('Location', `${config.calculateReleaseDatesUiUrl}?prisonId=A12345B`)
+        .expect('Location', `${config.applications.calculateReleaseDates.url}?prisonId=A12345B`)
     })
   })
 

@@ -1,8 +1,8 @@
-{% macro thingsToDoPanel(thingsToDo, prisonerNumber, calculateReleaseDatesUIUrl, adjustmentsUIUrl) %}
+{% macro thingsToDoPanel(thingsToDo, prisonerNumber, calculateReleaseDatesUiUrl, adjustmentsUiUrl) %}
   <article class="moj-ticket-panel" aria-label="things-todo-panel">
     {# Section for Calculation Required #}
     {% if thingsToDo.hasCalculationThingsToDo and 'CALCULATION_REQUIRED' in thingsToDo.calculationThingsToDo %}
-      {% set calculationUrl = calculateReleaseDatesUIUrl + '/calculation/' + prisonerNumber + '/reason' %}
+      {% set calculationUrl = calculateReleaseDatesUiUrl + '/calculation/' + prisonerNumber + '/reason' %}
       {% set heading = 'Calculation required' %}
       {% set paragraphText = 'Some information has changed. Check that all information is up to date then calculate release dates.' %}
       {% set buttonText = 'Calculate release dates' %}
@@ -16,9 +16,9 @@
 
       {% set adaUrl %}
         {% if adaIntercept.anyProspective %}
-          {{ adjustmentsUIUrl + "/" + prisonerNumber + "/additional-days/review-prospective" }}
+          {{ adjustmentsUiUrl + "/" + prisonerNumber + "/additional-days/review-prospective" }}
         {% else %}
-          {{ adjustmentsUIUrl + "/" + prisonerNumber + "/additional-days/review-and-approve" }}
+          {{ adjustmentsUiUrl + "/" + prisonerNumber + "/additional-days/review-and-approve" }}
         {% endif %}
       {% endset %}
 

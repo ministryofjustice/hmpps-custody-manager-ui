@@ -142,12 +142,34 @@ export default {
       },
       agent: new AgentConfig(Number(get('COURT_CASES_RELEASE_DATES_API_TIMEOUT_RESPONSE', 10000))),
     },
+    remandAndSentencingApi: {
+      url: get('REMAND_AND_SENTENCING_API_URL', 'http://localhost:8083', requiredInProduction),
+      timeout: {
+        response: Number(get('REMAND_AND_SENTENCING_API_TIMEOUT_RESPONSE', 10000)),
+        deadline: Number(get('REMAND_AND_SENTENCING_API_TIMEOUT_DEADLINE', 10000)),
+      },
+      agent: new AgentConfig(Number(get('REMAND_AND_SENTENCING_API_TIMEOUT_RESPONSE', 10000))),
+    },
   },
-  digitalPrisonServicesUrl: get('DIGITAL_PRISON_SERVICES_URL', 'http://127.0.0.1:3000/dps', requiredInProduction),
-  adjustmentsUIUrl: get('ADJUSTMENTS_UI_URL', 'http://127.0.0.1:3000/adjustments', requiredInProduction),
+  applications: {
+    recordARecall: {
+      url: get('RECALLS_UI_URL', 'http://localhost:3000', requiredInProduction),
+    },
+    digitalPrisonServices: {
+      url: get('DIGITAL_PRISON_SERVICES_URL', 'http://127.0.0.1:3000/dps', requiredInProduction),
+    },
+    adjustments: {
+      url: get('ADJUSTMENTS_UI_URL', 'http://127.0.0.1:3000/adjustments', requiredInProduction),
+    },
+    calculateReleaseDates: {
+      url: get('CALCULATE_RELEASE_DATES_UI_URL', 'http://127.0.0.1:3000/crds', requiredInProduction),
+    },
+    courtCasesReleaseDates: {
+      url: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
+    },
+  },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),
-  calculateReleaseDatesUiUrl: get('CALCULATE_RELEASE_DATES_UI_URL', 'http://127.0.0.1:3000/crds', requiredInProduction),
   appInsightsConnectionString: get('APPLICATIONINSIGHTS_CONNECTION_STRING', '', requiredInProduction),
   featureFlags: {
     thingsToDo: get('FEATURE_FLAG_THINGS_TO_DO', 'false') === 'true',

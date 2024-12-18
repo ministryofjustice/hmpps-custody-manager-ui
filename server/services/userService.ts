@@ -8,6 +8,7 @@ export interface UserDetails extends User {
   displayName: string
   roles: string[]
   hasAdjustmentsAccess: boolean
+  hasRasAccess: boolean
   hasInactiveBookingAccess: boolean
   hasReadOnlyNomisConfigAccess: boolean
   caseloads: string[]
@@ -32,6 +33,7 @@ export default class UserService {
       roles,
       displayName: convertToTitleCase(user.name),
       hasAdjustmentsAccess: this.hasAdjustmentsAccess(roles),
+      hasRasAccess: this.hasRasAccess(roles),
       hasInactiveBookingAccess: this.hasInactiveBookingAccess(roles),
       hasReadOnlyNomisConfigAccess: this.hasReadOnlyNomisConfigAccess(roles),
       caseloads: userCaseloads.map(uc => uc.caseLoadId),
@@ -47,6 +49,10 @@ export default class UserService {
 
   hasAdjustmentsAccess(roles: string[]): boolean {
     return roles.includes('ADJUSTMENTS_MAINTAINER')
+  }
+
+  hasRasAccess(roles: string[]): boolean {
+    return roles.includes('REMAND_AND_SENTENCING')
   }
 
   hasInactiveBookingAccess(roles: string[]): boolean {

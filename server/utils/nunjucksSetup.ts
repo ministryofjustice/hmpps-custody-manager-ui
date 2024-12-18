@@ -23,12 +23,13 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   app.locals.applicationName = 'Court cases, adjustments and release dates'
   app.locals.environmentName = config.environmentName
   app.locals.environmentNameColour = config.environmentName === 'PRE-PRODUCTION' ? 'govuk-tag--green' : ''
-  app.locals.digitalPrisonServicesUrl = config.digitalPrisonServicesUrl
-  app.locals.adjustmentsUIUrl = config.adjustmentsUIUrl
+  app.locals.digitalPrisonServicesUrl = config.applications.digitalPrisonServices.url
+  app.locals.adjustmentsUiUrl = config.applications.adjustments.url
+  app.locals.recallsUiUrl = config.applications.recordARecall.url
   app.locals.appInsightsConnectionString = config.appInsightsConnectionString
   app.locals.appInsightsApplicationName = applicationInfo.applicationName
   app.locals.buildNumber = config.buildNumber
-  app.locals.calculateReleaseDatesUIUrl = config.calculateReleaseDatesUiUrl
+  app.locals.calculateReleaseDatesUiUrl = config.applications.calculateReleaseDates.url
 
   if (config.environmentName === 'LOCAL') {
     app.locals.environment = 'local'

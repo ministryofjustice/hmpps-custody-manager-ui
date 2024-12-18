@@ -1,11 +1,11 @@
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 
-{% macro adjustmentsIntercept(intercept, prisonerNumber, adjustmentsUIUrl) %}
+{% macro adjustmentsIntercept(intercept, prisonerNumber, adjustmentsUiUrl) %}
   {% set url %}
     {% if intercept.anyProspective %}
-      {{ adjustmentsUIUrl + "/" + prisonerNumber + "/additional-days/review-prospective" }}
+      {{ adjustmentsUiUrl + "/" + prisonerNumber + "/additional-days/review-prospective" }}
     {% else %}
-      {{ adjustmentsUIUrl + "/" + prisonerNumber + "/additional-days/review-and-approve" }}
+      {{ adjustmentsUiUrl + "/" + prisonerNumber + "/additional-days/review-and-approve" }}
     {% endif %}
   {% endset %}
 
