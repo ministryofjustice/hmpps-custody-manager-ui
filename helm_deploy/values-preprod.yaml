@@ -28,6 +28,7 @@ generic-service:
     RECALLS_UI_URL: "https://record-a-recall-preprod.hmpps.service.justice.gov.uk/"
 
 
+
   allowlist:
     ark-dom1-farnborough: 194.33.192.0/24
     ark-dom1-corsham: 194.33.196.0/24

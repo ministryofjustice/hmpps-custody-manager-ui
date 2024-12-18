@@ -24,5 +24,6 @@ generic-service:
     REMAND_AND_SENTENCING_API_URL: "https://remand-and-sentencing-api.hmpps.service.justice.gov.uk"
     RECALLS_UI_URL: "https://record-a-recall.hmpps.service.justice.gov.uk/"
 
+
 generic-prometheus-alerts:
   alertSeverity: legacy-replacement-alerts
