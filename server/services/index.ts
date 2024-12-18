@@ -22,7 +22,7 @@ export const services = () => {
 
   const calculateReleaseDatesService = new CalculateReleaseDatesService()
 
-  const remandAndSentencingService = new RemandAndSentencingService(hmppsAuthClient)
+  const remandAndSentencingService = new RemandAndSentencingService()
 
   return {
     applicationInfo,
