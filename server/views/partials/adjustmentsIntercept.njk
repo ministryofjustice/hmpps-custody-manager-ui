@@ -12,9 +12,9 @@
   {% set html %}
     <p class="govuk-notification-banner__heading">
       Before you continue, you must
-      {% if intercept.type == 'FIRST_TIME' %}
+      {% if intercept.type in ['FIRST_TIME', 'FIRST_TIME_WITH_NO_ADJUDICATION'] %}
         <a href="{{ url }}">review existing ADA information</a>.
-        {% elif intercept.type == 'PADA' %}
+        {% elif intercept.type in ['PADA', 'PADAS'] %}
         <a href="{{ url }}">review prospective ADA information</a>.
       {% else %}
         <a href="{{ url }}">review the updated ADA information</a>.
