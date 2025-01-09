@@ -26,9 +26,9 @@
       {% set paragraphText = 'The ADA information needs to be reviewed.' %}
 
       {% set buttonText %}
-        {% if adaIntercept.type == 'FIRST_TIME' %}
+        {% if adaIntercept.type in ['FIRST_TIME', 'FIRST_TIME_WITH_NO_ADJUDICATION'] %}
           Review ADA information
-          {% elif adaIntercept.type == 'PADA' %}
+          {% elif adaIntercept.type in ['PADA', 'PADAS'] %}
           Review prospective ADA information
         {% else %}
           Review updated ADA information

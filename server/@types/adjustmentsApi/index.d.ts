@@ -371,7 +371,7 @@ export interface components {
     }
     AdaIntercept: {
       /** @enum {string} */
-      type: 'NONE' | 'FIRST_TIME' | 'UPDATE' | 'PADA'
+      type: 'NONE' | 'FIRST_TIME' | 'UPDATE' | 'PADA' | 'PADAS' | 'FIRST_TIME_WITH_NO_ADJUDICATION'
       /** Format: int32 */
       number: number
       anyProspective: boolean
