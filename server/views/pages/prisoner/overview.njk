@@ -117,7 +117,7 @@
             classes: "govuk-button--secondary",
             text: "Record a recall",
             preventDoubleClick: true,
-            href: '/person/' + nomisId + '/recall',
+            href: recallsUiUrl + '/person/' + prisoner.prisonerNumber + '/recall?entrypoint=ccards',
             attributes: {  'data-qa': 'create-new-recall-btn' }
           }) }}
       {% endif %}
