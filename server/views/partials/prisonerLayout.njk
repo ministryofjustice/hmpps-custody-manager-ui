@@ -42,14 +42,14 @@
     {% block subNavigation %}
         {% set navigation = {
                 activeSubNav: activeSubNav,
-                adjustments: {
-                    enabled: not profileBannerParams
-                },
                 courtCases: {
                     enabled: false
                 },
                 documents: {
                     enabled: false
+                },
+                recalls: {
+                    enabled: environment == 'dev'
                 },
                 releaseDates: {
                     thingsToDo: "1" if requiresNewCalculation
