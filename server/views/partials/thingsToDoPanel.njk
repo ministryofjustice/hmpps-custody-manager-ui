@@ -22,20 +22,31 @@
         {% endif %}
       {% endset %}
 
-      {% set heading = 'Review ADA information' %}
-      {% set paragraphText = 'The ADA information needs to be reviewed.' %}
+      {% if adaIntercept.number > 1 %}
+        {% set pluralisation = "s" %}
+      {% else %}
+        {% set pluralisation = "" %}
+      {% endif %}
 
-      {% set buttonText %}
+      {% set heading %}
         {% if adaIntercept.type in ['FIRST_TIME', 'FIRST_TIME_WITH_NO_ADJUDICATION'] %}
-          Review ADA information
-          {% elif adaIntercept.type in ['PADA', 'PADAS'] %}
-          Review prospective ADA information
+            Review ADA adjudication{{pluralisation}}
+        {% elif adaIntercept.type in ['PADA', 'PADAS']  %}
+          Review PADA{{pluralisation}}
+        {% elif adaIntercept.type == 'UPDATE' %}
+          Review ADA updates
         {% else %}
-          Review updated ADA information
+          Review adjustment information
         {% endif %}
       {% endset %}
 
-      {{ todoSection(adaUrl, heading, paragraphText, buttonText) }}
+        {% if adaIntercept.type in ['PADA','PADAS'] %}
+           {% set interceptType = "PADA" %}
+        {% else %}
+           {% set interceptType = "ADA" %}
+        {% endif %}
+
+      {{ todoSection(adaUrl, heading, adaIntercept.message, "Review " + interceptType + pluralisation) }}
     {% endif %}
   </article>
 {% endmacro %}
