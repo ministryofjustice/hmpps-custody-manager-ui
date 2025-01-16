@@ -24,7 +24,7 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/example/time': {
+  '/service-definitions/prisoner/{prisonerId}': {
     parameters: {
       query?: never
       header?: never
@@ -32,33 +32,10 @@ export interface paths {
       cookie?: never
     }
     /**
-     * Retrieve today's date and time
-     * @description This is an example endpoint that calls a service to return the current date and time. Requires role ROLE_TEMPLATE_KOTLIN__UI
+     * Retrieve the configuration of the CCRD services for a given prisoner
+     * @description Provides a list of services, their configuration and things-to-do for a specified prisoner.
      */
-    get: operations['getTime']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/example/message/{parameter}': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /**
-     * Example message endpoint to call another API
-     * @description This is an example endpoint that calls back to the kotlin template.
-     *           It will return a 404 response as the /example-external-api endpoint hasn't been implemented, so we use wiremock
-     *           in integration tests to simulate other responses.
-     *           Requires role ROLE_TEMPLATE_KOTLIN__UI
-     */
-    get: operations['getMessage']
+    get: operations['getCcrdConfiguration']
     put?: never
     post?: never
     delete?: never
@@ -78,6 +55,7 @@ export interface components {
       number: number
       anyProspective: boolean
       messageArguments: string[]
+      message: string
     }
     AdjustmentThingsToDo: {
       prisonerId: string
@@ -91,16 +69,24 @@ export interface components {
       hasAdjustmentThingsToDo: boolean
       hasCalculationThingsToDo: boolean
     }
-    ErrorResponse: {
-      /** Format: int32 */
-      status: number
-      errorCode?: string
-      userMessage?: string
-      developerMessage?: string
-      moreInfo?: string
+    AdjustmentThingToDo: WithRequired<components['schemas']['ThingToDo'], 'count'> & {
+      types: 'ADA_INTERCEPT'[]
+      adaIntercept?: components['schemas']['AdaIntercept']
     }
-    ExampleMessageDto: {
-      message: string
+    CcrdServiceDefinition: {
+      href: string
+      text: string
+      thingsToDo: components['schemas']['AdjustmentThingToDo'] | components['schemas']['EmptyThingToDo']
+    }
+    CcrdServiceDefinitions: {
+      services: {
+        [key: string]: components['schemas']['CcrdServiceDefinition']
+      }
+    }
+    EmptyThingToDo: WithRequired<components['schemas']['ThingToDo'], 'count'>
+    ThingToDo: {
+      /** Format: int64 */
+      count: number
     }
   }
   responses: never
@@ -155,91 +141,51 @@ export interface operations {
       }
     }
   }
-  getTime: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description today's date and time */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': string
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Forbidden to access this endpoint */
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  getMessage: {
+  getCcrdConfiguration: {
     parameters: {
       query?: never
       header?: never
       path: {
-        parameter: string
+        /**
+         * @description Prisoner's ID (also known as nomsId)
+         * @example A1234AB
+         */
+        prisonerId: string
       }
       cookie?: never
     }
     requestBody?: never
     responses: {
-      /** @description a message with a parameter */
+      /** @description Successfully returns the ccrd service list */
       200: {
         headers: {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ExampleMessageDto']
+          'application/json': components['schemas']['CcrdServiceDefinitions']
         }
       }
-      /** @description Unauthorized to access this endpoint */
+      /** @description Unauthorized - valid Oauth2 token required */
       401: {
         headers: {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponse']
+          'application/json': components['schemas']['CcrdServiceDefinitions']
         }
       }
-      /** @description Forbidden to access this endpoint */
+      /** @description Forbidden - requires appropriate role */
       403: {
         headers: {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Not found */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
+          'application/json': components['schemas']['CcrdServiceDefinitions']
         }
       }
     }
   }
+}
+type WithRequired<T, K extends keyof T> = T & {
+  [P in K]-?: T[P]
 }

@@ -3,9 +3,9 @@
 {% from "hmpps/components/court-cases-release-dates/service-header/macro.njk" import serviceHeader %}
 {% from "../../partials/adjustmentsIntercept.njk" import adjustmentsIntercept %}
 {% from "../../partials/recalculationRequiredPanel.njk" import recalcRequiredPanel %}
-{% from "../../partials/thingsToDoPanel.njk" import thingsToDoPanel %}
 {% from "hmpps/components/court-cases-release-dates/latest-calculation-card/macro.njk" import latestCalculationCard %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "hmpps/components/court-cases-release-dates/things-to-do/macro.njk" import thingsToDo %}
 
 {% set pageTitle = "Court cases and release dates - overview" %}
 {% set activeSubNav = 'overview' %}
@@ -52,8 +52,8 @@
       {% elif isIndeterminateAndHasNoCalculatedDates %}
         <p class="govuk-body">This person is serving an indeterminate sentence and has no calculated dates.</p>
         <p class="govuk-body">You will need to <a id="manual-calc-link-id" data-qa="manual-calc-link" href="{{ calculateReleaseDatesUiUrl }}/calculation/{{ prisoner.prisonerNumber }}/reason">manually enter the approved dates</a>.</p>
-      {% elif thingsToDo.hasAdjustmentThingsToDo or thingsToDo.hasCalculationThingsToDo %}
-        {{ thingsToDoPanel(thingsToDo, prisoner.prisonerNumber, calculateReleaseDatesUiUrl, adjustmentsUiUrl) }}
+      {% elif anyThingsToDo %}
+        {{ thingsToDo(serviceDefinitions, 'all') }}
       {% elif latestCalculationConfig %}
         {{ latestCalculationCard(latestCalculationConfig) }}
       {% endif %}

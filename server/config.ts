@@ -171,7 +171,4 @@ export default {
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),
   appInsightsConnectionString: get('APPLICATIONINSIGHTS_CONNECTION_STRING', '', requiredInProduction),
-  featureFlags: {
-    thingsToDo: get('FEATURE_FLAG_THINGS_TO_DO', 'false') === 'true',
-  },
 }
