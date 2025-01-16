@@ -47,6 +47,8 @@ export default class OverviewRoutes {
       const requiresNewCalculation =
         config.featureFlags.thingsToDo && thingsToDo.calculationThingsToDo.includes('CALCULATION_REQUIRED')
 
+      const requiresAdjustmentReview = config.featureFlags.thingsToDo && thingsToDo.hasAdjustmentThingsToDo
+
       const latestRecall = hasRasAccess
         ? await this.remandAndSentencingService.getMostRecentRecall(prisoner.prisonerNumber, token)
         : null
@@ -64,6 +66,7 @@ export default class OverviewRoutes {
         thingsToDo,
         showRecalls: hasRasAccess,
         latestRecall,
+        requiresAdjustmentReview,
       })
     }
     return res.redirect(`${config.applications.calculateReleaseDates.url}?prisonId=${prisoner.prisonerNumber}`)

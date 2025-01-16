@@ -390,15 +390,16 @@ describe('Route Handlers - Overview', () => {
           hasCalculationThingsToDo: false,
           hasAdjustmentThingsToDo: true,
           calculationThingsToDo: [],
-          adjustmentThingsToDo: { adaIntercept: { type: 'UPDATE' } as AdaIntercept },
+          adjustmentThingsToDo: { adaIntercept: { type: 'UPDATE', message: 'Update message' } as AdaIntercept },
         } as ThingsToDo)
 
         return request(app)
           .get('/prisoner/A12345B/overview')
           .expect('Content-Type', /html/)
           .expect(res => {
-            expect(res.text).toContain('The ADA information needs to be reviewed')
-            expect(res.text).toContain('Review updated ADA information')
+            expect(res.text).toContain('Update message')
+            expect(res.text).toContain('Review ADA updates')
+            expect(res.text).toContain('Review ADA')
           })
       })
 
@@ -416,15 +417,18 @@ describe('Route Handlers - Overview', () => {
           hasCalculationThingsToDo: false,
           hasAdjustmentThingsToDo: true,
           calculationThingsToDo: [],
-          adjustmentThingsToDo: { adaIntercept: { type: 'FIRST_TIME' } as AdaIntercept },
+          adjustmentThingsToDo: {
+            adaIntercept: { type: 'FIRST_TIME', number: 2, message: 'First time message' } as AdaIntercept,
+          },
         } as ThingsToDo)
 
         return request(app)
           .get('/prisoner/A12345B/overview')
           .expect('Content-Type', /html/)
           .expect(res => {
-            expect(res.text).toContain('The ADA information needs to be reviewed')
-            expect(res.text).toContain('Review ADA information')
+            expect(res.text).toContain('First time message')
+            expect(res.text).toContain('Review ADAs')
+            expect(res.text).toContain('Review ADA adjudications')
           })
       })
 
@@ -442,15 +446,15 @@ describe('Route Handlers - Overview', () => {
           hasCalculationThingsToDo: false,
           hasAdjustmentThingsToDo: true,
           calculationThingsToDo: [],
-          adjustmentThingsToDo: { adaIntercept: { type: 'PADA' } as AdaIntercept },
+          adjustmentThingsToDo: { adaIntercept: { type: 'PADA', message: 'PADA message' } as AdaIntercept },
         } as ThingsToDo)
 
         return request(app)
           .get('/prisoner/A12345B/overview')
           .expect('Content-Type', /html/)
           .expect(res => {
-            expect(res.text).toContain('The ADA information needs to be reviewed')
-            expect(res.text).toContain('Review prospective ADA information')
+            expect(res.text).toContain('PADA message')
+            expect(res.text).toContain('Review PADA')
           })
       })
     })
