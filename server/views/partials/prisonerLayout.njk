@@ -40,24 +40,6 @@
     </aside>
 
     {% block subNavigation %}
-        {% set navigation = {
-                activeSubNav: activeSubNav,
-                courtCases: {
-                    enabled: false
-                },
-                documents: {
-                    enabled: false
-                },
-                recalls: {
-                    enabled: environment == 'dev'
-                },
-                releaseDates: {
-                    thingsToDo: "1" if requiresNewCalculation
-                },
-                adjustments: {
-                    thingsToDo: "1" if requiresAdjustmentReview
-                }
-            } %}
-        {{ subNavigation(environment, navigation, prisoner.prisonerNumber) }}
+          {{ subNavigation(serviceDefinitions.services, 'overview') }}
     {% endblock %}
 {% endblock %}

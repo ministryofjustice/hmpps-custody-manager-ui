@@ -24,10 +24,10 @@ export default class OverviewRoutes {
 
     if (res.locals.user.hasAdjustmentsAccess === true) {
       const startOfSentenceEnvelope = await this.prisonerService.getStartOfSentenceEnvelope(bookingId, token)
-      const [nextCourtEvent, hasActiveSentences, thingsToDo] = await Promise.all([
+      const [nextCourtEvent, hasActiveSentences, serviceDefinitions] = await Promise.all([
         this.prisonerService.getNextCourtEvent(bookingId, token),
         this.prisonerService.hasActiveSentences(bookingId, token),
-        this.prisonerService.getThingsToDo(prisoner.prisonerNumber),
+        this.prisonerService.getServiceDefinitions(prisoner.prisonerNumber, token),
       ])
 
       const aggregatedAdjustments = showAdjustments
@@ -43,12 +43,7 @@ export default class OverviewRoutes {
           ? await this.calculateReleaseDatesService.hasIndeterminateSentences(bookingId, token)
           : false
 
-      // TODO When feature flag is removed, add to the Promise.all above
-      const requiresNewCalculation =
-        config.featureFlags.thingsToDo && thingsToDo.calculationThingsToDo.includes('CALCULATION_REQUIRED')
-
-      const requiresAdjustmentReview = config.featureFlags.thingsToDo && thingsToDo.hasAdjustmentThingsToDo
-
+      const anyThingsToDo = Object.values(serviceDefinitions.services).some(it => it.thingsToDo.count > 0)
       const latestRecall = hasRasAccess
         ? await this.remandAndSentencingService.getMostRecentRecall(prisoner.prisonerNumber, token)
         : null
@@ -61,12 +56,11 @@ export default class OverviewRoutes {
         isIndeterminateAndHasNoCalculatedDates,
         hasActiveSentences,
         showAdjustments,
-        requiresNewCalculation,
         hasReadOnlyNomisConfigAccess,
-        thingsToDo,
+        serviceDefinitions,
         showRecalls: hasRasAccess,
         latestRecall,
-        requiresAdjustmentReview,
+        anyThingsToDo,
       })
     }
     return res.redirect(`${config.applications.calculateReleaseDates.url}?prisonId=${prisoner.prisonerNumber}`)
