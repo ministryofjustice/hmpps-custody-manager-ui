@@ -8,10 +8,10 @@ import { Prisoner } from '../../../@types/prisonerSearchApi/types'
 import PrisonerSearchService from '../../../services/prisonerSearchService'
 import { CourtEventDetails } from '../../../@types/prisonApi/types'
 import AdjustmentsService from '../../../services/adjustmentsService'
-import { AdaIntercept, Adjustment } from '../../../@types/adjustmentsApi/types'
+import { Adjustment } from '../../../@types/adjustmentsApi/types'
 import config from '../../../config'
 import CalculateReleaseDatesService from '../../../services/calculateReleaseDatesService'
-import { ThingsToDo } from '../../../@types/courtCasesReleaseDatesApi/types'
+import { CcrdServiceDefinitions } from '../../../@types/courtCasesReleaseDatesApi/types'
 
 jest.mock('../../../services/prisonerService')
 jest.mock('../../../services/prisonerSearchService')
@@ -55,6 +55,7 @@ describe('Route Handlers - Overview', () => {
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
       prisonerService.hasActiveSentences.mockResolvedValue(false)
+      prisonerService.getServiceDefinitions.mockResolvedValue(serviceDefinitionsNoThingsToDo)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -62,6 +63,11 @@ describe('Route Handlers - Overview', () => {
         .expect(res => {
           expect(res.text).toContain('data-qa="mini-profile-prisoner-number">A12345B')
           expect(res.text).toContain('mini-profile-status">Life imprisonment<')
+          const $ = cheerio.load(res.text)
+          const nav = $('nav')
+          const overviewLink = nav.find('a:contains(Overview)')
+          expect(overviewLink.find('span:contains(1)')).not.toBeUndefined()
+          expect(overviewLink.attr('aria-current')).toBe('page')
         })
     })
 
@@ -73,6 +79,7 @@ describe('Route Handlers - Overview', () => {
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
       prisonerService.hasActiveSentences.mockResolvedValue(false)
+      prisonerService.getServiceDefinitions.mockResolvedValue(serviceDefinitionsNoThingsToDo)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -90,6 +97,7 @@ describe('Route Handlers - Overview', () => {
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
       prisonerService.hasActiveSentences.mockResolvedValue(false)
+      prisonerService.getServiceDefinitions.mockResolvedValue(serviceDefinitionsNoThingsToDo)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -122,6 +130,7 @@ describe('Route Handlers - Overview', () => {
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
       prisonerService.hasActiveSentences.mockResolvedValue(false)
+      prisonerService.getServiceDefinitions.mockResolvedValue(serviceDefinitionsNoThingsToDo)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -153,6 +162,7 @@ describe('Route Handlers - Overview', () => {
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
       prisonerService.hasActiveSentences.mockResolvedValue(false)
+      prisonerService.getServiceDefinitions.mockResolvedValue(serviceDefinitionsNoThingsToDo)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -184,6 +194,7 @@ describe('Route Handlers - Overview', () => {
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
       prisonerService.hasActiveSentences.mockResolvedValue(false)
+      prisonerService.getServiceDefinitions.mockResolvedValue(serviceDefinitionsNoThingsToDo)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -208,6 +219,7 @@ describe('Route Handlers - Overview', () => {
       } as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
       prisonerService.hasActiveSentences.mockResolvedValue(false)
+      prisonerService.getServiceDefinitions.mockResolvedValue(serviceDefinitionsNoThingsToDo)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -236,6 +248,7 @@ describe('Route Handlers - Overview', () => {
       } as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
       prisonerService.hasActiveSentences.mockResolvedValue(false)
+      prisonerService.getServiceDefinitions.mockResolvedValue(serviceDefinitionsNoThingsToDo)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -253,6 +266,7 @@ describe('Route Handlers - Overview', () => {
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
       prisonerService.hasActiveSentences.mockResolvedValue(false)
+      prisonerService.getServiceDefinitions.mockResolvedValue(serviceDefinitionsNoThingsToDo)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -275,6 +289,7 @@ describe('Route Handlers - Overview', () => {
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       adjustmentsService.getAdjustments.mockResolvedValue([])
       prisonerService.hasActiveSentences.mockResolvedValue(false)
+      prisonerService.getServiceDefinitions.mockResolvedValue(serviceDefinitionsNoThingsToDo)
       return request(app)
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
@@ -326,6 +341,7 @@ describe('Route Handlers - Overview', () => {
         } as Adjustment,
       ])
       prisonerService.hasActiveSentences.mockResolvedValue(false)
+      prisonerService.getServiceDefinitions.mockResolvedValue(serviceDefinitionsNoThingsToDo)
       return request(app)
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
@@ -364,6 +380,7 @@ describe('Route Handlers - Overview', () => {
         } as Adjustment,
       ])
       prisonerService.hasActiveSentences.mockResolvedValue(false)
+      prisonerService.getServiceDefinitions.mockResolvedValue(serviceDefinitionsNoThingsToDo)
       return request(app)
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
@@ -371,92 +388,6 @@ describe('Route Handlers - Overview', () => {
           expect(res.text).toContain('<h2 class="govuk-heading-l">Adjustments</h2>')
           expect(res.text).toContain('There are no active adjustments for Jane Doe')
         })
-    })
-  })
-
-  describe('Things To Do (notification) tests', () => {
-    describe('Adjustment intercept tests', () => {
-      it('should display correct message if intercept type is UPDATE', () => {
-        prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
-          prisonerNumber: 'A12345B',
-          firstName: 'Jane',
-          lastName: 'Doe',
-          prisonId: 'MDI',
-        } as Prisoner)
-        prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
-        adjustmentsService.getAdjustments.mockResolvedValue([])
-        prisonerService.hasActiveSentences.mockResolvedValue(true)
-        prisonerService.getThingsToDo.mockResolvedValue({
-          hasCalculationThingsToDo: false,
-          hasAdjustmentThingsToDo: true,
-          calculationThingsToDo: [],
-          adjustmentThingsToDo: { adaIntercept: { type: 'UPDATE', message: 'Update message' } as AdaIntercept },
-        } as ThingsToDo)
-
-        return request(app)
-          .get('/prisoner/A12345B/overview')
-          .expect('Content-Type', /html/)
-          .expect(res => {
-            expect(res.text).toContain('Update message')
-            expect(res.text).toContain('Review ADA updates')
-            expect(res.text).toContain('Review ADA')
-          })
-      })
-
-      it('should display correct message if intercept type is FIRST_TIME', () => {
-        prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
-          prisonerNumber: 'A12345B',
-          firstName: 'Jane',
-          lastName: 'Doe',
-          prisonId: 'MDI',
-        } as Prisoner)
-        prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
-        adjustmentsService.getAdjustments.mockResolvedValue([])
-        prisonerService.hasActiveSentences.mockResolvedValue(true)
-        prisonerService.getThingsToDo.mockResolvedValue({
-          hasCalculationThingsToDo: false,
-          hasAdjustmentThingsToDo: true,
-          calculationThingsToDo: [],
-          adjustmentThingsToDo: {
-            adaIntercept: { type: 'FIRST_TIME', number: 2, message: 'First time message' } as AdaIntercept,
-          },
-        } as ThingsToDo)
-
-        return request(app)
-          .get('/prisoner/A12345B/overview')
-          .expect('Content-Type', /html/)
-          .expect(res => {
-            expect(res.text).toContain('First time message')
-            expect(res.text).toContain('Review ADAs')
-            expect(res.text).toContain('Review ADA adjudications')
-          })
-      })
-
-      it('should display correct message if intercept type is PADA', () => {
-        prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
-          prisonerNumber: 'A12345B',
-          firstName: 'Jane',
-          lastName: 'Doe',
-          prisonId: 'MDI',
-        } as Prisoner)
-        prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
-        adjustmentsService.getAdjustments.mockResolvedValue([])
-        prisonerService.hasActiveSentences.mockResolvedValue(true)
-        prisonerService.getThingsToDo.mockResolvedValue({
-          hasCalculationThingsToDo: false,
-          hasAdjustmentThingsToDo: true,
-          calculationThingsToDo: [],
-          adjustmentThingsToDo: { adaIntercept: { type: 'PADA', message: 'PADA message' } as AdaIntercept },
-        } as ThingsToDo)
-
-        return request(app)
-          .get('/prisoner/A12345B/overview')
-          .expect('Content-Type', /html/)
-          .expect(res => {
-            expect(res.text).toContain('PADA message')
-            expect(res.text).toContain('Review PADA')
-          })
-      })
     })
   })
 
@@ -496,6 +427,7 @@ describe('Route Handlers - Overview', () => {
       adjustmentsService.getAdjustments.mockResolvedValue([])
       calculateReleaseDatesService.getLatestCalculationForPrisoner.mockResolvedValue(undefined)
       prisonerService.hasActiveSentences.mockResolvedValue(false)
+      prisonerService.getServiceDefinitions.mockResolvedValue(serviceDefinitionsNoThingsToDo)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -523,6 +455,7 @@ describe('Route Handlers - Overview', () => {
       adjustmentsService.getAdjustments.mockResolvedValue([])
       calculateReleaseDatesService.getLatestCalculationForPrisoner.mockResolvedValue(undefined)
       prisonerService.hasActiveSentences.mockResolvedValue(true)
+      prisonerService.getServiceDefinitions.mockResolvedValue(serviceDefinitionsNoThingsToDo)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -563,6 +496,7 @@ describe('Route Handlers - Overview', () => {
         ],
       })
       prisonerService.hasActiveSentences.mockResolvedValue(true)
+      prisonerService.getServiceDefinitions.mockResolvedValue(serviceDefinitionsNoThingsToDo)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -604,6 +538,7 @@ describe('Route Handlers - Overview', () => {
       })
       calculateReleaseDatesService.hasIndeterminateSentences.mockResolvedValue(true)
       prisonerService.hasActiveSentences.mockResolvedValue(true)
+      prisonerService.getServiceDefinitions.mockResolvedValue(serviceDefinitionsNoThingsToDo)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -630,6 +565,7 @@ describe('Route Handlers - Overview', () => {
       adjustmentsService.getAdjustments.mockResolvedValue([])
       calculateReleaseDatesService.hasIndeterminateSentences.mockResolvedValue(true)
       prisonerService.hasActiveSentences.mockResolvedValue(true)
+      prisonerService.getServiceDefinitions.mockResolvedValue(serviceDefinitionsNoThingsToDo)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -657,6 +593,7 @@ describe('Route Handlers - Overview', () => {
       adjustmentsService.getAdjustments.mockResolvedValue([])
       calculateReleaseDatesService.hasIndeterminateSentences.mockResolvedValue(false)
       prisonerService.hasActiveSentences.mockResolvedValue(true)
+      prisonerService.getServiceDefinitions.mockResolvedValue(serviceDefinitionsNoThingsToDo)
 
       return request(app)
         .get('/prisoner/A12345B/overview')
@@ -672,39 +609,6 @@ describe('Route Handlers - Overview', () => {
     })
   })
 
-  describe('Displaying of adjustments section tests', () => {
-    it('Do not show adjustments section if prisoner is OUT', () => {
-      app = appWithAllRoutes({
-        services: {
-          prisonerService,
-          prisonerSearchService,
-          adjustmentsService,
-          calculateReleaseDatesService,
-        },
-        userSupplier: () => {
-          return { ...user, hasInactiveBookingAccess: true, hasAdjustmentsAccess: true }
-        },
-      })
-      prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
-        prisonerNumber: 'A12345B',
-        firstName: 'Jane',
-        lastName: 'Doe',
-        prisonId: 'OUT',
-      } as Prisoner)
-      prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
-      prisonerService.hasActiveSentences.mockResolvedValue(false)
-      return request(app)
-        .get('/prisoner/A12345B/overview')
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          expect(res.text).toContain('This person has been released')
-          expect(res.text).toContain('Some information may be hidden')
-          expect(res.text).toContain(
-            '<a class="moj-sub-navigation__link"  href="https://adjust-release-dates.hmpps.service.justice.gov.uk/A12345B">Adjustments</a>',
-          )
-        })
-    })
-  })
   describe('Config section', () => {
     it('Config section not visible without the correct role', () => {
       prisonerSearchService.getByPrisonerNumber.mockResolvedValue({
@@ -716,6 +620,7 @@ describe('Route Handlers - Overview', () => {
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       prisonerService.hasActiveSentences.mockResolvedValue(false)
       adjustmentsService.getAdjustments.mockResolvedValue([])
+      prisonerService.getServiceDefinitions.mockResolvedValue(serviceDefinitionsNoThingsToDo)
       return request(app)
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
@@ -745,6 +650,7 @@ describe('Route Handlers - Overview', () => {
       prisonerService.getNextCourtEvent.mockResolvedValue({} as CourtEventDetails)
       prisonerService.hasActiveSentences.mockResolvedValue(false)
       adjustmentsService.getAdjustments.mockResolvedValue([])
+      prisonerService.getServiceDefinitions.mockResolvedValue(serviceDefinitionsNoThingsToDo)
       return request(app)
         .get('/prisoner/A12345B/overview')
         .expect('Content-Type', /html/)
@@ -755,3 +661,32 @@ describe('Route Handlers - Overview', () => {
     })
   })
 })
+
+const serviceDefinitionsNoThingsToDo = {
+  services: {
+    overview: {
+      href: 'http://localhost:8000/prisoner/AB1234AB/overview',
+      text: 'Overview',
+      thingsToDo: {
+        things: [],
+        count: 0,
+      },
+    },
+    adjustments: {
+      href: 'http://localhost:8002/AB1234AB',
+      text: 'Adjustments',
+      thingsToDo: {
+        things: [],
+        count: 0,
+      },
+    },
+    releaseDates: {
+      href: 'http://localhost:8004?prisonId=AB1234AB',
+      text: 'Release dates and calculations',
+      thingsToDo: {
+        things: [],
+        count: 0,
+      },
+    },
+  },
+} as CcrdServiceDefinitions
