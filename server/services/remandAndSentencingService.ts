@@ -14,6 +14,7 @@ export default class RemandAndSentencingService {
 
     return mostRecent
       ? {
+          recallId: mostRecent.recallUniqueIdentifier,
           recallDate: new Date(mostRecent.recallDate),
           returnToCustodyDate: new Date(mostRecent.returnToCustodyDate),
           recallType: RecallTypes[mostRecent.recallType],

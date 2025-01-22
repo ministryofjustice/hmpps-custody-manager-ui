@@ -39,6 +39,7 @@ describe('Remand and sentencing service', () => {
       }
 
       const latestRecallCard: Recall = {
+        recallId: 'b-uuid',
         recallDate: new Date('2024-12-18'),
         recallType: RecallTypes.HDC_CURFEW_VIOLATION_RECALL,
         returnToCustodyDate: new Date('2024-12-25'),
