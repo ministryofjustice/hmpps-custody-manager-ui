@@ -36,6 +36,7 @@ const RecallTypes = {
 export { RecallTypes, RecallType }
 
 export interface Recall {
+  recallId: string
   recallDate: Date
   returnToCustodyDate: Date
   ual: string
