@@ -117,7 +117,7 @@
             classes: "govuk-button--secondary",
             text: "Record a recall",
             preventDoubleClick: true,
-            href: recallsUiUrl + '/person/' + prisoner.prisonerNumber + '/recall?entrypoint=ccards',
+            href: recallsUiUrl + '/person/' + prisoner.prisonerNumber + '/record-recall?entrypoint=ccards',
             attributes: {  'data-qa': 'create-new-recall-btn' }
           }) }}
       {% endif %}
@@ -186,7 +186,7 @@
       <ul class="govuk-summary-card__actions">
         <div class="">
           <li class="govuk-summary-card__action">
-            <a class="govuk-link" href={{ recallsUiUrl + '/person/' + prisoner.prisonerNumber + '/recall/' + recall.recallId + '/edit?entrypoint=ccards' }}>Edit<span class="govuk-visually-hidden"> recall recorded on {{ recall.recallDate | date }}</span></a>
+            <a class="govuk-link" href={{ recallsUiUrl + '/person/' + prisoner.prisonerNumber + '/edit-recall/' + recall.recallId + '?entrypoint=ccards' }}>Edit<span class="govuk-visually-hidden"> recall recorded on {{ recall.recallDate | date }}</span></a>
           </li>
         </div>
       </ul>
