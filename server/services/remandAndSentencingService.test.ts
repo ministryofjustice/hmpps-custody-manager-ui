@@ -22,20 +22,22 @@ describe('Remand and sentencing service', () => {
         createdAt: '2024-12-18T00:00:00.000Z',
         createdByUsername: 'JBLOGGS',
         prisonerId: 'A1234AB',
-        recallDate: '2023-06-18T00:00:00.000Z',
-        recallType: 'STANDARD_RECALL',
-        recallUniqueIdentifier: 'a-uuid',
+        revocationDate: '2023-06-18T00:00:00.000Z',
+        recallType: 'LR',
+        recallUuid: 'a-uuid',
         returnToCustodyDate: '2023-06-18T00:00:00.000Z',
+        createdByPrison: 'PRI',
       }
 
       const latestApiRecall: ApiRecall = {
         createdAt: '2024-12-18T00:00:00.000Z',
         createdByUsername: 'JBLOGGS',
         prisonerId: 'A1234AB',
-        recallDate: '2024-12-18T00:00:00.000Z',
-        recallType: 'HDC_CURFEW_VIOLATION_RECALL',
-        recallUniqueIdentifier: 'b-uuid',
+        revocationDate: '2024-12-18T00:00:00.000Z',
+        recallType: 'CUR_HDC',
+        recallUuid: 'b-uuid',
         returnToCustodyDate: '2024-12-25T00:00:00.000Z',
+        createdByPrison: 'HMI',
       }
 
       const latestRecallCard: Recall = {
