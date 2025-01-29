@@ -39,6 +39,7 @@ export interface Recall {
   returnToCustodyDate: Date
   ual: string
   recallType: RecallType
+  location: string
 }
 
 function getRecallType(code: string): RecallType {
