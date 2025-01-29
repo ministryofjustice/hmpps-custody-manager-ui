@@ -15,11 +15,12 @@ export default class RemandAndSentencingService {
     return mostRecent
       ? {
           recallId: mostRecent.recallUuid,
-          recallDate: new Date(mostRecent.revocationDate),
-          returnToCustodyDate: new Date(mostRecent.returnToCustodyDate),
+          recallDate: mostRecent.revocationDate ? new Date(mostRecent.revocationDate) : null,
+          returnToCustodyDate: mostRecent.returnToCustodyDate ? new Date(mostRecent.returnToCustodyDate) : null,
           recallType: getRecallType(mostRecent.recallType),
           // TODO UAL should be stored on the recall in RaS not calculated on the fly
           ual: formatDistanceStrict(mostRecent.revocationDate, mostRecent.returnToCustodyDate, options),
+          location: mostRecent.createdByPrison,
         }
       : undefined
   }

@@ -46,6 +46,7 @@ describe('Remand and sentencing service', () => {
         recallType: RecallTypes.HDC_CURFEW_VIOLATION_RECALL,
         returnToCustodyDate: new Date('2024-12-25'),
         ual: '7 days',
+        location: 'HMI',
       }
 
       fakeApi.get(`/recall/person/${prisonerId}`).reply(200, [earlyApiRecall, latestApiRecall])
