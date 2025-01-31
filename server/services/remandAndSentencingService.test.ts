@@ -22,10 +22,10 @@ describe('Remand and sentencing service', () => {
         createdAt: '2024-12-18T00:00:00.000Z',
         createdByUsername: 'JBLOGGS',
         prisonerId: 'A1234AB',
-        revocationDate: '2023-06-18T00:00:00.000Z',
+        revocationDate: '2023-06-18',
         recallType: 'LR',
         recallUuid: 'a-uuid',
-        returnToCustodyDate: '2023-06-18T00:00:00.000Z',
+        returnToCustodyDate: '2023-06-18',
         createdByPrison: 'PRI',
       }
 
@@ -33,10 +33,10 @@ describe('Remand and sentencing service', () => {
         createdAt: '2024-12-18T00:00:00.000Z',
         createdByUsername: 'JBLOGGS',
         prisonerId: 'A1234AB',
-        revocationDate: '2024-12-18T00:00:00.000Z',
+        revocationDate: '2024-12-18',
         recallType: 'CUR_HDC',
         recallUuid: 'b-uuid',
-        returnToCustodyDate: '2024-12-25T00:00:00.000Z',
+        returnToCustodyDate: '2024-12-25',
         createdByPrison: 'HMI',
       }
 
@@ -45,7 +45,8 @@ describe('Remand and sentencing service', () => {
         recallDate: new Date('2024-12-18'),
         recallType: RecallTypes.HDC_CURFEW_VIOLATION_RECALL,
         returnToCustodyDate: new Date('2024-12-25'),
-        ual: '7 days',
+        ual: 6,
+        ualString: '6 days',
         location: 'HMI',
       }
 
