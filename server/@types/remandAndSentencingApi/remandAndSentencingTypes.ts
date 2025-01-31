@@ -37,7 +37,8 @@ export interface Recall {
   recallId: string
   recallDate: Date
   returnToCustodyDate: Date
-  ual: string
+  ual: number
+  ualString: string
   recallType: RecallType
   location: string
 }
